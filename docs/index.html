@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>The Whole You</title>
-<meta name="description" content="A free 3D dream adventure for ages 5 and up. 53 chapters, 38 dreamers, a black hole, a castle, a paper moon. Every dream shows you a piece of yourself.">
+<meta name="description" content="A free 3D dream adventure for ages 5 and up. 54 chapters, 48 dreamers, a black hole, a castle, a paper moon. Every dream shows you a piece of yourself.">
 <meta property="og:title" content="The Whole You">
 <meta property="og:description" content="A free 3D dream adventure for ages 5 and up. Every dream shows you a piece of yourself.">
 <meta name="theme-color" content="#0b0820">
@@ -417,8 +417,18 @@ const AV=[
  {name:'Sir Sushi',type:'Sushi Knight',kind:'sushi',line:'A brave knight with a chopstick sword and a soy-sauce shield.',spd:1.0,lives:5,cd:1.2,bg:0xffc83a},
  {name:'Jello Jett',type:'Jelly Pilot',kind:'jello',line:'A wobbly jelly pilot with goggles and a cherry on top.',spd:1.1,lives:4,cd:1.0,bg:0xff5aa8},
  {name:'Captain Corn',type:'Corn Hero',kind:'corn',line:'Pops into action with a popcorn cape and a super mask.',spd:1.08,lives:4,cd:0.95,bg:0xe8303a},
+ {name:'Luna',type:'Moon Fairy',kind:'luna',line:'Silver wings, a tiny halo, and sparkles wherever she lands.',spd:1.15,lives:3,cd:0.8,bg:0x5a3aa8},
+ {name:'Captain Coral',type:'Deep Sea Diver',kind:'diver',line:'A shiny dive suit and a glowing visor. Best friends with every fish.',spd:1.0,lives:5,cd:1.2,bg:0x1a6ab8},
+ {name:'Rocky',type:'Boulder Bot',kind:'rocky',line:'A big, slow, super strong robot made of mountain rock.',spd:0.82,lives:7,cd:1.7,bg:0x8a6a4a},
+ {name:'Sprout',type:'Garden Kid',kind:'sprout',line:'Green hoodie, a flower cap, and a pocket full of seeds.',spd:1.1,lives:4,cd:1.0,bg:0x3aa84a},
+ {name:'Chef Pepper',type:'Master Chef',kind:'chef',line:'Tall hat, curly mustache, and a spoon that fixes any soup.',spd:0.95,lives:5,cd:1.3,bg:0xd83a3a},
+ {name:'Zippy',type:'Lightning Racer',kind:'zippy',line:'Yellow suit, purple visor, and lightning crackling around her boots.',spd:1.3,lives:3,cd:0.55,bg:0xffd23a},
+ {name:'Pearl',type:'Sea Princess',kind:'pearl',line:'A crown of real pearls and a dress the color of the ocean.',spd:1.05,lives:4,cd:0.95,bg:0x2ab8b0},
+ {name:'Buzz',type:'Bee Bot',kind:'buzz',line:'Yellow and black stripes, little wings, and a happy buzzing sound.',spd:1.2,lives:3,cd:0.85,bg:0xffb020},
+ {name:'Captain Cosmo',type:'Star Explorer',kind:'cosmo',line:'Deep purple space suit and a jetpack that runs on stardust.',spd:1.12,lives:4,cd:0.9,bg:0x1a1a4a},
+ {name:'Snowy',type:'Snowman Kid',kind:'snowy',line:'A puffy white snow suit, a top hat, and a carrot nose that never melts.',spd:0.9,lives:6,cd:1.3,bg:0x8ad8ff},
 ];
-const PRICES=[0,0,40,60,120,100,0,80,200,150,300,500,120,180,250,350,450,600,300,650,400,350,450,800,250,900,9999,9999,9999,9999,500,550,600,650,700,750,800,850];AV.forEach((a,i)=>a.price=PRICES[i]);
+const PRICES=[0,0,40,60,120,100,0,80,200,150,300,500,120,180,250,350,450,600,300,650,400,350,450,800,250,900,9999,9999,9999,9999,500,550,600,650,700,750,800,850,600,650,700,500,550,750,650,600,800,700];AV.forEach((a,i)=>a.price=PRICES[i]);
 
 function nmapTex(key,size,hf,rep){return ctex(key,size,size,(g,w,h)=>{const H=new Float32Array(w*h);for(let y=0;y<h;y++)for(let x=0;x<w;x++)H[y*w+x]=hf(x/w,y/h);const img=g.createImageData(w,h);
   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const hx=H[y*w+(x+1)%w]-H[y*w+(x-1+w)%w],hy=H[((y+1)%h)*w+x]-H[((y-1+h)%h)*w+x];const nx=-hx*2.2,ny=-hy*2.2,l=Math.hypot(nx,ny,1),i=(y*w+x)*4;
@@ -796,6 +806,10 @@ function buildAvatar(i,cust){if(typeof i==='string'&&!cust){const rr=realFor(i);
     for(let j=0;j<7;j++){const x=-0.33+j*0.11;for(let q=0;q<3;q++)add(cp,sphere(0.045,10,8),pop,x+rnd(-0.03,0.03),-0.95+rnd(-0.03,0.04),rnd(-0.03,0.03),1,rnd(0.8,1.1),1);}r.fx.push({m:cp,type:'cape'});
     add(r.torso,cyl(0.13,0.13,0.03,32),fab(0xffffff,.5),0,0.32,0.25,1,1,1,Math.PI/2);add(r.torso,sphere(0.08,16,12),kern,0,0.32,0.27,0.75,1.1,0.4);}
   else if(k==='vexor'){r=buildVexorRig();}
+  if(!r){const Lk=typeof i==='number'?(RLOOK[i]||{}):{};const skin=skinM(0xf0c09a),top=fab(Lk.top!=null?Lk.top:0x3a7ad8,.7),pants=fab(Lk.pants!=null?Lk.pants:0x27324d);
+    r=rig2({skin,shirt:top,pants,shoe:fab(Lk.shoes!=null?Lk.shoes:0x2a2a32,.5)});face2(r.head,{skin,iris:0x2a5ad8});
+    puffs(r.head,fab(Lk.hair!=null?Lk.hair:0x3a2414,1),[[0,0.2,-0.06,0.22],[-0.2,0.1,-0.1,0.15],[0.2,0.1,-0.1,0.15]]);
+    if(!cust){const c=cleanCust({hat:Lk.hat,back:Lk.back,fx:Lk.fx,face:Lk.face});if(Object.keys(c).length)applyCustom(r,c);}}
   if(cust)applyCustom(r,cust);polishAvatar(r);r.blinkOff=rnd(0,3);return r;
 }
 function animRig(r,t,move,air=0){if(r.real){realAnim(r,t,move,air);return;}
@@ -930,7 +944,7 @@ function beep(f,d,type,slide){if(!ac)return;try{const o=ac.createOscillator(),g=
   if(slide)o.frequency.exponentialRampToValueAtTime(slide,ac.currentTime+d);g.gain.setValueAtTime(0.09,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+d);
   o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
 
-const WORLD={city:{mult:20,label:'Folding City'},hole:{mult:400,label:'Black Hole'},tess:{mult:1000000,label:'The Folded World'},lava:{mult:8000,label:'Volcano Vault'},night:{mult:160000,label:'Nightmare Castle'},sky:{mult:900000,label:'Ocean in the Sky'},clock:{mult:4000000,label:'Clockwork Tower'},giant:{mult:20000000,label:"Giant's Bedroom"},limbo:{mult:Infinity,label:'Limbo'},forest:{mult:1,label:'Tornado Forest'},ruins:{mult:1,label:'Ruined Neighborhood'},crystal:{mult:5000000,label:'Crystal Multiverse'},speed:{mult:10000000,label:'Neon Multiverse'},mirror:{mult:50000000,label:'Mirror Multiverse'},boss:{mult:Infinity,label:'Edge of the Multiverse'},dino:{mult:31536000,label:'Dinosaur Valley'},ship:{mult:1,label:'Spaceship'},spacefly:{mult:1,label:'Outer Space'},snow:{mult:1,label:'Snowy Mountains'},flight:{mult:1,label:'The Sky'},home:{mult:1,label:'Home'},mall:{mult:1,label:'The Mall'},fakemom:{mult:1,label:'Home at Night'},lab:{mult:1,label:"Mimic's Lab"},obby:{mult:1,label:'The Sky Obby'},dinner:{mult:1,label:'Home'},tiny:{mult:1,label:'The Giant Kitchen'},toys:{mult:1,label:'Midnight Living Room'},desert:{mult:1,label:'Desert of Mirages'},temple:{mult:1,label:'The Lost Temple'},mega:{mult:1,label:'Your Town'},party:{mult:1,label:'Home'},maze:{mult:1,label:'Planet Vexoria'},guardian:{mult:1,label:'Planet Vexoria'},cage:{mult:1,label:"Vexor's Castle"},escape:{mult:1,label:'Outer Space'},revenge:{mult:1,label:'Home'},bedtime:{mult:1,label:'Your Room'},voidrun:{mult:1.5,label:'The Deep Dream'},storm:{mult:1.5,label:'The Deep Dream'},eater:{mult:2,label:'The Deepest Dream'},lilydream:{mult:1.2,label:"Lily's Dream"},tinyfly:{mult:1.2,label:'The Tiny Dream'},fort:{mult:1.2,label:'The Pillow Fort'},king:{mult:2,label:'The Nightmare Throne'},school:{mult:1,label:'Home'},clockhub:{mult:1.2,label:'The Dream Clock'},neon:{mult:1.2,label:'Year 2049'},arcade:{mult:1.2,label:'Year 1986'},valley:{mult:1.2,label:'Year 1200'},garden:{mult:1.2,label:'The Center of Time'},grey:{mult:1.2,label:'Candy Town'},lantern:{mult:1.2,label:'The Lantern River'},paper:{mult:1.5,label:'The Paper Moon'},dcity:{mult:1,label:'Dream City'}};
+const WORLD={city:{mult:20,label:'Folding City'},hole:{mult:400,label:'Black Hole'},tess:{mult:1000000,label:'The Folded World'},lava:{mult:8000,label:'Volcano Vault'},night:{mult:160000,label:'Nightmare Castle'},sky:{mult:900000,label:'Ocean in the Sky'},clock:{mult:4000000,label:'Clockwork Tower'},giant:{mult:20000000,label:"Giant's Bedroom"},limbo:{mult:Infinity,label:'Limbo'},forest:{mult:1,label:'Tornado Forest'},ruins:{mult:1,label:'Ruined Neighborhood'},crystal:{mult:5000000,label:'Crystal Multiverse'},speed:{mult:10000000,label:'Neon Multiverse'},mirror:{mult:50000000,label:'Mirror Multiverse'},boss:{mult:Infinity,label:'Edge of the Multiverse'},dino:{mult:31536000,label:'Dinosaur Valley'},ship:{mult:1,label:'Spaceship'},spacefly:{mult:1,label:'Outer Space'},snow:{mult:1,label:'Snowy Mountains'},flight:{mult:1,label:'The Sky'},home:{mult:1,label:'Home'},mall:{mult:1,label:'The Mall'},fakemom:{mult:1,label:'Home at Night'},lab:{mult:1,label:"Mimic's Lab"},obby:{mult:1,label:'The Sky Obby'},dinner:{mult:1,label:'Home'},tiny:{mult:1,label:'The Giant Kitchen'},toys:{mult:1,label:'Midnight Living Room'},desert:{mult:1,label:'Desert of Mirages'},temple:{mult:1,label:'The Lost Temple'},mega:{mult:1,label:'Your Town'},party:{mult:1,label:'Home'},maze:{mult:1,label:'Planet Vexoria'},guardian:{mult:1,label:'Planet Vexoria'},cage:{mult:1,label:"Vexor's Castle"},escape:{mult:1,label:'Outer Space'},revenge:{mult:1,label:'Home'},bedtime:{mult:1,label:'Your Room'},voidrun:{mult:1.5,label:'The Deep Dream'},storm:{mult:1.5,label:'The Deep Dream'},eater:{mult:2,label:'The Deepest Dream'},lilydream:{mult:1.2,label:"Lily's Dream"},tinyfly:{mult:1.2,label:'The Tiny Dream'},fort:{mult:1.2,label:'The Pillow Fort'},king:{mult:2,label:'The Nightmare Throne'},school:{mult:1,label:'Home'},clockhub:{mult:1.2,label:'The Dream Clock'},neon:{mult:1.2,label:'Year 2049'},arcade:{mult:1.2,label:'Year 1986'},valley:{mult:1.2,label:'Year 1200'},garden:{mult:1.2,label:'The Center of Time'},grey:{mult:1.2,label:'Candy Town'},lantern:{mult:1.2,label:'The Lantern River'},paper:{mult:1.5,label:'The Paper Moon'},firstday:{mult:1,label:'Maple Star School'},dcity:{mult:1,label:'Dream City'}};
 const CH=[
  {n:1,world:'city',title:'The First Dream',short:'Collect 6 dream stars in a city that folds into the sky.',
   story:'Matrix falls asleep in a city that bends up into the sky. Streets climb the walls and hang upside down over your head. Agents in black suits patrol the roads.',
@@ -1091,6 +1105,9 @@ const CH=[
  {n:53,world:'paper',title:'THE PAPER MOON',short:"Meet the Moon Thief and win back Lily's colors.",
   story:"On top of the moon is a whole world made of folded paper. Here lives the MOON THIEF, a giant paper mask who keeps colors in glass jars. He is not mean. He is just very, very lonely.",
   goals:['Shine your DREAM LIGHT (F) on the 4 color jars','Soft paper stars fall down: step out of the glowing circles','Lily makes you hearts','Teach the Moon Thief how to SHARE']},
+ {n:54,world:'firstday',title:"Lily's First Day",short:'Lily starts at YOUR school. Then the fire alarm rings…',
+  story:"Morning. Lily is quiet at breakfast. Today is her FIRST DAY at your school, and she keeps looking at the sky. \"Stay close to me,\" you tell her. \"I will,\" she says. \"For a little while.\"",
+  goals:["Pick up Lily's 4 spilled crayons","Walk Lily to the school door","FIRE DRILL: walk calmly to the flag","Climb the fire stairs to the classroom window"]},
 ];
 
 let confirmBuy=-1;
@@ -2856,7 +2873,7 @@ function updMega(dt){const P=S.P,L=S.L,Z=L.Z,r=Z.r;if(S.stage===undefined){S.sta
   V.cd-=dt;if(S.stage<=1&&V.cd<=0){V.cd=16;const q=V3(P.pos.x+rnd(-4,4),1.3,P.pos.z+rnd(-4,4));q.x=clamp(q.x,-50,50);q.z=clamp(q.z,-50,50);addItem('heart',q);toast('DAD THREW YOU A SNACK! (+1 LIFE)',2200);beep(660,0.15,'square',990);beep(440,0.25,'square',300);}
   const Ly=L.lily;Ly.cd-=dt;animRig(Ly.r,S.t,0);Ly.r.armR.rotation.x=-2.6+Math.sin(S.t*8)*0.3;if(S.stage<=1&&Ly.cd<=0){Ly.cd=24;S.shield=8;toast("LILY'S SHIELD SPELL! (8 seconds)",2400);beep(900,0.4,'sine',1500);flash3(L,V3(0,1.4,40),P.pos.clone().setY(P.pos.y+1),0xffd23a,0.15,300);}}
 function showCredits(fin,extra){clearTimeout(CR_AUTO);const ov=$('credits');const roll=$('crRoll');const nm=PN();const ch=CH.map(c=>`<li>${c.n}. ${c.title.replace(/[&<>]/g,'')}</li>`).join('');
-  roll.innerHTML=`<h2>${fin?'THE END':'THE END…?'}</h2><p class="cr-big">THE WHOLE YOU</p><p>A dream adventure in ${CH.length} chapters</p><h3>STARRING</h3><p class="cr-big">${nm.replace(/[&<>]/g,'')}</p><h3>THE FAMILY</h3><p>SUPER MOM · DAD (and the minivan) · LILY (and her wand)</p><h3>THE VILLAINS</h3><p>ZORVAX the Destroyer · MIMIC the Copycat · Mr. Snuggles (sorry!)${fin?' · VEXOR the Collector · THE DREAM EATER · THE NIGHTMARE KING':''}${extra==='tease'?' · THE MOON THIEF (now a friend!)':''}</p><h3>ALSO STARRING</h3><p>Whiskers the Cat · The Robot Vacuum · The Broccoli</p>${fin?'<h3>NEW FRIENDS</h3><p>TOCK the Dream Clock owl · the robots of 2049 · the boombox of 1986 · Mama Dragon and her 4 babies · YOUR SHADOW (best friend!)</p>':''}<h3>THE CHAPTERS</h3><ul>${ch}</ul><h3>STORY &amp; IDEAS</h3><p class="cr-big">ADVIK</p><h3>BUILT WITH</h3><p>Three.js and Claude</p><h3>NEW DREAMERS UNLOCKED</h3><p>LILY · DAD</p><p class="cr-big">THANK YOU FOR PLAYING!</p><p>${fin?'Sweet dreams. See you in the next adventure!':'…but somewhere, a little jar is wobbling.'}</p>`;$('crNext').hidden=!!fin&&!extra;CR_NEXT=null;$('crNext').textContent='Wait… Chapter 30 ▸';
+  roll.innerHTML=`<h2>${fin?'THE END':'THE END…?'}</h2><p class="cr-big">THE WHOLE YOU</p><p>A dream adventure in ${CH.length} chapters</p><h3>STARRING</h3><p class="cr-big">${nm.replace(/[&<>]/g,'')}</p><h3>THE FAMILY</h3><p>SUPER MOM · DAD (and the minivan) · LILY (and her wand)</p><h3>THE VILLAINS</h3><p>ZORVAX the Destroyer · MIMIC the Copycat · Mr. Snuggles (sorry!)${fin?' · VEXOR the Collector · THE DREAM EATER · THE NIGHTMARE KING':''}${extra==='tease'?' · THE MOON THIEF (now a friend!) · ZERO (who IS he?)':''}</p><h3>ALSO STARRING</h3><p>Whiskers the Cat · The Robot Vacuum · The Broccoli</p>${fin?'<h3>NEW FRIENDS</h3><p>TOCK the Dream Clock owl · the robots of 2049 · the boombox of 1986 · Mama Dragon and her 4 babies · YOUR SHADOW (best friend!)</p>':''}<h3>THE CHAPTERS</h3><ul>${ch}</ul><h3>STORY &amp; IDEAS</h3><p class="cr-big">ADVIK</p><h3>BUILT WITH</h3><p>Three.js and Claude</p><h3>NEW DREAMERS UNLOCKED</h3><p>LILY · DAD</p><h3>NEW IN THE SHOP</h3><p>LUNA · CAPTAIN CORAL · ROCKY · SPROUT · CHEF PEPPER · ZIPPY · PEARL · BUZZ · CAPTAIN COSMO · SNOWY</p><p class="cr-big">THANK YOU FOR PLAYING!</p><p>${fin?'Sweet dreams. See you in the next adventure!':'…but somewhere, a little jar is wobbling.'}</p>`;$('crNext').hidden=!!fin&&!extra;CR_NEXT=null;$('crNext').textContent='Wait… Chapter 30 ▸';
   if(extra==='tease'){$('crNext').textContent='Wait… one more scene! ▸';CR_NEXT=playTease;CR_AUTO=setTimeout(()=>{if(!$('credits').hidden&&CR_NEXT===playTease)playTease();},24000);}
   else if(extra==='next51'){$('crNext').textContent='NEW: Chapter 51 ▸';CR_NEXT=()=>startChapter(51);}
   ov.hidden=false;roll.style.top='';roll.style.animation='none';void roll.offsetWidth;roll.style.animation='';$('crMenu').focus();}
@@ -3562,7 +3579,7 @@ function updArcade(dt){const P=S.P,L=S.L;S.stT+=dt;L.disco.rotation.y+=dt*0.8;
         else{toast('OOPS! WRONG TILE. WATCH AGAIN!',1600);beep(160,0.4,'sawtooth',90);S.show={i:0,t:-0.6};S.inIdx=0;}}if(P.onGround)S.lastTile=t;}}
   if(S.stage===2&&S.got>=6){S.stage=3;talk([['TOCK','HOO! The KEY stone! A key means you can open new ideas, like learning a new dance!'],['{N}','That was RADICAL! Where to next?'],['TOCK','Hold on tight… we are going back to the time of KNIGHTS and CASTLES. The year 1200!']]);}
   if(S.stage===3&&S.talkDone&&!S.portal)spawnPortalAt(V3(0,1.2,-4),'YEAR 1200');}
-/* ---- Chapter 48: YEAR 1200,  the castle of the dragon ---- */
+/* ---- Chapter 48: YEAR 1200, the castle of the dragon ---- */
 function babyDino(col){const g=new THREE.Group();const m=gloss(col,.35),bl=gloss(0xfff0d0,.4);add(g,sphere(0.45,20,14),m,0,0.5,0,1,0.85,1.2);add(g,sphere(0.34,20,14),m,0,0.95,0.42);add(g,sphere(0.3,16,12),bl,0,0.45,0.2,0.9,0.7,1);
   for(const s of[-1,1]){add(g,sphere(0.09,12,10),PM({color:0x111111,roughness:.05,clearcoat:1}),s*0.15,1.05,0.68,1,1.2,0.6);add(g,sphere(0.03,8,6),glowM(0xffffff,2),s*0.15+0.03,1.1,0.73);add(g,capsule(0.08,0.15),m,s*0.25,0.15,0.1);}
   add(g,cone(0.18,0.6,10),m,0,0.5,-0.65,1,1,1,-Math.PI/2+0.3);for(let i=0;i<3;i++)add(g,cone(0.07,0.16,6),gloss(0xffd166,.3),0,1.25-i*0.12,0.3-i*0.28);g.add(glow(0xffd166,1.6,0.35));return g;}
@@ -3818,57 +3835,216 @@ function plushBunny(){const g=new THREE.Group();const f=fab(0xffd8ec,.95),w=fab(
 function nightSkyTex(){return ctex('nightsky2',1024,512,(g,w,h)=>{const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#020414');gr.addColorStop(0.7,'#0c1640');gr.addColorStop(1,'#1a2a5a');g.fillStyle=gr;g.fillRect(0,0,w,h);
   for(let i=0;i<1400;i++){const a=Math.random();g.fillStyle=`rgba(255,255,255,${a*a})`;g.fillRect(Math.random()*w,Math.random()*h*0.85,a>0.97?2:1,a>0.97?2:1);}
   g.fillStyle='rgba(10,14,30,1)';for(let i=0;i<40;i++){const bw=10+Math.random()*30,bh=20+Math.random()*90,x=i*26+Math.random()*10;g.fillRect(x,h-bh,bw,bh);for(let y=h-bh+6;y<h-4;y+=9)for(let xx=x+3;xx<x+bw-3;xx+=7)if(Math.random()<0.3){g.fillStyle='rgba(255,210,140,.8)';g.fillRect(xx,y,3,4);g.fillStyle='rgba(10,14,30,1)';}}});}
-function teaseSetup(B){const sc=B.scene;if(B.rig){sc.remove(B.rig.g);}
-  let bl=null,glass=null;sc.traverse(o=>{if(!o.isMesh||!o.geometry)return;const p=o.geometry.parameters||{};if(o.geometry.type==='BoxGeometry'&&Math.abs(o.position.z+1.22)<0.01&&Math.abs(o.position.y-0.8)<0.01)bl=o;if(o.geometry.type==='PlaneGeometry'&&p.width===1.8&&p.height===1.5&&o.material.isMeshBasicMaterial)glass=o;});
+function teaseSetup(B){const sc=B.scene;
+  let bl=null,glass=null,front=null;sc.traverse(o=>{if(!o.isMesh||!o.geometry)return;const p=o.geometry.parameters||{};if(o.geometry.type==='BoxGeometry'&&Math.abs(o.position.z+1.22)<0.01&&Math.abs(o.position.y-0.8)<0.01)bl=o;if(o.geometry.type==='PlaneGeometry'&&p.width===1.8&&p.height===1.5&&o.material.isMeshBasicMaterial)glass=o;if(o.geometry.type==='PlaneGeometry'&&p.width===6&&p.height===3.2&&Math.abs(o.position.z-3)<0.01)front=o;});
   if(bl){bl.visible=false;add(sc,box(1.6,0.08,0.95),bl.material,0,0.84,-0.85);}
   if(glass){glass.material=new THREE.MeshBasicMaterial({color:0x8ab0ff,transparent:true,opacity:0.12,depthWrite:false});}
+  // lights: start dark, keep handles
+  B.lt={hemi:null,sun:null,lamp:null,lampM:null};sc.traverse(o=>{if(o.isHemisphereLight)B.lt.hemi=o;else if(o.isDirectionalLight)B.lt.sun=o;else if(o.isPointLight&&Math.abs(o.position.x-1.42)<0.01)B.lt.lamp=o;else if(o.isMesh&&o.material&&o.material.emissiveIntensity===2.5)B.lt.lampM=o.material;});
+  if(B.lt.hemi)B.lt.hemi.intensity=0.07;if(B.lt.sun)B.lt.sun.intensity=0.7;if(B.lt.lamp)B.lt.lamp.intensity=0;if(B.lt.lampM)B.lt.lampM.emissiveIntensity=0.12;
+  const ceilL=new THREE.PointLight(0xfff0d8,0,9,2);ceilL.position.set(0,2.95,0.3);ceilL.castShadow=true;ceilL.shadow.mapSize.set(1024,1024);sc.add(ceilL);B.ceilL=ceilL;
+  B.bulb=add(sc,sphere(0.16,16,12),M({color:0xfff6e8,emissive:0xfff0d0,emissiveIntensity:0.05,roughness:.3}),0,3.05,0.3);add(sc,cyl(0.05,0.05,0.2,10),M({color:0xd8d0c8}),0,3.15,0.3);
+  // front wall with a door hole, a hallway behind it
+  if(front)front.visible=false;const wm=front?front.material:M({color:0xe8e4ea,roughness:.9,side:THREE.DoubleSide});
+  for(const[w,h,x,y] of[[0.85,3.2,-2.575,1.6],[4.2,3.2,0.9,1.6],[0.95,1.1,-1.675,2.65]])add(sc,new THREE.PlaneGeometry(w,h),wm,x,y,3,1,1,1,0,Math.PI,0);
+  const fr=M({color:0xf2efe8,roughness:.5});add(sc,box(0.1,2.15,0.14),fr,-2.17,1.07,3);add(sc,box(0.1,2.15,0.14),fr,-1.18,1.07,3);add(sc,box(1.1,0.1,0.14),fr,-1.675,2.14,3);
+  add(sc,new THREE.PlaneGeometry(3.2,2.6),M({map:woodTex(),roughness:.6}),-1.6,0,4.3,1,1,1,-Math.PI/2);add(sc,new THREE.PlaneGeometry(3.2,3.2),M({color:0xd8cfc4,roughness:.95}),-1.6,1.6,5.6);
+  const hall=new THREE.PointLight(0xffc890,0.9,5,2);hall.position.set(-1.7,2.4,4.2);sc.add(hall);
+  const hinge=new THREE.Group();hinge.position.set(-2.12,0,2.92);sc.add(hinge);add(hinge,box(0.9,2.06,0.06),M({color:0xf6f2ea,roughness:.55}),0.45,1.03,0);add(hinge,sphere(0.04,10,8),metalM(0xd8c070,.3),0.82,1.0,-0.06);B.door=hinge;
+  // light switch
+  add(sc,box(0.12,0.16,0.02),M({color:0xf4f4f0,roughness:.5}),-0.95,1.28,2.98);B.sw=add(sc,box(0.05,0.07,0.03),M({color:0xe8e8e0,roughness:.4}),-0.95,1.27,2.965);B.sw.rotation.x=0.35;
+  // the sky, the moon and the black ring
   const sky=new THREE.Mesh(new THREE.PlaneGeometry(160,80),new THREE.MeshBasicMaterial({map:nightSkyTex(),fog:false}));sky.position.set(45,14,-0.3);sky.rotation.y=-Math.PI/2;sc.add(sky);
   const moon=add(sc,sphere(2.2,32,20),new THREE.MeshBasicMaterial({color:new THREE.Color(0xfff4dc).multiplyScalar(1.6)}),40,16,-8);moon.add(glow(0xfff0d0,14,0.45));
   const bz=new THREE.Group();bz.position.set(40,22,8);bz.rotation.y=-Math.PI/2;sc.add(bz);add(bz,sphere(2.6,32,20),new THREE.MeshBasicMaterial({color:0x000000}));const bzr=add(bz,new THREE.TorusGeometry(3.6,0.18,10,80),new THREE.MeshBasicMaterial({color:new THREE.Color(0xffd8a0).multiplyScalar(2),transparent:true,opacity:0}),0,0,0,1,1,1,1.25,0,0);B.bzr=bzr;
-  const beamM=new THREE.MeshBasicMaterial({color:0x9ab8ff,transparent:true,opacity:0.07,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});const beam=new THREE.Mesh(new THREE.CylinderGeometry(0.75,1.5,4.2,24,1,true),beamM);beam.position.set(1.6,1.0,-0.3);beam.rotation.z=-1.05;sc.add(beam);B.beam=beam;
-  const ml=new THREE.SpotLight(0xa8c0ff,2.2,12,0.5,0.6,1.5);ml.position.set(4,3.2,-0.3);ml.target.position.set(0,0.6,-1.4);ml.castShadow=true;ml.shadow.mapSize.set(1024,1024);sc.add(ml,ml.target);
-  const ly=buildAvatar('sis');const H=ly.real?1.22:1.3;ly.g.rotation.x=-Math.PI/2;ly.g.position.set(0,0.74,-2.4+H);sc.add(ly.g);B.lily=ly;
-  const bun=plushBunny();bun.position.set(0.95,0,-1.15);bun.rotation.set(0,0.6,1.35);sc.add(bun);B.bun=bun;B.bun0=bun.position.clone();
+  const ml=new THREE.SpotLight(0xa8c0ff,1.4,12,0.5,0.6,1.5);ml.position.set(4,3.2,-0.3);ml.target.position.set(2.2,0.8,-0.4);ml.castShadow=true;ml.shadow.mapSize.set(1024,1024);sc.add(ml,ml.target);
+  // Lily stands at the window, back to the room, perfectly still
+  const ly=buildAvatar('sis');ly.g.position.set(2.3,0,-0.35);ly.g.rotation.y=Math.PI/2;sc.add(ly.g);B.lily=ly;
+  const em=new THREE.MeshBasicMaterial({color:new THREE.Color(0x9ad0ff).multiplyScalar(2.5),transparent:true,opacity:0});B.eyes=[0,1].map(()=>{const e=add(sc,sphere(0.022,10,8),em,0,0,0);const gl=glow(0x9ad0ff,0.16,1.2);gl.material.opacity=0;e.add(gl);e.userData.gl=gl;return e;});B.eyeM=em;
+  // the hero: in the hallway, about to come in
+  let hr=B.rig;if(hr){if(useRealHero()){sc.remove(hr.g);hr=B.rig=realAvatar(avIdx,save.cust[avIdx]);sc.add(hr.g);}hr.g.position.set(-1.65,0,4.4);hr.g.rotation.set(0,Math.PI,0);if(hr.b)hr.b.position.y=0;hr.g.visible=true;}
+  const bun=plushBunny();bun.position.set(0.95,0,-1.15);bun.rotation.set(0,0.6,1.35);sc.add(bun);
   add(sc,new THREE.CircleGeometry(1.1,40),fab(0xff8ad8,1),0.4,0.008,0.6,1,1,1,-Math.PI/2);
-  const fl=new THREE.Group();sc.add(fl);for(let i=0;i<14;i++){const a=i/13;add(fl,sphere(0.025,8,6),glowM([0xffd166,0xff8ad8,0x8ab0ff][i%3],3),-2.95,2.6+Math.sin(a*TAU*2)*0.08,-2.8+a*5.4);}
   const shelf=new THREE.Group();shelf.position.set(-2.85,0,1.2);sc.add(shelf);const wd=M({map:woodTex(),roughness:.6});add(shelf,box(0.3,0.05,1.4),wd,0,1.1,0);add(shelf,box(0.3,0.05,1.4),wd,0,1.6,0);
   [[0xffd8a0,0.25],[0x8ad8ff,-0.3],[0xb48cff,0.0]].forEach(([c,z],i)=>{const t=plushBunny();t.scale.setScalar(0.9);t.position.set(0,i<2?1.13:1.63,z);t.rotation.y=Math.PI/2;t.traverse(o=>{if(o.isMesh&&o.material.color&&o.material.color.getHex()===0xffd8ec){o.material=o.material.clone();o.material.color.setHex(c);}});shelf.add(t);});
   for(const[z,c] of[[1.9,0xff8ad8],[-0.5,0x5ee7ff]])add(sc,new THREE.PlaneGeometry(0.7,0.9),M({color:c,roughness:.8,emissive:c,emissiveIntensity:0.08}),-2.98,1.9,z,1,1,1,0,Math.PI/2,0);
-  const proj=add(sc,sphere(0.1,16,10),M({color:0xffffff,emissive:0xffe0a0,emissiveIntensity:1.5,transparent:true,opacity:0.85}),1.2,0.7,-2.75);const dots=new THREE.Group();dots.position.set(1.2,0.7,-2.75);sc.add(dots);const dm=new THREE.MeshBasicMaterial({color:0xfff0c0,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false});
-  for(let i=0;i<40;i++){const a=rnd(0,TAU),e=rnd(0.2,1.3);const d=V3(Math.cos(a)*Math.cos(e),Math.sin(e),Math.sin(a)*Math.cos(e));const s=add(dots,starShapeGeo(),dm,d.x*2.6,d.y*2.4,d.z*2.6);s.scale.setScalar(0.04);s.lookAt(0,0,0);}B.dots=dots;
-  const z=zeroFigure();z.position.set(2.3,0,-0.4);z.rotation.y=-Math.PI/2;z.scale.setScalar(0.001);sc.add(z);B.zero=z;B.star=null;
-  const rm=new THREE.MeshBasicMaterial({color:0xffd8a0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});B.ring=add(sc,new THREE.RingGeometry(0.9,1.0,64),rm,1.0,0.02,-1.05,1,1,1,-Math.PI/2);
-  B.curt=[];sc.traverse(o=>{if(o.isMesh&&o.geometry&&o.geometry.type==='PlaneGeometry'&&o.geometry.parameters.width===0.6)B.curt.push({m:o,r:o.rotation.y});});}
-function updTease(dt,t,c,B,say){const T=c.t;
-  say([[4,'Later that night…'],[8,'Lily is fast asleep. Her dreams are full of color again.'],[12,'Then the curtains begin to move… someone has come to visit.'],[14.8,'"Shh… do not wake up, little dreamer."'],[17.4,`"You and ${PN()} were very brave tonight…"`],[20.5,'"…but this is only the BEGINNING."'],[23.5,'"See you very soon."'],[26.5,`Lily (half asleep): "…${PN()}? Is that you?"`],[99,'And far away, in the night sky… something is waking up.']]);
-  if(B.lily){animRig(B.lily,t,0);if(B.lily.real)rhPost(B.lily);B.lily.b.scale.z=1+Math.sin(t*1.6)*0.02;}
-  B.dots.rotation.y+=dt*0.08;B.beam.material.opacity=0.06+Math.sin(t*0.7)*0.015;
-  if(Math.random()<dt*25)emit({x:rnd(0.2,2.6),y:rnd(0.3,2.2),z:rnd(-0.9,0.3),vx:rnd(-.03,.03),vy:rnd(-.02,.02),vz:rnd(-.03,.03),life:5,max:5,r:0.9,g:1,b:1.4,size:0.012,grav:0,drag:0});
-  const wind=T>8&&T<21?Math.min(1,(T-8)/1.5)*(T>19?Math.max(0,(21-T)/2):1):0;B.curt.forEach((cu,i)=>{cu.m.rotation.y=cu.r+Math.sin(t*3+i)*0.35*wind;cu.m.rotation.x=Math.sin(t*2.3+i)*0.15*wind;});
-  const Z=B.zero;const shot=(p,l)=>{camera.position.copy(p);camera.lookAt(l);};camera.fov=50;
-  if(T<4)shot(lerp3(V3(2.2,1.8,1.7),V3(1.5,1.55,0.8),sm(T/4)),V3(0,0.75,-1.9));
-  else if(T<8)shot(lerp3(V3(1.3,1.9,-0.6),V3(0.8,1.6,-1.3),sm((T-4)/4)),V3(0,0.8,-2.0));
-  else if(T<12)shot(V3(-1.7,1.55,1.5),lerp3(V3(0.4,1,-1.6),V3(2.2,1.2,-0.4),sm((T-8)/2)));
-  else if(T<20.5)shot(lerp3(V3(-1.3,1.55,0.6),V3(-0.9,1.45,0.1),sm((T-12)/8)),lerp3(V3(1.6,1.2,-0.6),V3(0.9,1.2,-1.0),sm((T-12)/4)));
-  else if(T<24)shot(lerp3(V3(-0.8,1.4,0.2),V3(-0.3,1.3,-0.5),sm((T-20.5)/3.5)),V3(1.0,1.0,-1.0));
-  else if(T<26.5)shot(lerp3(V3(1.5,1.9,-0.4),V3(0.9,1.65,-1.2),sm((T-24)/2.5)),V3(0.05,0.85,-2.2));
-  else{const k=sm((T-26.5)/3.2);shot(lerp3(V3(0.9,1.65,-1.2),V3(5.5,1.8,-0.3),k),lerp3(V3(3,1.7,-0.3),V3(40,20,6),k));B.bzr.material.opacity=Math.min(1,(T-27.5)*0.8);B.bzr.rotation.z+=dt*0.4;}
+  B.curt=[];sc.traverse(o=>{if(o.isMesh&&o.geometry&&o.geometry.type==='PlaneGeometry'&&o.geometry.parameters.width===0.6)B.curt.push({m:o,r:o.rotation.y});});B.lightsOn=0;}
+function teaseLights(B,k){const L=B.lt;if(L.hemi)L.hemi.intensity=0.07+k*0.75;B.ceilL.intensity=k*2.6;B.bulb.material.emissiveIntensity=0.05+k*2.2;if(L.lamp)L.lamp.intensity=k*1.2;if(L.lampM)L.lampM.emissiveIntensity=0.12+k*2;B.lightsOn=k;}
+function updTease(dt,t,c,B,say){const T=c.t;const N=PN();
+  say([[1.5,'Later that night…'],[4.8,`${N}: Lily? Are you still awake?`],[7.6,'Click.'],[9.6,'Lily is standing at the window. Very, very still.'],[12.4,`${N}: Lily? …Lily, hello?`],[14.8,'She does not answer. She does not blink. She only looks at the sky.'],[17.4,`${N}: Okaaay… you are sleep-standing. Weird! Goodnight, Lily.`],[20.6,'Click. The room is dark again.'],[23.2,'Lily did not go to bed. Lily was WAITING.'],[26.4,'And far away in the sky… something was waiting too.'],[28.8,"Tomorrow is Lily's FIRST DAY at your school."]]);
+  const ly=B.lily;if(ly){animRig(ly,1.234,0);if(ly.real)rhPost(ly);}
+  // door: open 3.5-4.7, close 22.4-23.4
+  const dk=T<3.5?0:T<4.7?sm((T-3.5)/1.2):T<22.4?1:T<23.4?1-sm((T-22.4)/1):0;B.door.rotation.y=-1.9*dk;if((T>3.5&&T<3.6&&!c.sq1)){c.sq1=1;beep(220,0.5,'sawtooth',180);}if(T>22.4&&!c.sq2){c.sq2=1;beep(200,0.4,'sawtooth',160);}
+  // the hero walks in, flips the switch, waits, flips it off, walks out
+  const hr=B.rig;if(hr){let p,mv=0,ry=Math.PI;
+    if(T<4.2){p=V3(-1.65,0,4.4);}
+    else if(T<6.2){const k=sm((T-4.2)/2);p=lerp3(V3(-1.65,0,4.4),V3(-1.35,0,2.1),k);mv=0.75;}
+    else if(T<7.2){const k=sm((T-6.2)/1);p=lerp3(V3(-1.35,0,2.1),V3(-1.0,0,2.35),k);mv=0.35;ry=Math.PI+k*0.9;}
+    else if(T<17.6){p=V3(-1.0,0,2.35);ry=T<9?Math.PI+0.9-sm((T-7.6)/1.2)*2.2:Math.PI-1.3;}
+    else if(T<19.4){const k=sm((T-17.6)/1.2);p=V3(-1.0,0,2.35);ry=Math.PI-1.3+k*2.2;}
+    else if(T<20.6){p=V3(-1.0,0,2.35);ry=Math.PI+0.9;}
+    else if(T<22.6){const k=sm((T-20.6)/2);p=lerp3(V3(-1.0,0,2.35),V3(-1.65,0,4.6),k);mv=0.75;ry=0.25;}
+    else{p=V3(-1.65,0,4.6);ry=0;}
+    hr.g.position.copy(p);hr.g.rotation.set(0,ry,0);animRig(hr,t,mv);if(hr.real)rhPost(hr);
+    if((T>7.0&&T<7.6)||(T>20.0&&T<20.6)||(T>16.2&&T<17.2))emote(hr,'wave',t);}
+  // light switch
+  const on=T>=7.4&&T<20.3;const want=on?1:0;if(B.lightsOn!==want){const k=B.lightsOn+(want-B.lightsOn)*Math.min(1,dt*9);teaseLights(B,Math.abs(k-want)<0.01?want:k);}
+  if(T>7.4&&!c.ck1){c.ck1=1;beep(1600,0.05,'square');B.sw.rotation.x=-0.35;}if(T>20.3&&!c.ck2){c.ck2=1;beep(1300,0.05,'square');B.sw.rotation.x=0.35;}
+  // Lily's eyes glow after the room is dark
+  const eg=T>23.6?sm((T-23.6)/2.2):0;if(ly&&B.eyes){const hb=ly.real?(ly.bn&&ly.bn.head):ly.head;const hp=V3();if(hb){hb.getWorldPosition(hp);}else{hp.set(2.3,1.25,-0.35);}
+    B.eyes.forEach((e,i)=>{e.position.set(hp.x+0.1,hp.y+(ly.real?0.09:0.02),hp.z+(i?0.045:-0.045));e.material.opacity=eg;e.userData.gl.material.opacity=eg*0.9;});}
+  if(T>23&&Math.random()<dt*10)emit({x:rnd(1.8,2.9),y:rnd(0.4,2.4),z:rnd(-0.9,0.3),vx:rnd(-.02,.02),vy:rnd(0.02,0.08),vz:rnd(-.02,.02),life:4,max:4,r:0.9,g:1.1,b:1.5,size:0.012,grav:0,drag:0});
+  const wind=T>23?Math.min(1,(T-23)/2):0;B.curt.forEach((cu,i)=>{cu.m.rotation.y=cu.r+Math.sin(t*2.6+i)*0.25*wind;cu.m.rotation.x=Math.sin(t*2+i)*0.1*wind;});
+  const shot=(p,l)=>{camera.position.copy(p);camera.lookAt(l);};camera.fov=50;
+  if(T<3.5)shot(lerp3(V3(-0.6,1.5,2.2),V3(-0.3,1.45,1.6),sm(T/3.5)),V3(2.3,1.1,-0.4));
+  else if(T<7.4)shot(V3(1.4,1.55,-0.2),lerp3(V3(-1.65,1.1,3.2),V3(-1.1,1.1,2.4),sm((T-5)/2)));
+  else if(T<9.6)shot(lerp3(V3(1.4,1.55,-0.2),V3(0.9,1.6,1.4),sm((T-7.4)/2.2)),lerp3(V3(-1.1,1.1,2.4),V3(1.4,1.1,-0.3),sm((T-7.4)/1.6)));
+  else if(T<14.8)shot(lerp3(V3(0.9,1.6,1.4),V3(1.1,1.5,0.7),sm((T-9.6)/5.2)),V3(2.3,1.15,-0.35));
+  else if(T<17.6)shot(lerp3(V3(1.8,1.5,1.6),V3(1.3,1.45,1.3),sm((T-14.8)/2.8)),V3(-1.0,1.2,2.3));
+  else if(T<23.4)shot(lerp3(V3(0.6,1.9,0.4),V3(0.9,1.75,0.0),sm((T-17.6)/5.8)),lerp3(V3(-1.2,1.0,2.6),V3(-1.6,1.0,3.2),sm((T-20.6)/2)));
+  else if(T<26.4)shot(lerp3(V3(4.6,1.45,-0.35),V3(3.7,1.35,-0.35),sm((T-23.4)/3)),V3(2.3,1.2,-0.35));
+  else{const k=sm((T-26.4)/3.8);shot(lerp3(V3(3.7,1.35,-0.35),V3(9,3.5,-0.3),k),lerp3(V3(2.3,1.2,-0.35),V3(40,20,6),k));B.bzr.material.opacity=Math.min(1,Math.max(0,(T-27.2))*0.9);B.bzr.rotation.z+=dt*0.4;}
   camera.updateProjectionMatrix();
-  if(T>8&&T<10.5&&Math.random()<dt*90){const a=rnd(0,TAU),r=rnd(0.1,0.8);emit({x:2.3+Math.cos(a)*r,y:rnd(0,2),z:-0.4+Math.sin(a)*r,vx:-Math.sin(a)*1.4,vy:rnd(0.3,1.2),vz:Math.cos(a)*1.4,life:1.2,max:1.2,r:1.8,g:1.4,b:3,size:rnd(0.02,0.05),grav:0,drag:0.4});}
-  if(T>8.6&&T<23.5){const k=sm((T-8.6)/1.6);Z.scale.setScalar(Math.max(0.001,k));Z.userData.lt.intensity=k*1.2;Z.rotation.z=Math.sin(t*1.2)*0.02;}
-  if(T>=12&&T<23.5){const k=sm((T-12)/3.2);Z.position.lerpVectors(V3(2.3,0,-0.4),V3(1.0,0,-1.05),k);Z.rotation.y=-Math.PI/2+k*(Math.PI*0.25);Z.position.y=Math.sin(t*1.5)*0.03;}
-  if(T>14.6&&T<17.5){const k=sm((T-14.6)/2.6);const hand=V3(1.0,0.95,-0.85);B.bun.position.copy(k<0.4?lerp3(B.bun0,hand,k/0.4):lerp3(hand,V3(0.35,0.9,-2.15),(k-0.4)/0.6));B.bun.rotation.set(0,0.6+k*1.6,1.35*(1-k));}
-  if(T>17.5&&!B.star){B.star=add(B.scene,new THREE.TorusGeometry(0.05,0.012,8,24),M({color:0x000000,emissive:0xffc070,emissiveIntensity:3}),0.35,1.08,-2.13);B.star.add(glow(0xffc070,0.5,1.2));beep(1318,0.6,'sine',1760);B.ringT=0;}
-  if(B.ringT!==undefined&&B.ringT<3){B.ringT+=dt;const k=B.ringT/3;B.ring.scale.setScalar(0.3+k*3.2);B.ring.material.opacity=Math.sin(k*Math.PI)*0.6;}
-  if(B.star){B.star.rotation.y+=dt*2;B.star.position.y=1.08+Math.sin(t*2)*0.02;}
-  if(T>22.6&&T<23.6){const k=(T-22.6)/1;Z.scale.setScalar(Math.max(0.001,1-k));for(let i=0;i<3;i++)emit({x:Z.position.x+rnd(-0.3,0.3),y:rnd(0.2,1.9),z:Z.position.z+rnd(-0.3,0.3),vx:rnd(-0.5,0.5)+1.6,vy:rnd(0.5,1.5),vz:rnd(-0.5,0.5)+0.6,life:1.6,max:1.6,r:1.6,g:1.3,b:3,size:rnd(0.02,0.05),grav:0,drag:0.3});}
-  if(T>=23.6)Z.visible=false;
-  if(Math.floor(T*1.1)!==c.mb&&T<29){c.mb=Math.floor(T*1.1);beep([784,659,523,659,784,880,784,659][c.mb%8],0.5,'sine');}
-  finalPass.uniforms.flashCol.value.set(0,0,0);finalPass.uniforms.flash.value=T>29.2?sm((T-29.2)/1.2):T<0.8?1-T/0.8:0;finalPass.uniforms.vig.value=0.6;}
+  if(Math.floor(T*1.1)!==c.mb&&T<29&&T>23){c.mb=Math.floor(T*1.1);beep([523,659,784,659][c.mb%4],0.5,'sine');}
+  finalPass.uniforms.flashCol.value.set(0,0,0);finalPass.uniforms.flash.value=T>29.4?sm((T-29.4)/1.2):T<0.8?1-T/0.8:0;finalPass.uniforms.vig.value=0.6;}
 function playTease(){clearTimeout(CR_AUTO);CR_NEXT=null;$('credits').hidden=true;$('result').hidden=true;running=false;if(S&&S.L){disposeLevel(S.L);}S=null;
   playCine('tease',()=>{finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=0;const ov=$('credits'),roll=$('crRoll');
-    roll.innerHTML=`<p style="margin-top:12vh;letter-spacing:.3em;color:#b8a8ff">THE WHOLE YOU WILL RETURN IN</p><h2 style="font-size:clamp(46px,10vw,96px);margin:10px 0">DREAMSDAY</h2><p class="cr-big">Who is ZERO?</p><p>And why did he visit Lily's room?</p><p style="margin-top:22px;color:#ffd166">Thank you for playing, ${PN().replace(/[&<>]/g,'')}!</p>`;
-    roll.style.animation='none';roll.style.top='0';ov.hidden=false;$('crNext').hidden=true;$('crMenu').focus();});}
+    roll.innerHTML=`<p style="margin-top:12vh;letter-spacing:.3em;color:#b8a8ff">THE WHOLE YOU</p><h2 style="font-size:clamp(46px,10vw,96px);margin:10px 0">THE NEXT DAY</h2><p class="cr-big">Lily's first day at YOUR school.</p><p>Why was she waiting? And who is ZERO?</p><p style="margin-top:22px;color:#ffd166">Chapter 54 is ready, ${PN().replace(/[&<>]/g,'')}!</p>`;
+    roll.style.animation='none';roll.style.top='0';ov.hidden=false;$('crNext').hidden=false;$('crNext').textContent='Chapter 54 ▸';CR_NEXT=()=>startChapter(54);$('crNext').focus();});}
+
+/* ---- Chapter 54: Lily's First Day ---- */
+function miniKid(o){const g=new THREE.Group(),skin=M({color:o.skin||0xf0c09a,roughness:.6}),cl=fab(o.col,.7),pn=fab(o.pants!=null?o.pants:0x27324d,.8),hr=fab(o.hair!=null?o.hair:0x3a2414,1);
+  const lg=cg('kidLeg',()=>new THREE.CapsuleGeometry(0.09,0.3,3,8)),bd=cg('kidBody',()=>new THREE.CapsuleGeometry(0.2,0.3,3,10)),ar=cg('kidArm',()=>new THREE.CapsuleGeometry(0.06,0.28,3,8));
+  const legs=[-1,1].map(x=>{const l=new THREE.Group();l.position.set(x*0.12,0.5,0);g.add(l);add(l,lg,pn,0,-0.2,0);return l;});add(g,bd,cl,0,0.82,0);const head=add(g,sphere(0.22,14,10),skin,0,1.24,0);add(head,sphere(0.23,14,10),hr,0,0.06,-0.03,1,0.8,1);
+  for(const x of[-1,1])add(head,sphere(0.035,8,6),M({color:0x111111}),x*0.08,0.02,0.2);add(head,new THREE.TorusGeometry(0.05,0.012,6,10,Math.PI),M({color:0xa04040}),0,-0.07,0.2,1,1,1,Math.PI);
+  if(o.hat)add(head,cyl(0.16,0.18,0.3,12),fab(o.hat,.7),0,0.26,0);if(o.bun)add(head,sphere(0.1,10,8),hr,0,0.26,-0.08);
+  const arms=[-1,1].map(x=>{const a=new THREE.Group();a.position.set(x*0.27,0.98,0);g.add(a);add(a,ar,cl,0,-0.18,0);add(a,sphere(0.06,8,6),skin,0,-0.38,0);return a;});
+  g.scale.setScalar(o.s||1);g.traverse(m=>{if(m.isMesh)m.castShadow=true;});
+  return {g,step(t,mv){const ph=t*9,sw=Math.sin(ph)*0.8*mv;legs[0].rotation.x=sw;legs[1].rotation.x=-sw;arms[0].rotation.x=-sw;arms[1].rotation.x=sw;arms[0].rotation.z=0.12;arms[1].rotation.z=-0.12;g.position.y=Math.abs(Math.cos(ph))*0.06*mv;head.rotation.y=Math.sin(t*1.3)*0.15;}};}
+function brickTex(){return ctex('brick',512,512,(g,w,h)=>{g.fillStyle='#c8745c';g.fillRect(0,0,w,h);for(let r=0;r<16;r++){const y=r*32;g.fillStyle=['#c46e56','#cf7a60','#bf6a52','#d08066'][r%4];g.fillRect(0,y,w,32);g.fillStyle='#e2d8cc';g.fillRect(0,y,w,4);const off=(r%2)*48;for(let x=-48;x<w;x+=96)g.fillRect(x+off,y,4,32);}g.fillStyle='rgba(0,0,0,.07)';for(let i=0;i<260;i++)g.fillRect(Math.random()*w,Math.random()*h,7,3);},{rep:[6,2]});}
+function boomSnd(){if(!ac)return;try{const n=(ac.sampleRate*1.8)|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.4);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=700;const g=ac.createGain();g.gain.setValueAtTime(0.7,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+1.8);s.connect(f);f.connect(g);g.connect(ac.destination);s.start();beep(70,1.6,'sine',28);}catch(e){}}
+function thunderSnd(){if(!ac)return;try{const n=(ac.sampleRate*1.2)|0,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,1.6)*(i<2000?i/2000:1);const s=ac.createBufferSource();s.buffer=b;const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=420;const g=ac.createGain();g.gain.setValueAtTime(0.35,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+1.2);s.connect(f);f.connect(g);g.connect(ac.destination);s.start();}catch(e){}}
+function zeroShip(){const g=new THREE.Group();add(g,sphere(3,32,20),new THREE.MeshBasicMaterial({color:0x000000}),0,0,0,1,0.36,1);add(g,sphere(1.4,24,14),new THREE.MeshBasicMaterial({color:0x000000}),0,0.55,0,1,0.6,1);
+  const rm=new THREE.MeshBasicMaterial({color:new THREE.Color(0xffd8a0).multiplyScalar(2),transparent:true,opacity:0.95});const ring=add(g,new THREE.TorusGeometry(4.2,0.2,10,80),rm,0,0,0,1,1,1,Math.PI/2);g.userData.ring=ring;
+  const ring2=add(g,new THREE.TorusGeometry(3.0,0.07,8,64),new THREE.MeshBasicMaterial({color:new THREE.Color(0x8ab0ff).multiplyScalar(1.8)}),0,-0.7,0,1,1,1,Math.PI/2);g.userData.ring2=ring2;
+  for(let i=0;i<12;i++){const a=i/12*TAU;add(g,sphere(0.12,8,6),new THREE.MeshBasicMaterial({color:0xffd8a0}),Math.cos(a)*2.4,-0.9,Math.sin(a)*2.4);}
+  const lt=new THREE.PointLight(0xffd8a0,2.2,50,2);lt.position.y=-1;g.add(lt);g.userData.lt=lt;return g;}
+function crayonMesh(col){const g=new THREE.Group();add(g,cyl(0.11,0.11,0.9,12),gloss(col,.3),0,0,0);add(g,cone(0.11,0.22,12),gloss(col,.3),0,0.56,0);add(g,cyl(0.112,0.112,0.3,12),fab(0xf4f0e8,.6),0,0.05,0);g.rotation.z=0.5;const w=new THREE.Group();w.add(g);w.position.y=0.5;return w;}
+function buildFirstDay(S){
+  const L=baseLevel({fog:[0xcfe2f4,0.003],sky:{top:0x3a7ad8,mid:0x9ccaf2,bot:0xe0ecf8,sunDir:V3(0.5,0.5,-0.7),sunCol:0xfff0d0,clouds:0.55,cloudCol:0xffffff},hemi:[0xdcecff,0x5a7a3a,0.45],sunCol:0xfff2dc,sunInt:1.6,sunDir:V3(0.5,0.75,-0.4),bounds:{type:'sq',size:46},gain:[0.9,0.9,0.92],sat:1.15,raysK:0.3});
+  add(L.scene,new THREE.PlaneGeometry(420,420),M({map:meadowTex(),color:0xa8dc86,roughness:.95}),0,0,0,1,1,1,-Math.PI/2).receiveShadow=true;
+  const asp=M({map:asphaltTex(),color:0xb8b4ae,roughness:.9});add(L.scene,new THREE.PlaneGeometry(44,34),asp,0,0.02,1,1,1,1,-Math.PI/2).receiveShadow=true;
+  add(L.scene,new THREE.PlaneGeometry(5,12),M({map:concreteTex(),color:0xe0dcd4,roughness:.9}),0,0.03,24,1,1,1,-Math.PI/2);
+  for(let i=0;i<6;i++)add(L.scene,new THREE.PlaneGeometry(0.5,2.2),M({color:0xffe066,roughness:.8}),-9+i*3.6,0.04,13,1,1,1,-Math.PI/2);
+  // the school
+  const bk=M({map:brickTex(),roughness:.85}),W=30,D=14,H=7.6,cz=-22;const bld=add(L.scene,box(W,H,D),bk,0,H/2,cz);bld.castShadow=true;bld.receiveShadow=true;L.blockers.push(bld);L.colliders.push({x0:-W/2,x1:W/2,z0:cz-D/2,z1:cz+D/2,top:H});
+  add(L.scene,box(W+0.8,0.5,D+0.8),M({color:0x4a5060,roughness:.7}),0,H+0.25,cz);add(L.scene,box(W+0.2,0.3,D+0.2),M({color:0xf2f0ea,roughness:.6}),0,3.85,cz);
+  const win=new THREE.MeshBasicMaterial({color:new THREE.Color(0xc4e4ff).multiplyScalar(1.1)}),frm=M({color:0xf6f4ee,roughness:.5});
+  for(const y of[2.0,5.7])for(let x=-12.5;x<=12.6;x+=3.6){if(y<3&&Math.abs(x)<2.2)continue;add(L.scene,box(2,1.5,0.1),frm,x,y,cz+D/2+0.05);add(L.scene,new THREE.PlaneGeometry(1.8,1.3),win,x,y,cz+D/2+0.12);}
+  const fz=cz+D/2;add(L.scene,box(3.2,3.1,0.3),M({color:0x2a4a8a,roughness:.5}),0,1.55,fz+0.12);add(L.scene,box(0.08,2.8,0.1),frm,0,1.4,fz+0.3);for(const s of[-1,1]){add(L.scene,new THREE.PlaneGeometry(0.9,0.9),win,s*0.75,2.1,fz+0.3);add(L.scene,sphere(0.07,10,8),metalM(0xd8c070,.3),s*0.45,1.3,fz+0.3);}
+  add(L.scene,box(5.6,0.5,2.4),M({color:0x2a4a8a,roughness:.6}),0,3.45,fz+1.1);for(const s of[-1,1])add(L.scene,cyl(0.1,0.1,3.2,10),frm,s*2.5,1.6,fz+2.1);L.colliders.push({x0:-3,x1:3,z0:fz,z1:fz+2.4,top:3.7});
+  const st=signTex('MAPLE STAR SCHOOL','#1d3f8a','#ffe066');add(L.scene,box(9,1.3,0.2),M({map:st,emissive:0xffffff,emissiveMap:st,emissiveIntensity:0.5}),0,4.75,fz+0.25);
+  add(L.scene,cyl(0.9,0.9,0.12,40),M({color:0xffffff,roughness:.4}),0,6.6,fz+0.12,1,1,1,Math.PI/2);add(L.scene,cyl(0.95,0.95,0.1,40),M({color:0x2a2a32}),0,6.6,fz+0.08,1,1,1,Math.PI/2);add(L.scene,box(0.08,0.6,0.04),M({color:0x2a2a32}),0,6.85,fz+0.2);add(L.scene,box(0.08,0.45,0.04),M({color:0x2a2a32}),0.18,6.5,fz+0.2,1,1,1,0,0,1.2);
+  L.alarm=[];for(const x of[-10,0,10]){const lm=M({color:0xff4a3a,emissive:0xff3020,emissiveIntensity:0,roughness:.3});const m=add(L.scene,sphere(0.22,12,8),lm,x,7.2,fz+0.2);const lt=new THREE.PointLight(0xff4030,0,16,2);lt.position.set(x,7,fz+1);L.scene.add(lt);L.alarm.push({lm,lt});}
+  // fire stairs on the right side, up to the classroom balcony
+  const mt=metalM(0x8a9aa8,.45);for(let i=0;i<8;i++)obPlat(L,16.6,0.55+i*0.52,-15.6-i*1.45,2,1.45,mt,0.25);
+  obPlat(L,18.9,4.2,-19.6,2.2,13.6,mt,0.3);obPlat(L,11.4,4.2,-13.7,16.8,2.6,mt,0.3);
+  const rail=metalM(0xd8dee6,.3);for(let x=3.5;x<=19.5;x+=2){add(L.scene,cyl(0.04,0.04,1,8),rail,x,4.7,-12.45);}add(L.scene,box(17,0.06,0.06),rail,11.5,5.2,-12.45);
+  for(let z=-26;z<=-13;z+=2){add(L.scene,cyl(0.04,0.04,1,8),rail,20,4.7,z);}add(L.scene,box(0.06,0.06,13.6),rail,20,5.2,-19.6);
+  lbl(L,'FIRE STAIRS','#ffffff',0.7,16.6,2.2,-13.5);L.winPt=V3(8,4.2,-13.7);L.winSp=lbl(L,'CLASSROOM WINDOW','#ffe066',0.7,8,6.4,-13.4);L.winSp.visible=false;
+  // flag pole
+  const fp=V3(11,0,8);add(L.scene,cyl(0.08,0.1,9,12),metalM(0xd8dee6,.3),fp.x,4.5,fp.z);add(L.scene,sphere(0.18,12,8),metalM(0xffd166,.2),fp.x,9.1,fp.z);
+  const flag=add(L.scene,new THREE.PlaneGeometry(2.4,1.5,8,4),M({color:0x2a5ad8,roughness:.8,side:THREE.DoubleSide}),fp.x+1.25,8.2,fp.z);L.flag=flag;add(flag,starShapeGeo(),new THREE.MeshBasicMaterial({color:0xffe066,side:THREE.DoubleSide}),0,0,0.01,0.45,0.45,0.45);L.colliders.push({x0:fp.x-0.2,x1:fp.x+0.2,z0:fp.z-0.2,z1:fp.z+0.2,top:9});L.flagPt=fp;
+  add(L.scene,new THREE.CircleGeometry(2.6,40),M({color:0xffe066,roughness:.8,transparent:true,opacity:0.35}),fp.x,0.05,fp.z+3.5,1,1,1,-Math.PI/2);lbl(L,'LINE UP HERE','#ffe066',0.6,fp.x,2.2,fp.z+3.5);
+  // playground
+  const pg=metalM(0xff6a3a,.4),seat=fab(0x2a2a32,.6);for(const s of[-1,1]){add(L.scene,cyl(0.1,0.1,3.4,10),pg,-16+s*2.2,1.7,6,1,1,1,0,0,s*0.25);}add(L.scene,cyl(0.08,0.08,4.8,10),pg,-16,3.4,6,1,1,1,0,0,Math.PI/2);
+  L.swings=[];for(const x of[-17,-15]){const g=new THREE.Group();g.position.set(x,3.4,6);L.scene.add(g);add(g,cyl(0.02,0.02,2.4,6),rail,-0.3,-1.2,0);add(g,cyl(0.02,0.02,2.4,6),rail,0.3,-1.2,0);add(g,box(0.8,0.08,0.3),seat,0,-2.4,0);L.swings.push(g);}
+  add(L.scene,box(1.2,0.15,5),gloss(0xffd23a,.3),-16,1.3,-5,1,1,1,-0.5,0,0);add(L.scene,box(1.2,2.6,1.2),gloss(0x3aa8ff,.4),-16,1.3,-7.6);for(let i=0;i<4;i++)add(L.scene,cyl(0.04,0.04,1.2,8),rail,-16,0.5+i*0.6,-8.3,1,1,1,0,0,Math.PI/2);
+  L.colliders.push({x0:-16.6,x1:-15.4,z0:-8.2,z1:-7,top:2.6});
+  for(const x of[14,18])for(const z of[-2,2]){add(L.scene,box(2,0.1,0.5),fab(0x8a5a2a,.7),x,0.55,z);add(L.scene,box(2,0.5,0.1),fab(0x8a5a2a,.7),x,0.8,z-0.25);for(const s of[-1,1])add(L.scene,box(0.1,0.55,0.5),metalM(0x3a3a42,.5),x+s*0.9,0.27,z);}
+  // fence with a gate, trees
+  const fm=M({color:0xf4f4f0,roughness:.6});for(let x=-24;x<=24;x+=2){if(Math.abs(x)<3)continue;add(L.scene,box(0.12,1.2,0.12),fm,x,0.6,20);add(L.scene,box(2,0.08,0.06),fm,x+1>24?x:x+1,0.9,20);add(L.scene,box(2,0.08,0.06),fm,x+1>24?x:x+1,0.4,20);}
+  for(const s of[-1,1]){add(L.scene,box(0.25,2.2,0.25),fm,s*3,1.1,20);add(L.scene,box(2.2,1.3,0.06),M({color:0x2a5ad8,roughness:.6}),s*1.6,0.8,20);}add(L.scene,box(6.6,0.3,0.3),fm,0,2.3,20);const gt=signTex('WELCOME','#2a5ad8','#ffffff');add(L.scene,box(3,0.6,0.1),M({map:gt,emissive:0xffffff,emissiveMap:gt,emissiveIntensity:0.4}),0,2.3,20.2);
+  for(let x=-24;x<=24;x+=2){add(L.scene,box(0.12,1.2,0.12),fm,-24,0.6,-6+x*0.6);add(L.scene,box(0.12,1.2,0.12),fm,24,0.6,-6+x*0.6);}
+  for(const[x,z,s] of[[-22,-12,1.1],[22,-10,1],[-21,14,1.1],[22,14,1],[-9,26,0.9],[10,26,0.9]])tree(L,x,z,s);
+  // Lily's spilled crayons
+  L.crayons=[[V3(-6,0,15),0xff4f6a],[V3(7,0,12),0x3a9aff],[V3(-13,0,2),0x5ad86a],[V3(14,0,-7),0xffd23a]];
+  L.spawn=V3(0,0,26);L.camYaw=0;L.camPitch=0.3;L.showcase={pos:V3(18,10,34),look:V3(0,3,-10)};L.tip="LILY'S FIRST DAY!";L.door=V3(0,0,-12.6);return L;}
+function updFirstDay(dt){const P=S.P,L=S.L;S.stT=(S.stT||0)+dt;
+  if(!S.init){S.init=1;S.stage=0;startCp();lilyJoin(V3(1.4,0,1.6));S.cr=[];
+    L.crayons.forEach(([q,c],i)=>{const it=addItem('star',q.clone().setY(1.1));L.scene.remove(it.mesh);it.mesh=crayonMesh(c);it.mesh.position.copy(q);L.scene.add(it.mesh);S.cr.push(it);});
+    L.kids=[[0xff4f6a,0x3a2414,0xf0c09a,-4,-10.5],[0x3a9aff,0xf2c230,0xffd9b3,-2.2,-9.6],[0x5ad86a,0x1a1a22,0x8a5a3a,3,-10.2],[0xffd23a,0xd8782a,0xf0c09a,5,-9.4],[0xb06aff,0x3a2414,0xc08060,-6.5,-9]].map(([c,h,sk,x,z],i)=>{const r=miniKid({col:c,hair:h,skin:sk,s:0.95,hat:i===2?0xffffff:0});r.g.position.set(x,0,z);r.g.rotation.y=Math.PI+rnd(-0.4,0.4);L.scene.add(r.g);return {r,pos:V3(x,0,z),ph:rnd(0,6),tgt:null};});
+    const t=miniKid({col:0xe8e4ec,pants:0x5a3a8a,hair:0x8a4a2a,skin:0xf0c09a,s:1.35,bun:1});t.g.position.set(1.8,0,-11.6);t.g.rotation.y=Math.PI;L.scene.add(t.g);L.teach={r:t,pos:V3(1.8,0,-11.6)};lbl(L,'MS. PEPPER','#ffe066',0.6,1.8,2.8,-11.6);
+    toast("LILY'S FIRST DAY OF SCHOOL",2600);
+    talk([['LILY','My tummy feels funny. Is that normal on the first day?'],['{N}','Totally normal! You are going to LOVE it. I will show you around.'],['LILY','Oh no… my backpack was open. My CRAYONS fell out!'],['{N}','No problem. Let\'s pick them up on the way to the door!']]);}
+  if(S.stage<=1)lilyFollow(dt);
+  for(const it of S.cr){if(!it.done&&!S.items.includes(it)){it.done=1;floatText('CRAYON!',it.pos.clone().setY(2.2),'#ffe066',0.9);burst(it.pos,0xffe066,30,6);}}
+  if(S.stage===0&&S.got>=4){S.stage=1;S.stT=0;talk([['LILY','All 4! Thank you!'],['{N}','Now the big moment. Ready to meet your class?']]);toast('BRING LILY TO THE SCHOOL DOOR',2200);}
+  L.flag.rotation.y=Math.sin(S.t*2.2)*0.1;L.flag.position.z=L.flagPt.z+Math.sin(S.t*2.2)*0.1;L.swings.forEach((g,i)=>g.rotation.x=Math.sin(S.t*1.4+i)*0.35);
+  for(const k of L.kids){if(k.tgt){const to=k.tgt.clone().sub(k.pos);to.y=0;const d=to.length();if(d>0.3){to.normalize();k.pos.addScaledVector(to,Math.min(d,dt*3.2));k.r.g.rotation.y=Math.atan2(to.x,to.z);k.r.step(S.t+k.ph,0.8);}else{k.r.g.rotation.y=Math.PI;k.r.step(S.t+k.ph,0);}k.r.g.position.copy(k.pos);}else k.r.step(S.t+k.ph,0);}
+  const T=L.teach;if(T.tgt){const to=T.tgt.clone().sub(T.pos);to.y=0;const d=to.length();if(d>0.3){to.normalize();T.pos.addScaledVector(to,Math.min(d,dt*3.4));T.r.g.rotation.y=Math.atan2(to.x,to.z);T.r.step(S.t,0.8);}else{T.r.g.rotation.y=Math.atan2(P.pos.x-T.pos.x,P.pos.z-T.pos.z);T.r.step(S.t,0);}T.r.g.position.copy(T.pos);}else{T.r.g.rotation.y=Math.atan2(P.pos.x-T.pos.x,P.pos.z-T.pos.z);T.r.step(S.t,0);}
+  // stage 1 -> at the door: welcome, then the fire alarm
+  if(S.stage===1&&S.talkDone&&hdist(P.pos,L.door)<3.4){S.stage=2;S.stT=0;S.lockMove=true;
+    talk([['MS. PEPPER','Good morning! You must be LILY. Welcome to Maple Star School!'],['LILY','…hi.'],['MS. PEPPER',`Class, this is Lily, ${PN()}'s little sister. Say hello!`],['KIDS','HELLO, LILY!'],['MS. PEPPER','Now, everybody inside, we are going to…']]);}
+  if(S.stage===2){if(S.talkDone&&!S.alarmOn){S.alarmOn=1;S.stT=0;S.lockMove=false;beep(880,0.35,'square');setTimeout(()=>beep(880,0.35,'square'),400);setTimeout(()=>beep(880,0.35,'square'),800);S.shake=0.15;
+      talk([['MS. PEPPER','RIIIING! That is the FIRE ALARM! No running, no pushing. Everybody walk calmly to the FLAG!'],['{N}','Come on, Lily, this way!']]);toast('FIRE DRILL! WALK TO THE FLAG',2600);
+      L.kids.forEach((k,i)=>k.tgt=V3(L.flagPt.x-3+i*1.5,0,L.flagPt.z+3.5+(i%2)*1.2));T.tgt=V3(L.flagPt.x-4.5,0,L.flagPt.z+2);
+      // Lily does not follow: she walks to the middle of the yard and looks up
+      const ly=S.ly;S.ly=null;L.lily={r:ly.r,pos:ly.pos.clone(),tgt:V3(0,0,8)};}
+    if(S.alarmOn&&hdist(P.pos,V3(L.flagPt.x,0,L.flagPt.z+3.5))<3.2){S.stage=3;S.stT=0;S.lockMove=true;
+      talk([['MS. PEPPER','Good job, everyone! Nobody ran. The drill is over.'],['{N}','Lily? Lily, come stand with us!'],['LILY','…I am waiting.'],['{N}','Waiting for WHAT? It is just a drill!'],['MS. PEPPER',`${PN()}, go on up to the classroom. I will bring your sister.`],['{N}','…Okay. Lily, I can see you from the window, alright?']]);}}
+  if(S.stage===3&&S.talkDone&&!S.goUp){S.goUp=1;S.lockMove=false;L.winSp.visible=true;toast('CLIMB THE FIRE STAIRS TO THE CLASSROOM WINDOW',3000);L.kids.forEach(k=>k.tgt=V3(k.pos.x*0.3,0,-11));}
+  const ly=L.lily;if(ly){const to=ly.tgt.clone().sub(ly.pos);to.y=0;const d=to.length();if(d>0.25&&!S.cine){to.normalize();ly.pos.addScaledVector(to,Math.min(d,dt*2.6));ly.r.g.rotation.y=Math.atan2(to.x,to.z);animRig(ly.r,S.t,0.7);ly.r.g.position.copy(ly.pos);}else if(!S.cine){ly.r.g.rotation.y=0;animRig(ly.r,1.234,0);ly.r.g.position.copy(ly.pos);}}
+  if(S.stage===3&&S.goUp&&P.pos.y>3.6&&hdist(P.pos,L.winPt)<4){S.stage=4;S.stT=0;S.cine=0;S.lockMove=true;L.winSp.visible=false;P.vel.set(0,0,0);talk([['{N}','There she is. Still just… standing there.']]);}
+  // the alarm lights
+  const al=S.alarmOn&&S.stage<4?(Math.sin(S.t*8)>0?1:0):0;L.alarm.forEach(a=>{a.lm.emissiveIntensity=al*2.5;a.lt.intensity=al*2;});
+  if(S.stage===4)updFirstDayCine(dt);}
+function updFirstDayCine(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine,ly=L.lily;const say=(who,txt)=>{talk([[who,txt]]);};const at=(k,f)=>{if(T>=k&&!(S.cd&&S.cd[k])){(S.cd=S.cd||{})[k]=1;f();}};
+  const lyP=V3(0,0,8),shipHome=V3(0,19,8),look=V3(),pos=V3();
+  if(!S.cineB){S.cineB=1;const su=L.sky&&L.sky.material.uniforms;L.sky0=su?{top:su.top.value.clone(),mid:su.mid.value.clone(),bot:su.bot.value.clone()}:null;L.sun0=L.sun.intensity;L.fog0=L.scene.fog?L.scene.fog.color.clone():null;
+    L.ship=zeroShip();L.ship.position.set(0,90,60);L.scene.add(L.ship);L.zero=zeroFigure();L.zero.position.set(1.6,0,8);L.zero.rotation.y=-Math.PI/2;L.zero.scale.setScalar(0.001);L.scene.add(L.zero);
+    const bm=new THREE.MeshBasicMaterial({color:0x9ab8ff,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});L.tbeam=new THREE.Mesh(new THREE.CylinderGeometry(1.1,2.6,1,24,1,true),bm);L.scene.add(L.tbeam);
+    const sm2=new THREE.MeshBasicMaterial({color:0xfff0b0,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false});L.sbeam=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,1,16,1,true),sm2);L.scene.add(L.sbeam);
+    L.star=add(L.scene,sphere(0.8,12,8),new THREE.MeshBasicMaterial({color:0xffe9a0,fog:false}),-70,85,-60);L.star.add(glow(0xffe9a0,10,1.4));L.star.visible=false;}
+  // the sky turns dark
+  const dk=sm(T/3.5);if(L.sky0){const su=L.sky.material.uniforms;su.top.value.copy(L.sky0.top).lerp(new THREE.Color(0x14122a),dk*0.9);su.mid.value.copy(L.sky0.mid).lerp(new THREE.Color(0x2a2846),dk*0.9);su.bot.value.copy(L.sky0.bot).lerp(new THREE.Color(0x4a4668),dk*0.85);}L.sun.intensity=L.sun0*(1-dk*0.72);if(L.fog0)L.scene.fog.color.copy(L.fog0).lerp(new THREE.Color(0x2a2a44),dk*0.8);
+  at(1.2,()=>{finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=0.9;thunderSnd();S.shake=0.3;say('{N}','Whoa… where did THAT storm come from?');});
+  at(2.6,()=>{finalPass.uniforms.flash.value=0.7;thunderSnd();S.shake=0.25;});
+  if(finalPass.uniforms.flash.value>0&&T>1)finalPass.uniforms.flash.value=Math.max(0,finalPass.uniforms.flash.value-dt*2.2);
+  // Zero's ship comes down
+  const sk=T<3?0:sm((T-3)/4);L.ship.position.lerpVectors(V3(0,90,60),shipHome,sk);L.ship.rotation.y+=dt*0.6;L.ship.userData.ring.rotation.z+=dt*0.9;L.ship.userData.ring2.rotation.z-=dt*1.4;
+  if(T>3&&T<7&&Math.random()<dt*30)emit({x:L.ship.position.x+rnd(-3,3),y:L.ship.position.y-1,z:L.ship.position.z+rnd(-3,3),vx:rnd(-.3,.3),vy:rnd(-2,-0.5),vz:rnd(-.3,.3),life:1.5,max:1.5,r:1.8,g:1.5,b:1,size:0.08,grav:0,drag:0.5});
+  at(4.5,()=>say('KIDS','LOOK! UP IN THE SKY!'));at(6.8,()=>say('{N}','Lily! LILY! Get away from there!'));
+  // the entity from Lily's room
+  if(T>7&&T<9){const k=sm((T-7)/1.6);L.zero.scale.setScalar(Math.max(0.001,k));L.zero.userData.lt.intensity=k*2.4;if(Math.random()<dt*80){const a=rnd(0,TAU),r=rnd(0.1,0.9);emit({x:1.6+Math.cos(a)*r,y:rnd(0,2.2),z:8+Math.sin(a)*r,vx:-Math.sin(a)*1.4,vy:rnd(0.3,1.2),vz:Math.cos(a)*1.4,life:1.2,max:1.2,r:1.8,g:1.4,b:3,size:rnd(0.02,0.05),grav:0,drag:0.4});}}
+  at(8.6,()=>say('ZERO','Hello again, little dreamer. It is time.'));at(10.6,()=>say('LILY','I know. I was waiting for you.'));at(12.2,()=>say('{N}','Lily, NO! You do not even know him!'));
+  // the beam lifts Lily and Zero up into the ship
+  const bk2=T<12.8?0:T<13.6?sm((T-12.8)/0.8):T<18.4?1:T<19?1-sm((T-18.4)/0.6):0;const sp=L.ship.position;L.tbeam.material.opacity=bk2*0.35;L.tbeam.position.set(sp.x,sp.y/2,sp.z);L.tbeam.scale.set(1,Math.max(0.01,sp.y),1);
+  const lk=T<13.6?0:sm((T-13.6)/4.4);const ly0=V3(0,0,8),up=V3(0,sp.y-1.5,8);if(ly){ly.pos.lerpVectors(ly0,up,lk);ly.r.g.position.copy(ly.pos);ly.r.g.rotation.y=lk*TAU*0.5;animRig(ly.r,1.234,0);if(ly.r.real)rhPost(ly.r);}
+  L.zero.position.lerpVectors(V3(1.6,0,8),V3(1.2,sp.y-1.5,8),lk);L.zero.position.y+=Math.sin(S.t*1.5)*0.03;
+  if(lk>0&&lk<1&&Math.random()<dt*40)emit({x:rnd(-1,2.4),y:ly.pos.y+rnd(-1,1.5),z:8+rnd(-1,1),vx:0,vy:rnd(0.5,2),vz:0,life:1,max:1,r:1.2,g:1.6,b:3,size:0.05,grav:0,drag:0});
+  at(14.4,()=>say('{N}','LILY! WAIT! Come back! LILYYY!'));at(16.6,()=>say('LILY','Do not worry! I will be back before dinner!'));
+  if(T>=18&&T<18.4){L.zero.visible=false;if(ly)ly.r.g.visible=false;}
+  // then: a golden beam from far away hits the ship. BOOM.
+  const stA=V3(-70,85,-60);const bb=T<19.2?0:T<19.5?sm((T-19.2)/0.3):T<21?1:Math.max(0,1-(T-21)*2);if(bb>0){const dir=sp.clone().sub(stA);const len=dir.length();dir.normalize();L.sbeam.position.copy(stA).addScaledVector(dir,len/2);L.sbeam.scale.set(1+bb*0.6,len,1+bb*0.6);L.sbeam.quaternion.setFromUnitVectors(V3(0,1,0),dir);L.sbeam.material.opacity=bb*0.9;}else L.sbeam.material.opacity=0;
+  at(19.5,()=>{finalPass.uniforms.flashCol.value.set(1,0.95,0.7);finalPass.uniforms.flash.value=1;boomSnd();S.shake=1.4;burst(sp,0xffd166,220,18,0.6,1.8,-2,3);burst(sp,0xffffff,120,26,0.4,1.2,-1,3);burst(sp,0xff8ad8,80,14,0.5,2,-3,3);floatText('BOOM!',sp.clone().setY(sp.y+6),'#ffe066',4);say('{N}','WHOA!!! What was THAT?!');});
+  if(T>19.5){S.shake=Math.max(S.shake||0,0.6*Math.max(0,1-(T-19.5)/1.5));}
+  // the ship wobbles away, trailing sparks
+  if(T>20){const k=sm((T-20)/5.5);L.ship.position.lerpVectors(shipHome,V3(110,42,-150),k*k);L.ship.rotation.z=Math.sin(T*6)*0.35*(1-k*0.6);L.ship.rotation.x=0.4*k;L.ship.userData.ring.material.opacity=Math.sin(T*18)>0?0.95:0.25;L.ship.userData.lt.intensity=2.2*(1-k);
+    if(k<1&&Math.random()<dt*60)emit({x:L.ship.position.x+rnd(-2,2),y:L.ship.position.y+rnd(-1,1),z:L.ship.position.z+rnd(-2,2),vx:rnd(-2,2),vy:rnd(-3,1),vz:rnd(-2,2),life:1.4,max:1.4,r:2.5,g:1.6,b:0.6,size:rnd(0.06,0.14),grav:-4,drag:0.3});}
+  at(22,()=>say('KIDS','IT IS FLYING AWAY! AND IT IS SMOKING!'));at(24,()=>say('{N}','Somebody HIT it. Somebody up there… is on OUR side.'));
+  if(T>24.5){L.star.visible=true;L.star.scale.setScalar(0.8+Math.sin(T*5)*0.4);}
+  at(26.5,()=>say('MS. PEPPER',`${PN()}… I think your sister has some explaining to do.`));
+  // camera
+  const camL=(p,l)=>{pos.copy(p);look.copy(l);};
+  if(T<3)camL(lerp3(V3(9.5,5.8,-10.6),V3(9,5.9,-10),sm(T/3)),V3(0,1.2,8));
+  else if(T<7)camL(lerp3(V3(9,5.9,-10),V3(6,6.4,-7),sm((T-3)/4)),lerp3(V3(0,1.2,8),V3(0,16,8),sm((T-3)/3)));
+  else if(T<12.8)camL(lerp3(V3(6,6.4,-7),V3(3.4,1.7,4.6),sm((T-7)/2.5)),lerp3(V3(0,16,8),V3(0.8,1.0,8),sm((T-7)/2)));
+  else if(T<19.2)camL(lerp3(V3(3.4,1.7,4.6),V3(7,5,-1),sm((T-12.8)/3)),lerp3(V3(0.8,1.1,8),V3(0.4,16,8),sm((T-13.6)/4.4)));
+  else if(T<24.5)camL(lerp3(V3(7,5,-1),V3(14,9,-4),sm((T-19.2)/2)),lerp3(V3(0,18,8),L.ship.position,sm((T-20)/1.5)));
+  else camL(lerp3(V3(14,9,-4),V3(9.5,5.8,-10.6),sm((T-24.5)/3)),lerp3(L.ship.position.clone(),stA,sm((T-24.5)/2)));
+  S.cam={pos,look};
+  if(T>29&&!S.fin){S.fin=1;S.cam=null;running=false;finish(true);}}
 
 /* ---- wind-swaying 3D grass ---- */
 function grassGeo(){return cg('grassClump',()=>{const pos=[],nor=[],idx=[];let base=0;for(let b=0;b<4;b++){const a=b/4*TAU+Math.random()*0.8,ox=Math.cos(a)*0.09,oz=Math.sin(a)*0.09,h=0.42+Math.random()*0.4,w=0.045,lean=(Math.random()-0.5)*0.35,px=Math.cos(a+1.57),pz=Math.sin(a+1.57);
@@ -4409,7 +4585,17 @@ const RLOOK=[
  {b:'mia',pants:0xff8ab8,hat:'party',fx:'sparkle',glassC:0xff8ab8,h:1.3,hd:1.15,w:1.12,leg:0.85}, //34 roller donut
  {b:'max',top:0xf8f4ea,back:'katana',acc:0xe8303a,visor:0xff5a5a,h:1.7,leg:0.9},  //35 sushi knight
  {b:'max',top:0x5ad8a0,back:'jetpack',acc:0x5ad8a0,visor:0x7dffd0,h:1.58},//36 jelly pilot
- {b:'xbot',top:0xffd23a,pants:0x3aa84a,back:'cape',acc:0xffd23a,h:1.44,hd:1.12,leg:1.12,w:0.9}]; //37 corn hero
+ {b:'xbot',top:0xffd23a,pants:0x3aa84a,back:'cape',acc:0xffd23a,h:1.44,hd:1.12,leg:1.12,w:0.9}, //37 corn hero
+ {b:'mia',pants:0xb0a8ff,hat:'halo',back:'wings',fx:'sparkle',glassC:0xd8d0ff,h:1.5,hd:1.08,leg:1.05,w:0.95}, //38 luna
+ {b:'max',top:0x2a9ad8,back:'jetpack',acc:0xffb020,visor:0x7df0ff,h:1.7,w:1.06}, //39 diver
+ {b:'bot',top:0x8a7a6a,pants:0x5a4a3a,acc:0xffb020,h:1.62,w:1.32}, //40 rocky
+ {b:'xbot',top:0x5ad83a,pants:0x8a5a2a,hat:'cap',acc:0x7dff6b,fx:'rainbow',h:1.4,hd:1.14,w:1.0,leg:0.95}, //41 sprout
+ {b:'dad',top:0xd83a3a,pants:0x2a2a32,shoes:0x1a1a22,hat:'chef',face:'mustache',hair:0x3a2414,h:1.8,w:1.14}, //42 chef pepper
+ {b:'max',top:0xffd23a,visor:0xb05aff,acc:0xb05aff,fx:'thunder',h:1.64,leg:1.1,w:0.94}, //43 zippy
+ {b:'mia',pants:0x3ad8d0,hat:'crown',fx:'sparkle',glassC:0x7df0ff,h:1.6,leg:1.08,w:0.96}, //44 pearl
+ {b:'bot',top:0xffc020,pants:0x1c1d26,hat:'boppers',back:'wings',acc:0xffd23a,h:1.2,w:1.0}, //45 buzz
+ {b:'xbot',top:0x3a2a6a,pants:0x8a4aff,back:'jetpack',acc:0x7dffd0,fx:'sparkle',h:1.7,w:1.04}, //46 cosmo
+ {b:'bot',top:0xf4f8ff,pants:0xdde8f0,hat:'tophat',acc:0xff6a2a,fx:'ice',h:1.42,w:1.2}]; //47 snowy
 const RH_H={T:0.3,R:0.29,hw:0.3,cx:0,cz:0,ex:0.105,ey:0.03,ez:0.31};
 function miaMat(base,hex,ghex){const m=base.clone();m.userData={};const col=new THREE.Color(hex!=null?hex:0xf2c230),gcol=new THREE.Color(ghex!=null?ghex:0xff3a2a);
   m.onBeforeCompile=sh=>{sh.uniforms.uPant={value:col};sh.uniforms.uGl={value:gcol};sh.fragmentShader='uniform vec3 uPant,uGl;\n'+sh.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
@@ -4579,7 +4765,7 @@ function makeEnemyMesh(type){
 
 /* ================= GAME STATE ================= */
 let S=null,running=false,mode='menu';
-const CHB={1:buildCity,2:buildHole,3:buildLava,4:buildNight,5:buildSkyOcean,6:buildClock,7:buildGiant,8:buildLimbo,9:buildForest,10:buildDino,11:buildShip,12:buildSnow,13:buildFlight,14:buildRuins,15:buildCrystal,16:buildSpeed,17:buildMirror,18:buildBoss,19:buildHome,20:buildMall,21:buildHome,22:buildLab,23:buildObby,24:buildDinner,25:buildTiny,26:buildToys,27:buildDesert,28:buildTemple,29:buildMega,30:buildParty,31:buildMaze,32:buildGuardian,33:buildCage,34:buildEscape,35:buildParty,36:buildBedtime,37:buildVoidRun,38:buildStorm,39:buildEater,40:buildLilyDream,41:buildTinyFly,42:buildFort,43:buildKing,44:buildSchool,45:buildClockHub,46:buildNeon,47:buildArcade,48:buildValley,49:buildGarden,50:buildDreamCity,51:buildGrey,52:buildLantern,53:buildPaper};
+const CHB={1:buildCity,2:buildHole,3:buildLava,4:buildNight,5:buildSkyOcean,6:buildClock,7:buildGiant,8:buildLimbo,9:buildForest,10:buildDino,11:buildShip,12:buildSnow,13:buildFlight,14:buildRuins,15:buildCrystal,16:buildSpeed,17:buildMirror,18:buildBoss,19:buildHome,20:buildMall,21:buildHome,22:buildLab,23:buildObby,24:buildDinner,25:buildTiny,26:buildToys,27:buildDesert,28:buildTemple,29:buildMega,30:buildParty,31:buildMaze,32:buildGuardian,33:buildCage,34:buildEscape,35:buildParty,36:buildBedtime,37:buildVoidRun,38:buildStorm,39:buildEater,40:buildLilyDream,41:buildTinyFly,42:buildFort,43:buildKing,44:buildSchool,45:buildClockHub,46:buildNeon,47:buildArcade,48:buildValley,49:buildGarden,50:buildDreamCity,51:buildGrey,52:buildLantern,53:buildPaper,54:buildFirstDay};
 function boltBlocked(L,p){for(const c of L.colliders)if(c.top>0.6&&p.x>c.x0&&p.x<c.x1&&p.z>c.z0&&p.z<c.z1&&p.y<c.top)return true;return false;}
 function blocked(L,x,z,m){for(const c of L.colliders)if(x>c.x0-m&&x<c.x1+m&&z>c.z0-m&&z<c.z1+m&&c.top>0.6)return true;return false;}
 function inBounds(L,x,z,m){const b=L.bounds;return b.type==='circle'?Math.hypot(x,z)<b.size-m:Math.abs(x)<b.size-m&&Math.abs(z)<b.size-m;}
@@ -4935,7 +5121,7 @@ function beginChapter(n){
   buildChapter(n,avIdx);setFlyButtons(!!S.L.fly);if(S.super&&!S.L.fly)$('emoBtn').textContent='SLAM';S.swoop={t:0,hold:S.world==='hole'};setScene(S.L.scene);if(GFX.ultra)applyGfx();applyGrade(S.L);camera.fov=62;camera.updateProjectionMatrix();finalPass.uniforms.exposure.value=1;camYaw=S.L.camYaw||0;camPitch=S.L.camPitch||0.32;camDist=8.5;placeCamera(1,true);$('talk').hidden=true;
   $('hCh').textContent=`CHAPTER ${n} · ${S.ch.title.toUpperCase()}`;
   $('iNo').textContent=`CHAPTER ${n} · ${WORLD[S.world].label.toUpperCase()}`;$('iTitle').textContent=S.ch.title;$('iStory').textContent=withName(S.ch.story);
-  $('iGoals').innerHTML=[...S.ch.goals,...(S.L.fly||['ship','dinner','home','mall','fakemom','toys','desert','mega','party','maze','guardian','cage','revenge','bedtime','eater','tinyfly','fort','king','school','clockhub','arcade','valley','garden','dcity','grey','lantern','paper'].includes(S.world)?[]:['Touch a flag to save a checkpoint']),...(n!==2&&!S.L.fly&&!['hole','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper'].includes(S.world)?['Watch out: sometimes the whole dream flips upside down!']:[])].map(g=>`<li>${g.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</li>`).join('');
+  $('iGoals').innerHTML=[...S.ch.goals,...(S.L.fly||['ship','dinner','home','mall','fakemom','toys','desert','mega','party','maze','guardian','cage','revenge','bedtime','eater','tinyfly','fort','king','school','clockhub','arcade','valley','garden','dcity','grey','lantern','paper','firstday'].includes(S.world)?[]:['Touch a flag to save a checkpoint']),...(n!==2&&!S.L.fly&&!['hole','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper','firstday'].includes(S.world)?['Watch out: sometimes the whole dream flips upside down!']:[])].map(g=>`<li>${g.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</li>`).join('');
   running=false;$('intro').hidden=false;$('goBtn').focus();updateObjective();updateHud(true);
   stage.scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -5025,7 +5211,7 @@ function killEnemy(e){const c=V3(e.pos.x,cyOf(e),e.pos.z);burst(c,0x8ff4ff,50,14
   if(e.type==='fakemom'){floatText('FAKE!',c.clone().setY(c.y+2.4),'#7dffcf',0.9);burst(c,0x1affb0,80,12,0.5,1);}
   if(['tower','clone','minion','villain','fakemom'].includes(e.type)){S.L.scene.remove(e.g);if(e.type==='tower'){S.got++;floatText('TOWER LIT UP!',c.clone().setY(c.y+4),'#d8b8ff',1.1);burst(c,0xb03aff,140,20,0.7,1.4);S.shake=0.5;if(S.got>=5&&!S.portal){toast('ALL TOWERS LIT UP! THE PORTAL IS OPEN',2500);spawnPortal();}}return;}
   if(e.type==='rock'){e.dead=false;e.pos.set(rnd(-55,55),rnd(0.8,2.8),rnd(-170,-120));return;}
-  S.L.scene.remove(e.g);if(!['toys','desert','mega','maze','guardian','cage','fort','king','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper'].includes(S.world))S.respawnQ.push({type:e.type,t:9});}
+  S.L.scene.remove(e.g);if(!['toys','desert','mega','maze','guardian','cage','fort','king','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper','firstday'].includes(S.world))S.respawnQ.push({type:e.type,t:9});}
 function jump(){const P=S.P;if(P.onGround||P.coyote>0){P.vel.y=S.super?13:9.5;P.onGround=false;P.coyote=0;P.dj=false;beep(420,0.12,'triangle',700);}else if(S.super&&!P.dj){P.dj=true;P.vel.y=12.5;burst(P.pos.clone().setY(P.pos.y+0.4),0xb48cff,30,8,0.35,0.6);fxRing(P.pos.clone().setY(P.pos.y+0.2),0xb48cff,5,0.4,0.15);beep(620,0.15,'triangle',1200);}}
 function tryDash(){if(S.L.fly)return;const P=S.P;if(P.cd>0||P.dash>0)return;P.dash=0.26;P.cd=S.av.cd;beep(500,0.15,'square',1400);}
 
@@ -5051,6 +5237,7 @@ function updateObjective(){const w=S.world;let o='';
   else if(w==='grey')o=S.stage>=1?'Jump into the RAINBOW portal!':`Find the color drops ${S.got||0} / 6`;
   else if(w==='lantern')o=S.stage>=1?'Climb the lantern stairs to the portal!':`Wake up the sky lanterns ${S.L.lans.filter(l=>l.lit).length} / 5 (F)`;
   else if(w==='paper')o=S.stage===0?`Open the color jars ${S.L.jars.filter(j=>j.hp<=0).length} / 4 (F)`:'Teach the Moon Thief to share';
+  else if(w==='firstday')o=S.stage===0?`Pick up Lily's crayons ${Math.min(4,S.got)} / 4`:S.stage===1?'Bring Lily to the school DOOR':S.stage===2?(S.alarmOn?'FIRE DRILL! Walk to the FLAG':'Meet the class'):S.stage===3?'Climb the FIRE STAIRS to the classroom window':'…';
   else if(w==='garden')o=S.stage===0?`Tag your shadow gently ${S.caught||0} / 3`:S.stage===1?'Make friends…':'The Dream Clock is whole again!';
   else if(w==='school')o=S.stage===0?'Grab your BACKPACK':S.stage===1?'Walk to the SCHOOL BUS':S.stage===2?'Say goodbye to Lily':'Off to school!';
   else if(w==='eater')o=S.stage===0?`Close the DREAM EATER's eyes ${S.L.E.eyes.filter(e=>e.hp<=0).length} / 6`:'IT IS OVER… WAKE UP!';
@@ -5182,6 +5369,7 @@ function finish(win){running=false;S.ended=win?'win':'lose';const stars=win?(S.h
   else if(win&&S.world==='eater'){save.coins+=100;persist();$('rTitle').textContent='YOU WOKE UP!';$('rText').textContent=`${PN()} beat the DREAM EATER and woke up in bed. Morning sun. Birds. Safe. Then Lily runs in: "I had the SCARIEST dream! A giant monster with SIX EYES!" …You both had the SAME dream. BONUS +100 COINS. TO BE CONTINUED…`;$('nextBtn').textContent='Back to chapters';}
   else if(win&&S.world==='tiny'){$('rTitle').textContent='BIG AGAIN!';$('rText').textContent=`${PN()} found all 5 magic stars and grew back to normal size! Lily promised: no more magic tricks… but she is STILL holding the wand. And that night…`;$('nextBtn').textContent='Chapter 26 ▸';}
   else if(win&&S.world==='lab'){const si=AV.findIndex(a=>a.kind==='supermom');if(si>=0&&!save.owned.includes(si)){save.owned.push(si);persist();}$('rTitle').textContent='MOM IS A SUPERHERO!';$('rText').textContent=`${PN()} and SUPER MOM defeated MIMIC together! Mom's big secret: the mysterious cube was HERS all along. NEW DREAMER UNLOCKED: SUPER MOM! Now… time to go HOME.`;$('nextBtn').textContent='Chapter 23 ▸';}
+  else if(win&&S.world==='firstday'){save.coins+=150;persist();$('rTitle').textContent='TO BE CONTINUED…';$('rText').textContent=`ZERO took Lily up into his ship… and then SOMEONE hit that ship with a golden beam! Who is on your side? Where is Lily going? BONUS +150 COINS. The story continues in the next update!`;$('nextBtn').textContent='Back to chapters';}
   else if(win&&S.n===CH.length){$('rTitle').textContent='THE END… FOR NOW';$('rText').textContent='TO BE CONTINUED…';$('nextBtn').textContent='Back to chapters';}
   else if(win&&S.world==='dino'){$('rTitle').textContent='YOU WOKE UP… IN SPACE?!';$('rText').textContent='Wait… where is your bed? Why is everything floating?';$('nextBtn').textContent=`Chapter ${S.n+1} ▸`;}
   else if(win){$('rTitle').textContent='CHAPTER COMPLETE!';$('rText').textContent=stars===3?`Perfect, ${PN()}! Not a single hit.`:'Get through with no hits to earn 3 stars.';$('nextBtn').textContent=`Chapter ${S.n+1} ▸`;}
@@ -5203,7 +5391,7 @@ function update(dt){
   if(S.autoDive!==undefined){S.autoDive-=dt;if(S.autoDive<=0){S.autoDive=undefined;startDive();return;}}
   let ix=0,iz=0;if(keys['a']||keys['arrowleft'])ix-=1;if(keys['d']||keys['arrowright'])ix+=1;if(keys['w']||keys['arrowup'])iz+=1;if(keys['s']||keys['arrowdown'])iz-=1;
   if(joy.x||joy.y){ix=joy.x;iz=-joy.y;}if(keys['q']){camYaw+=dt*2;lastLook=performance.now();}if(S.lockMove){ix=0;iz=0;}
-  if(!['hole','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper'].includes(S.world)){S.flipT=(S.flipT===undefined?14:S.flipT)-dt;
+  if(!['hole','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper','firstday'].includes(S.world)){S.flipT=(S.flipT===undefined?14:S.flipT)-dt;
     if(!S.flip&&!S.ev&&S.flipT<=0){S.flip={t:0};floatText('THE DREAM IS FLIPPING!',P.pos.clone().setY(3.6),'#ff9fe0',0.9);beep(120,1.5,'sawtooth',40);beep(300,1.6,'sine',1200);S.shake=0.5;}
     if(S.flip){const f=S.flip;f.t+=dt;const T=f.t;let k=T<1.6?T/1.6:T<8.6?1:T<10.2?1-(T-8.6)/1.6:0;k=k*k*(3-2*k);S.roll=k*Math.PI;
       if(Math.random()<dt*25)emit({x:P.pos.x+rnd(-20,20),y:rnd(0,10),z:P.pos.z+rnd(-20,20),vx:0,vy:rnd(3,8),vz:0,life:2,max:2,r:2.5,g:1,b:3,size:0.2,grav:0,drag:0});
@@ -5211,9 +5399,9 @@ function update(dt){
   if(S.world==='clock'&&!L.stopped){if(S.freeze>0){S.freeze-=dt;if(S.freeze<=0){S.freeze=0;floatText('TIME MOVES AGAIN!',P.pos.clone().setY(3.6),'#ffe0a0',0.7);beep(200,0.6,'sine',800);}}
     else{S.freezeT-=dt;if(S.freezeT<=0){S.freeze=5;S.freezeT=rnd(14,18);floatText('TIME FREEZE!',P.pos.clone().setY(3.6),'#bfe8ff',1.1);beep(1200,1.4,'sine',80);S.white=0.45;}}}
   else if(S.freeze>0)S.freeze=0;
-  if(!['hole','ship','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper'].includes(S.world)&&!S.portal){S.evT=(S.evT===undefined?rnd(16,22):S.evT)-dt;if(!S.ev&&!S.flip&&S.evT<=0)startEvent();}
+  if(!['hole','ship','ruins','speed','boss','home','mall','fakemom','lab','obby','dinner','tiny','toys','desert','temple','mega','party','maze','guardian','cage','escape','revenge','bedtime','voidrun','storm','eater','lilydream','tinyfly','fort','king','school','clockhub','neon','arcade','valley','garden','dcity','grey','lantern','paper','firstday'].includes(S.world)&&!S.portal){S.evT=(S.evT===undefined?rnd(16,22):S.evT)-dt;if(!S.ev&&!S.flip&&S.evT<=0)startEvent();}
   if(S.ev)updEvent(dt);
-  if(S.world==='ruins')updRuins(dt);if(S.world==='home')updHome(dt);if(S.world==='mall')updMall(dt);if(S.world==='fakemom')updFakeMom(dt);if(S.world==='lab')updLab(dt);if(S.world==='obby')updObby(dt);if(S.world==='dinner')updDinner(dt);if(S.world==='tiny')updTiny(dt);if(S.world==='toys')updToys(dt);if(S.world==='desert')updDesert(dt);if(S.world==='temple')updTemple(dt);if(S.world==='mega')updMega(dt);if(S.world==='party')updParty(dt);if(S.world==='revenge')updRevenge(dt);if(S.world==='maze')updMaze(dt);if(S.world==='guardian')updGuardian(dt);if(S.world==='cage')updCage(dt);if(S.world==='bedtime')updBedtime(dt);if(S.world==='voidrun')updVoidRun(dt);if(S.world==='storm')updStorm(dt);if(S.world==='eater')updEater(dt);if(S.world==='lilydream')updLilyDream(dt);if(S.world==='fort')updFort(dt);if(S.world==='king')updKing(dt);if(S.world==='school')updSchool(dt);if(S.world==='clockhub')updClockHub(dt);if(S.world==='neon')updNeon(dt);if(S.world==='arcade')updArcade(dt);if(S.world==='valley')updValley(dt);if(S.world==='garden')updGarden(dt);if(S.world==='grey')updGrey(dt);if(S.world==='lantern')updLantern(dt);if(S.world==='paper')updPaper(dt);if(S.world==='dcity')updDreamCity(dt);updTalk(dt);if(S.world==='speed')updSpeedGates(dt);if(S.world==='mirror')updMirror(dt);superFx(dt);custFx(dt);updFx2(dt);
+  if(S.world==='ruins')updRuins(dt);if(S.world==='home')updHome(dt);if(S.world==='mall')updMall(dt);if(S.world==='fakemom')updFakeMom(dt);if(S.world==='lab')updLab(dt);if(S.world==='obby')updObby(dt);if(S.world==='dinner')updDinner(dt);if(S.world==='tiny')updTiny(dt);if(S.world==='toys')updToys(dt);if(S.world==='desert')updDesert(dt);if(S.world==='temple')updTemple(dt);if(S.world==='mega')updMega(dt);if(S.world==='party')updParty(dt);if(S.world==='revenge')updRevenge(dt);if(S.world==='maze')updMaze(dt);if(S.world==='guardian')updGuardian(dt);if(S.world==='cage')updCage(dt);if(S.world==='bedtime')updBedtime(dt);if(S.world==='voidrun')updVoidRun(dt);if(S.world==='storm')updStorm(dt);if(S.world==='eater')updEater(dt);if(S.world==='lilydream')updLilyDream(dt);if(S.world==='fort')updFort(dt);if(S.world==='king')updKing(dt);if(S.world==='school')updSchool(dt);if(S.world==='clockhub')updClockHub(dt);if(S.world==='neon')updNeon(dt);if(S.world==='arcade')updArcade(dt);if(S.world==='valley')updValley(dt);if(S.world==='garden')updGarden(dt);if(S.world==='grey')updGrey(dt);if(S.world==='lantern')updLantern(dt);if(S.world==='paper')updPaper(dt);if(S.world==='firstday')updFirstDay(dt);if(S.world==='dcity')updDreamCity(dt);updTalk(dt);if(S.world==='speed')updSpeedGates(dt);if(S.world==='mirror')updMirror(dt);superFx(dt);custFx(dt);updFx2(dt);
   if(S.roll>Math.PI/2)ix=-ix;
   const m=Math.min(1,Math.hypot(ix,iz));const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=Math.cos(camYaw),rz=-Math.sin(camYaw);
   let dx=fx*iz+rx*ix,dz=fz*iz+rz*ix;const dl=Math.hypot(dx,dz);if(dl>0){dx/=dl;dz/=dl;}
@@ -5357,7 +5545,8 @@ function updateHud(force){if(!S)return;const h=`${S.obj}|${S.lives}|${Math.floor
   $('hObj').textContent=S.obj;$('hLives').textContent='♥'.repeat(Math.max(0,S.lives))+'♡'.repeat(Math.max(0,S.maxLives-S.lives));$('hCoins').textContent=`Coins this run: ${S.coins}`;$('hDream').textContent=`Dream time: ${fmt(S.dream)}`;}
 
 /* ================= CAMERA + HUD OVERLAYS ================= */
-function placeCamera(dt,snap){try{updRealRigs();}catch(e){console.warn(e);}if(S.L.fly&&S.V){placeFlyCam(dt,snap);return;}const P=S.P,L=S.L,cm=camMode;let tgt=V3(P.pos.x,P.pos.y+1.6,P.pos.z),want,look;
+function placeCamera(dt,snap){try{updRealRigs();}catch(e){console.warn(e);}if(S.L.fly&&S.V){placeFlyCam(dt,snap);return;}const P=S.P,L=S.L,cm=camMode;
+  if(S.cam){camera.position.copy(S.cam.pos);camera.lookAt(S.cam.look);if(S.shake>0){camera.position.x+=rnd(-1,1)*S.shake*0.6;camera.position.y+=rnd(-1,1)*S.shake*0.6;}P.rig.g.visible=true;L.sun.position.copy(P.pos).addScaledVector(L.sunDir,150);L.sun.target.position.copy(P.pos);return;}let tgt=V3(P.pos.x,P.pos.y+1.6,P.pos.z),want,look;
   const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=Math.cos(camYaw),rz=-Math.sin(camYaw);
   if(cm===2){const lp=(camPitch-0.32)*1.3;want=V3(P.pos.x+fx*0.25,P.pos.y+1.72,P.pos.z+fz*0.25);look=want.clone().add(V3(fx*Math.cos(lp),-Math.sin(lp),fz*Math.cos(lp)).multiplyScalar(10));}
   else if(cm===3){want=V3(P.pos.x-fx*4,P.pos.y+19,P.pos.z-fz*4);look=V3(P.pos.x,P.pos.y,P.pos.z);}
@@ -5429,7 +5618,7 @@ function musLabel(){$('musBtn').textContent='Music: '+(MUS.on?'ON':'OFF');}musLa
 $('musBtn').onclick=()=>{audio();MUS.on=!MUS.on;if(MUS.g)MUS.g.gain.value=MUS.on?0.5:0;try{localStorage.setItem('mdd-music',MUS.on?'on':'off');}catch(e){}musLabel();};
 const MW={menu:{root:60,sc:[0,4,7,11,14],bpm:84,prog:[0,5,-3,4],kick:0},city:{root:57,sc:[0,3,5,7,10],bpm:104,prog:[0,-4,-2,3],kick:1},hole:{root:50,sc:[0,2,3,7,8],bpm:70,prog:[0,-4,1,-2],kick:0},
   tess:{root:62,sc:[0,4,7,9,11],bpm:78,prog:[0,5,7,4],kick:0},lava:{root:52,sc:[0,1,4,5,7],bpm:116,prog:[0,1,-2,0],kick:1},night:{root:49,sc:[0,1,3,6,7],bpm:96,prog:[0,1,-3,-1],kick:1},
-  limbo:{root:55,sc:[0,2,3,7,10],bpm:66,prog:[0,-2,-4,-5],kick:0},forest:{root:53,sc:[0,2,3,7,8],bpm:72,prog:[0,-4,-2,-5],kick:0},ship:{root:57,sc:[0,2,3,7,10],bpm:80,prog:[0,-2,3,-4],kick:0},spacefly:{root:52,sc:[0,4,7,9,11],bpm:118,prog:[0,5,-3,4],kick:1},snow:{root:62,sc:[0,2,4,7,9],bpm:84,prog:[0,-3,5,4],kick:0},flight:{root:60,sc:[0,2,4,7,9],bpm:124,prog:[0,5,-3,4],kick:1},ruins:{root:50,sc:[0,1,3,5,7],bpm:76,prog:[0,-2,-4,1],kick:0},crystal:{root:57,sc:[0,2,4,7,11],bpm:104,prog:[0,5,-3,4],kick:1},speed:{root:57,sc:[0,3,5,7,10],bpm:140,prog:[0,-4,-2,3],kick:1},mirror:{root:52,sc:[0,1,3,7,8],bpm:96,prog:[0,1,-2,-4],kick:1},boss:{root:45,sc:[0,1,3,6,7],bpm:150,prog:[0,1,-2,-1],kick:1},dino:{root:50,sc:[0,3,5,7,10],bpm:112,prog:[0,5,3,-2],kick:1},sky:{root:62,sc:[0,2,4,7,9],bpm:88,prog:[0,5,-3,4],kick:0},clock:{root:57,sc:[0,2,3,5,7],bpm:120,prog:[0,-2,-4,-5],kick:1},giant:{root:60,sc:[0,4,7,9,12],bpm:100,prog:[0,5,7,0],kick:1},cine:{root:64,sc:[0,4,7,11],bpm:60,prog:[0,5,-3,4],kick:0},home:{root:60,sc:[0,2,4,7,9],bpm:96,prog:[0,5,-3,4],kick:0},mall:{root:62,sc:[0,4,7,9,11],bpm:108,prog:[0,-3,5,4],kick:1},fakemom:{root:50,sc:[0,1,3,6,7],bpm:84,prog:[0,1,-2,-4],kick:0},lab:{root:47,sc:[0,1,3,5,7],bpm:128,prog:[0,1,-2,-1],kick:1},obby:{root:60,sc:[0,2,4,7,9],bpm:132,prog:[0,5,-3,4],kick:1},dinner:{root:58,sc:[0,2,4,7,9],bpm:90,prog:[0,5,3,4],kick:0},tiny:{root:65,sc:[0,2,4,5,7],bpm:116,prog:[0,-3,5,2],kick:1},toys:{root:62,sc:[0,2,4,7,9],bpm:120,prog:[0,4,5,3],kick:1},desert:{root:57,sc:[0,1,4,5,7],bpm:100,prog:[0,1,-2,0],kick:1},temple:{root:52,sc:[0,1,3,5,7],bpm:92,prog:[0,-2,1,-4],kick:0},mega:{root:50,sc:[0,3,5,7,10],bpm:138,prog:[0,-4,-2,3],kick:1},party:{root:60,sc:[0,2,4,7,9],bpm:112,prog:[0,5,-3,4],kick:1},maze:{root:54,sc:[0,2,3,7,8],bpm:100,prog:[0,-4,1,-2],kick:1},guardian:{root:47,sc:[0,1,3,5,7],bpm:132,prog:[0,1,-2,-1],kick:1},cage:{root:49,sc:[0,1,3,6,7],bpm:84,prog:[0,1,-3,-1],kick:0},escape:{root:55,sc:[0,2,4,7,9],bpm:140,prog:[0,5,-3,4],kick:1},revenge:{root:60,sc:[0,4,7,9,11],bpm:90,prog:[0,5,-3,4],kick:0},bedtime:{root:60,sc:[0,2,4,7,9],bpm:72,prog:[0,5,-3,4],kick:0},voidrun:{root:50,sc:[0,1,3,5,7],bpm:150,prog:[0,1,-2,-1],kick:1},storm:{root:57,sc:[0,2,4,7,9],bpm:150,prog:[0,5,-3,4],kick:1},eater:{root:45,sc:[0,1,3,6,7],bpm:144,prog:[0,1,-3,-1],kick:1},lilydream:{root:64,sc:[0,2,4,7,9],bpm:104,prog:[0,5,-3,4],kick:0},tinyfly:{root:60,sc:[0,2,4,7,9],bpm:132,prog:[0,5,-3,4],kick:1},fort:{root:55,sc:[0,2,3,7,8],bpm:138,prog:[0,-4,1,-2],kick:1},king:{root:43,sc:[0,1,3,6,7],bpm:150,prog:[0,1,-3,-1],kick:1},school:{root:60,sc:[0,4,7,9,11],bpm:100,prog:[0,5,-3,4],kick:0},clockhub:{root:57,sc:[0,2,4,7,9],bpm:90,prog:[0,5,-3,4],kick:0},neon:{root:52,sc:[0,3,5,7,10],bpm:118,prog:[0,-4,-2,3],kick:1},arcade:{root:57,sc:[0,2,4,7,9],bpm:128,prog:[0,5,-3,4],kick:1},valley:{root:55,sc:[0,2,4,7,9],bpm:100,prog:[0,5,-3,4],kick:0},garden:{root:60,sc:[0,2,4,7,9,11],bpm:84,prog:[0,5,-3,4],kick:0},dcity:{root:52,sc:[0,3,5,7,10],bpm:108,prog:[0,-4,-2,3],kick:1},grey:{root:60,sc:[0,2,4,7,9],bpm:100,prog:[0,5,-3,4],kick:0},lantern:{root:57,sc:[0,2,4,7,9,11],bpm:70,prog:[0,-3,5,-5],kick:0},paper:{root:55,sc:[0,2,4,7,9],bpm:112,prog:[0,5,-3,4],kick:1}};
+  limbo:{root:55,sc:[0,2,3,7,10],bpm:66,prog:[0,-2,-4,-5],kick:0},forest:{root:53,sc:[0,2,3,7,8],bpm:72,prog:[0,-4,-2,-5],kick:0},ship:{root:57,sc:[0,2,3,7,10],bpm:80,prog:[0,-2,3,-4],kick:0},spacefly:{root:52,sc:[0,4,7,9,11],bpm:118,prog:[0,5,-3,4],kick:1},snow:{root:62,sc:[0,2,4,7,9],bpm:84,prog:[0,-3,5,4],kick:0},flight:{root:60,sc:[0,2,4,7,9],bpm:124,prog:[0,5,-3,4],kick:1},ruins:{root:50,sc:[0,1,3,5,7],bpm:76,prog:[0,-2,-4,1],kick:0},crystal:{root:57,sc:[0,2,4,7,11],bpm:104,prog:[0,5,-3,4],kick:1},speed:{root:57,sc:[0,3,5,7,10],bpm:140,prog:[0,-4,-2,3],kick:1},mirror:{root:52,sc:[0,1,3,7,8],bpm:96,prog:[0,1,-2,-4],kick:1},boss:{root:45,sc:[0,1,3,6,7],bpm:150,prog:[0,1,-2,-1],kick:1},dino:{root:50,sc:[0,3,5,7,10],bpm:112,prog:[0,5,3,-2],kick:1},sky:{root:62,sc:[0,2,4,7,9],bpm:88,prog:[0,5,-3,4],kick:0},clock:{root:57,sc:[0,2,3,5,7],bpm:120,prog:[0,-2,-4,-5],kick:1},giant:{root:60,sc:[0,4,7,9,12],bpm:100,prog:[0,5,7,0],kick:1},cine:{root:64,sc:[0,4,7,11],bpm:60,prog:[0,5,-3,4],kick:0},home:{root:60,sc:[0,2,4,7,9],bpm:96,prog:[0,5,-3,4],kick:0},mall:{root:62,sc:[0,4,7,9,11],bpm:108,prog:[0,-3,5,4],kick:1},fakemom:{root:50,sc:[0,1,3,6,7],bpm:84,prog:[0,1,-2,-4],kick:0},lab:{root:47,sc:[0,1,3,5,7],bpm:128,prog:[0,1,-2,-1],kick:1},obby:{root:60,sc:[0,2,4,7,9],bpm:132,prog:[0,5,-3,4],kick:1},dinner:{root:58,sc:[0,2,4,7,9],bpm:90,prog:[0,5,3,4],kick:0},tiny:{root:65,sc:[0,2,4,5,7],bpm:116,prog:[0,-3,5,2],kick:1},toys:{root:62,sc:[0,2,4,7,9],bpm:120,prog:[0,4,5,3],kick:1},desert:{root:57,sc:[0,1,4,5,7],bpm:100,prog:[0,1,-2,0],kick:1},temple:{root:52,sc:[0,1,3,5,7],bpm:92,prog:[0,-2,1,-4],kick:0},mega:{root:50,sc:[0,3,5,7,10],bpm:138,prog:[0,-4,-2,3],kick:1},party:{root:60,sc:[0,2,4,7,9],bpm:112,prog:[0,5,-3,4],kick:1},maze:{root:54,sc:[0,2,3,7,8],bpm:100,prog:[0,-4,1,-2],kick:1},guardian:{root:47,sc:[0,1,3,5,7],bpm:132,prog:[0,1,-2,-1],kick:1},cage:{root:49,sc:[0,1,3,6,7],bpm:84,prog:[0,1,-3,-1],kick:0},escape:{root:55,sc:[0,2,4,7,9],bpm:140,prog:[0,5,-3,4],kick:1},revenge:{root:60,sc:[0,4,7,9,11],bpm:90,prog:[0,5,-3,4],kick:0},bedtime:{root:60,sc:[0,2,4,7,9],bpm:72,prog:[0,5,-3,4],kick:0},voidrun:{root:50,sc:[0,1,3,5,7],bpm:150,prog:[0,1,-2,-1],kick:1},storm:{root:57,sc:[0,2,4,7,9],bpm:150,prog:[0,5,-3,4],kick:1},eater:{root:45,sc:[0,1,3,6,7],bpm:144,prog:[0,1,-3,-1],kick:1},lilydream:{root:64,sc:[0,2,4,7,9],bpm:104,prog:[0,5,-3,4],kick:0},tinyfly:{root:60,sc:[0,2,4,7,9],bpm:132,prog:[0,5,-3,4],kick:1},fort:{root:55,sc:[0,2,3,7,8],bpm:138,prog:[0,-4,1,-2],kick:1},king:{root:43,sc:[0,1,3,6,7],bpm:150,prog:[0,1,-3,-1],kick:1},school:{root:60,sc:[0,4,7,9,11],bpm:100,prog:[0,5,-3,4],kick:0},clockhub:{root:57,sc:[0,2,4,7,9],bpm:90,prog:[0,5,-3,4],kick:0},neon:{root:52,sc:[0,3,5,7,10],bpm:118,prog:[0,-4,-2,3],kick:1},arcade:{root:57,sc:[0,2,4,7,9],bpm:128,prog:[0,5,-3,4],kick:1},valley:{root:55,sc:[0,2,4,7,9],bpm:100,prog:[0,5,-3,4],kick:0},garden:{root:60,sc:[0,2,4,7,9,11],bpm:84,prog:[0,5,-3,4],kick:0},dcity:{root:52,sc:[0,3,5,7,10],bpm:108,prog:[0,-4,-2,3],kick:1},firstday:{root:62,sc:[0,2,4,7,9],bpm:104,prog:[0,5,-3,4],kick:0},grey:{root:60,sc:[0,2,4,7,9],bpm:100,prog:[0,5,-3,4],kick:0},lantern:{root:57,sc:[0,2,4,7,9,11],bpm:70,prog:[0,-3,5,-5],kick:0},paper:{root:55,sc:[0,2,4,7,9],bpm:112,prog:[0,5,-3,4],kick:1}};
 const mtof=n=>440*Math.pow(2,(n-69)/12);
 function mnote(t,f,d,type,v){const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(v,t+0.02);g.gain.exponentialRampToValueAtTime(0.0008,t+d);o.connect(g);g.connect(MUS.g);o.start(t);o.stop(t+d+0.05);}
 function mkick(t){const o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(40,t+0.15);g.gain.setValueAtTime(0.16,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);o.connect(g);g.connect(MUS.g);o.start(t);o.stop(t+0.25);}
