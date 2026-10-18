@@ -63,13 +63,18 @@ Deno.serve(async (req) => {
   }
   if (path === "/pulse") {
     const since = new Date(Date.now() - 7 * 86_400_000).toISOString();
-    const { count, error } = await db.from("thewholeyou_completions").select("*", { count: "exact", head: true }).gte("created_at", since);
+    const { count, error } = await db.from("thewholeyou_completions").select("*", { count: "exact", head: true }).gte("created_at", since).lt("chapter", 90); // chapters >= 90 are drill rows
     if (error) return json({ ok: false, error: "ledger unreadable" }, 503);
     return json({ ok: true, product: SLUG, completions_7d: count ?? 0 });
   }
   if (path === "/complete" && req.method === "POST") {
     if (await paused()) return json({ ok: false, paused: true }, 503);
-    if (!allow(req)) return json({ ok: false, error: "slow down" }, 429);
+    if (!allow(req)) return json({ ok: false, error: "slow down: 30 per minute per source" }, 429);
+    // global flood guard, read from the ledger itself (no identifiers): 300 completions per minute across all players
+    const minuteAgo = new Date(Date.now() - 60_000).toISOString();
+    const { count: recent, error: cErr } = await db.from("thewholeyou_completions").select("*", { count: "exact", head: true }).gte("created_at", minuteAgo);
+    if (cErr) return json({ ok: false, error: "ledger unreadable" }, 503); // fail closed
+    if ((recent ?? 0) >= 300) return json({ ok: false, error: "slow down: 300 per minute for everyone" }, 429);
     let body: { chapter?: unknown; stars?: unknown } = {};
     try { body = await req.json(); } catch { return json({ ok: false, error: "bad json" }, 400); }
     const chapter = Number(body.chapter), stars = Number(body.stars ?? 0);
