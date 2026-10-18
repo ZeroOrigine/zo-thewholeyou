@@ -4247,7 +4247,7 @@ function updOtherverseCine(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine,Z=L.z
 const MP={ws:null,room:null,id:Math.random().toString(36).slice(2,10),peers:{},rigs:{},lastSend:0,ref:1,hb:null,status:'off',tries:0,key:(typeof window!=='undefined'&&window.__TWY_KEY)||'',url:(typeof window!=='undefined'&&window.__TWY_RT)||''};
 function mpAvailable(){return !!(MP.key&&MP.url&&'WebSocket' in window);}
 function mpCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ',D='23456789';let c='';for(let i=0;i<4;i++)c+=A[(Math.random()*A.length)|0];c+='-';for(let i=0;i<3;i++)c+=D[(Math.random()*D.length)|0];return c;}
-function mpSetStatus(t){MP.status=t;const el=$('mpStatus');if(el)el.textContent=t;const r=$('mpRoom');if(r)r.textContent=MP.room?(MP.room==='public'?'PUBLIC ROOM':'PRIVATE SERVER '+MP.room):'';const lv=$('mpLeave');if(lv)lv.hidden=!MP.room;}
+function mpSetStatus(t){MP.status=t;const el=$('mpStatus');if(el)el.textContent=t;const r=$('mpRoom');if(r)r.textContent=MP.room?(MP.room==='PUBLIC'?'PUBLIC ROOM ·':'PRIVATE SERVER '+MP.room+' ·'):'';const lv=$('mpLeave');if(lv)lv.hidden=!MP.room;}
 function mpSend(obj){if(MP.ws&&MP.ws.readyState===1)MP.ws.send(JSON.stringify(obj));}
 function mpJoin(room){mpLeave(true);if(!mpAvailable()){mpSetStatus('Play Together works on thewholeyou.zeroorigine.com');return;}
   room=String(room||'').trim().toUpperCase();if(!room)return;MP.room=room;MP.tries=0;try{localStorage.setItem('twy-room',room);}catch(e){}mpOpen();}
@@ -4265,7 +4265,11 @@ function mpLeave(silent){if(MP.ws){try{mpSend({topic:'realtime:twy-'+(MP.room||'
   clearInterval(MP.hb);for(const id in MP.peers)mpDropPeer(id);MP.peers={};if(!silent){MP.room=null;try{localStorage.removeItem('twy-room');}catch(e){}mpSetStatus('Off');}}
 function mpDropPeer(id){const r=MP.rigs[id];if(r){if(S&&S.L)S.L.scene.remove(r.g);if(r.tag&&S&&S.L)S.L.scene.remove(r.tag);delete MP.rigs[id];}delete MP.peers[id];}
 function mpClearRigs(){for(const id in MP.rigs){const r=MP.rigs[id];if(r.scene){r.scene.remove(r.g);if(r.tag)r.scene.remove(r.tag);}}MP.rigs={};}
-function mpPeersUI(){const el=$('mpPeers');if(!el)return;const n=Object.keys(MP.peers).length;el.textContent=MP.room?(n===0?'Nobody else is here yet. Share your code!':n===1?'1 friend here':n+' friends here'):'';}
+function mpPeersUI(){const el=$('mpPeers');if(!el)return;const ps=Object.values(MP.peers);const n=ps.length;const me=(S&&running)?S.n:0;
+  el.textContent=MP.room?(n===0?'Nobody else is here yet. Share your code!':(n===1?'1 friend here: ':n+' friends here: ')+ps.map(p=>(p.n||'friend')+(p.ch?' (Chapter '+p.ch+')':' (menu)')).join(', ')+'. Play the SAME chapter to see each other.'):'';}
+function mpPing(){if(!MP.room||!MP.ws||MP.ws.readyState!==1)return;const now=performance.now();if(S&&running){return;}
+  if(now-MP.lastSend>1000){MP.lastSend=now;mpSend({topic:'realtime:twy-'+MP.room,event:'broadcast',payload:{type:'broadcast',event:'p',payload:{id:MP.id,n:(MP.room==='PUBLIC'?((AV[avIdx]&&AV[avIdx].name)||'Dreamer'):PN().slice(0,14)),ch:0,w:'',x:0,y:0,z:0,ry:0,mv:0,av:avIdx,air:0}},ref:String(MP.ref++)});}
+  let changed=false;for(const id in MP.peers){if(now-MP.peers[id].seen>7000){mpDropPeer(id);changed=true;}}if(changed)mpPeersUI();}
 function mpTick(dt){if(!MP.room||!MP.ws||MP.ws.readyState!==1)return;const now=performance.now();
   if(S&&S.L&&running&&now-MP.lastSend>100){MP.lastSend=now;const P=S.P;const mv=Math.min(1,Math.hypot(P.vel.x,P.vel.z)/7);
     mpSend({topic:'realtime:twy-'+MP.room,event:'broadcast',payload:{type:'broadcast',event:'p',payload:{id:MP.id,n:(MP.room==='PUBLIC'?((AV[S.avI]&&AV[S.avI].name)||'Dreamer'):PN().slice(0,14)),ch:S.n,w:S.world,x:+P.pos.x.toFixed(2),y:+P.pos.y.toFixed(2),z:+P.pos.z.toFixed(2),ry:+(S.P.rig?S.P.rig.g.rotation.y:0).toFixed(2),mv:+mv.toFixed(2),av:S.avI,air:P.pos.y>groundAt(S.L,P.pos.x,P.pos.z,P.pos.y)+0.3?1:0}},ref:String(MP.ref++)});}
@@ -4285,7 +4289,7 @@ function mpInitUI(){const box=$('mpBox');if(!box)return;
   $('mpLeave').onclick=()=>{audio();mpLeave(false);mpPeersUI();};
   if(!mpAvailable()){mpSetStatus('Play Together works on thewholeyou.zeroorigine.com');$('mpPublic').disabled=$('mpCreate').disabled=$('mpJoinBtn').disabled=true;}
   else{let last=null;try{last=localStorage.getItem('twy-room');}catch(e){}if(last){$('mpCodeIn').value=last;mpJoin(last);}else mpSetStatus('Off');}
-  setInterval(()=>{if(MP.room)mpPeersUI();},2000);}
+  setInterval(()=>{try{mpPing();}catch(e){}},1000);setInterval(()=>{if(MP.room)mpPeersUI();},2000);}
 
 /* ---- wind-swaying 3D grass ---- */
 function grassGeo(){return cg('grassClump',()=>{const pos=[],nor=[],idx=[];let base=0;for(let b=0;b<4;b++){const a=b/4*TAU+Math.random()*0.8,ox=Math.cos(a)*0.09,oz=Math.sin(a)*0.09,h=0.42+Math.random()*0.4,w=0.045,lean=(Math.random()-0.5)*0.35,px=Math.cos(a+1.57),pz=Math.sin(a+1.57);
@@ -5369,7 +5373,7 @@ function beginChapter(n){
 }
 function go(){$('intro').hidden=true;running=true;if(isTouch&&!isFS())try{setFS(true);}catch(e){}if(!S.L.fly)setTimeout(()=>lookHint(6000),600);beep(300,0.4,'sine',900);if(S.world==='hole')S.autoDive=1.4;if(S.L.tip){if(S.L.fly)toast(S.L.tip+' · E/Q THROTTLE · P AUTOPILOT · G GEAR · C CAMERA',6000);else floatText(S.L.tip,S.P.pos.clone().setY(3.8),'#ffe08a',0.75);}}
 $('goBtn').onclick=go;
-function toMenu(){running=false;mode='menu';$('credits').hidden=true;$('talk').hidden=true;if(document.pointerLockElement)document.exitPointerLock();$('bossbar').hidden=true;if(S&&S.L&&S.L.eng&&ac)S.L.eng.g.gain.value=0;if(C){disposeLevel(C.B);C=null;}stage.classList.remove('cine');setLids(0);lidTarget=0;$('cap').textContent='';$('skip').hidden=true;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});try{fakeFS(false);}catch(e){}$('game').hidden=true;$('menu').hidden=false;$('intro').hidden=true;$('result').hidden=true;renderChapters();renderCards();setPick();}
+function toMenu(){running=false;mode='menu';try{mpClearRigs();}catch(e){}$('credits').hidden=true;$('talk').hidden=true;if(document.pointerLockElement)document.exitPointerLock();$('bossbar').hidden=true;if(S&&S.L&&S.L.eng&&ac)S.L.eng.g.gain.value=0;if(C){disposeLevel(C.B);C=null;}stage.classList.remove('cine');setLids(0);lidTarget=0;$('cap').textContent='';$('skip').hidden=true;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});try{fakeFS(false);}catch(e){}$('game').hidden=true;$('menu').hidden=false;$('intro').hidden=true;$('result').hidden=true;renderChapters();renderCards();setPick();}
 $('quitBtn').onclick=toMenu;$('mapBtn').onclick=toMenu;
 $('retryBtn').onclick=()=>startChapter(S.n);
 $('nextBtn').onclick=()=>{const nx=CH.find(c=>c.n>S.n&&!c.bonus);if(S.ended==='win'&&nx&&!S.ch.bonus)startChapter(nx.n);else if(S.ended==='win')toMenu();else startChapter(S.n);};
