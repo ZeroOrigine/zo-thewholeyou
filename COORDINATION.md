@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-18  v38 and v39: fire stairs fix, chapters 55-57, Continue button (Cowork session)
+
+- v38: chapter 54 fire stairs moved out from under the balcony (platform colliders block the ground beneath them; the stairs were unreachable). Verified with real key presses.
+- v39: chapters 55 "DOOM" (golden crash in the schoolyard, 3 shockwaves, the Dreamkeeper speech, join him), 56 "Stuck in the Wormhole" (ship hull, 5 engine parts on floating rocks, full speed), 57 "The Other Universe" (upside-down houses, 4 mind-control crystals, slow giants, Lily freed, Zero teleports away, TO BE CONTINUED).
+- Menu: CONTINUE WHERE YOU LEFT OFF button opens the highest unlocked chapter. Saves that finished 54 are migrated to unlock 55.
+- Tests: scripted walkthrough of every stage in 55, 56, 57 and the Continue button, 0 page errors. Human play still pending.
+
 ## 2026-10-18  v37: chapter 54, new ending scene, 10 dreamers (Cowork session)
 
 - Artifact v37 published; docs/index.html regenerated with the sync script (head, no em dash, footer, /complete call, beacon). Live after Netlify build.
