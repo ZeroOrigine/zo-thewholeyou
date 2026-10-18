@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-18  v40: real Doom, realistic chapters 54-57, Play Together (Cowork session)
+
+- Doom is now a real skinned body (the Soldier base, dark armour tint, gold visor, cape) with the glove attached to the left hand bone; primitive body stays as fallback when the models are not loaded.
+- Animations: Doom rises from the crater with a light pillar, dust ring and debris; shockwaves are a ring plus a wall of light with sparks; glove charge pulls particles in; wormhole engine shows an exhaust flame; Zero is stretched into a spiral portal that closes with a flash; Doom fires a golden beam in chapter 57.
+- Realism: school uses PBR lawn, asphalt, concrete, brick and three parked real cars; wormhole hull has metal panels, a glass dome and boulders instead of cubes; the other universe has real houses hanging upside down on rock ground, rock islands, a marble altar.
+- Hands: retargeted clips no longer carry finger tracks, so Lily and the Mia/Dad based dreamers keep open hands.
+- PLAY TOGETHER: Supabase Realtime broadcast over a raw WebSocket (no library). Rooms: PUBLIC or a private code like HMAV-425. Each player sends id, chapter, position, yaw, move, avatar at 10 Hz; peers are drawn as real rigs with a name tag, dropped after 7 s of silence. In PUBLIC the shared name is the dreamer's name, not the typed name. Nothing is stored. The realtime key is the public anon key, injected by the site sync (`window.__TWY_KEY`); the artifact copy has no key, so the panel there says it works on the live host. Tested with two headless browsers on a private server: both Connected, each saw the other's rig.
+- privacy.html updated with the Play Together paragraph.
+
 ## 2026-10-18  v38 and v39: fire stairs fix, chapters 55-57, Continue button (Cowork session)
 
 - v38: chapter 54 fire stairs moved out from under the balcony (platform colliders block the ground beneath them; the stairs were unreachable). Verified with real key presses.
