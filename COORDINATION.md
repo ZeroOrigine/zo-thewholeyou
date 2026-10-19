@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-19  v43: CINEMA look (Cowork session)
+
+- CINEMA = Graphics ULTRA + Style REALISTIC (desktop). Daytime chapters get a physics atmosphere sky (three.js Sky, skyGain 0.13, rayleigh 2.2) with a drifting cloud layer; the painted gradient sky stays for night chapters, Dream City (own day/night cycle) and storm scenes. Film colour grade (contrast S-curve, teal shadows, warm highlights, slight desaturation) via finalPass `cine`. Depth of field in cutscenes. Dreamer cards are studio portraits (dark radial backdrop).
+- School lawn has 9000 3D grass blades (addGrass) in REALISTIC.
+- Tried and rejected: SAOPass (dark smudges on near planes) and SSAOPass (grey veil over the whole frame). Both remain loaded but forced off in cinemaApply/applyGfx. Sky gain 0.22 bleached the scene; 0.07 looked like dusk; 0.13 kept.
+- Founder keeps asking for AAA-render realism; answered plainly each time that a phone-browser three.js game cannot match it, and shipped the largest visible steps instead.
+
 ## 2026-10-19  v42: real school people, glass windows, cinematic depth of field (Cowork session)
 
 - Ms. Pepper and the 5 students in chapters 54 and 55 are real skinned bodies (KID_LOOKS, TEACHER_LOOK via realPerson); miniKid stays only as the fallback when models fail to load.
