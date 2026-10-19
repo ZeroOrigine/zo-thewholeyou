@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-19  v42: real school people, glass windows, cinematic depth of field (Cowork session)
+
+- Ms. Pepper and the 5 students in chapters 54 and 55 are real skinned bodies (KID_LOOKS, TEACHER_LOOK via realPerson); miniKid stays only as the fallback when models fail to load.
+- School windows are glass (MeshPhysical, env reflections) with mullions and sills.
+- Post stack: SAOPass and BokehPass are loaded from the three.js CDN (r147 examples). Depth of field is on during cutscenes and scripted camera moments on desktop ULTRA. SAO is wired but OFF: it produced dark smudges on near planes and grey halos against the sky; left in the code with gentle params for a future try.
+- Founder asked for the look of AAA renders; told him plainly that a phone-browser single-file game cannot reach that, and what was done instead.
+
 ## 2026-10-18  v40: real Doom, realistic chapters 54-57, Play Together (Cowork session)
 
 - Doom is now a real skinned body (the Soldier base, dark armour tint, gold visor, cape) with the glove attached to the left hand bone; primitive body stays as fallback when the models are not loaded.

@@ -248,6 +248,12 @@ body.fsmode{overflow:hidden!important;overscroll-behavior:none;position:fixed;in
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/MaskPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/SAOShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/DepthLimitedBlurShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/UnpackDepthRGBAShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/SAOPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/shaders/BokehShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/postprocessing/BokehPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/utils/SkeletonUtils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/objects/Reflector.js"></script>
 <script>
@@ -274,6 +280,11 @@ const camera=new THREE.PerspectiveCamera(62,16/9,0.1,5000);
 const rt=new THREE.WebGLRenderTarget(64,64,{type:THREE.HalfFloatType});
 const composer=new THREE.EffectComposer(renderer,rt);composer.setPixelRatio(DPR);
 const renderPass=new THREE.RenderPass(new THREE.Scene(),camera);composer.addPass(renderPass);
+/* REAL LIGHT: screen-space ambient occlusion (contact shadows in every corner) and a cinematic depth of field for cutscenes. Desktop ULTRA only. */
+let saoPass=null,dofPass=null;
+try{if(THREE.SAOPass){saoPass=new THREE.SAOPass(renderPass.scene,camera,false,true);Object.assign(saoPass.params,{saoBias:0.5,saoIntensity:0.0055,saoScale:4.5,saoKernelRadius:12,saoMinResolution:0,saoBlur:true,saoBlurRadius:8,saoBlurStdDev:4,saoBlurDepthCutoff:0.006});saoPass.enabled=false;composer.addPass(saoPass);}}catch(e){console.warn('sao',e);}
+try{if(THREE.BokehPass){dofPass=new THREE.BokehPass(renderPass.scene,camera,{focus:5,aperture:0.00055,maxblur:0.009,width:1280,height:720});dofPass.enabled=false;composer.addPass(dofPass);}}catch(e){console.warn('dof',e);}
+function dofSet(on,focus){if(!dofPass)return;dofPass.enabled=!!on&&GFX.ultra;if(dofPass.enabled&&focus!==undefined)dofPass.uniforms.focus.value=focus;}
 const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(256,256),0.8,0.55,0.92);composer.addPass(bloom);
 const finalPass=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},exposure:{value:1},vig:{value:0.45},flash:{value:0},flashCol:{value:new THREE.Vector3(1,0.3,0.5)},time:{value:0},sat:{value:1.15},gain:{value:new THREE.Vector3(1,1,1)},ca:{value:0.0022},sharp:{value:0},real:{value:0},mblur:{value:0},px:{value:new THREE.Vector2(0.001,0.001)}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
@@ -306,13 +317,13 @@ function updRays(pos,k,tint){if(!GFX.ultra||!pos||!k){raysPass.enabled=false;ret
   const s=k*Math.pow(f,1.5)*clamp(1.8-off,0,1);raysPass.enabled=s>0.01;raysPass.uniforms.strength.value=s;raysPass.uniforms.lp.value.set(_rv.x*0.5+0.5,_rv.y*0.5+0.5);raysPass.uniforms.aspect.value=viewW/Math.max(1,viewH);if(tint)raysPass.uniforms.tint.value.set(tint[0],tint[1],tint[2]);}
 const sao=null;
 const canMS=renderer.capabilities.isWebGL2&&renderer.extensions.has('EXT_color_buffer_float');
-function setScene(sc){renderPass.scene=sc;}
+function setScene(sc){renderPass.scene=sc;if(saoPass)saoPass.scene=sc;if(dofPass)dofPass.scene=sc;}
 function applyGfx(){
   DPR=GFX.ultra?Math.min(GFX.cap||2,Math.max(1.5,window.devicePixelRatio||1)):Math.min(isTouch?1.25:1.5,window.devicePixelRatio||1);
   renderer.setPixelRatio(DPR);composer.setPixelRatio(DPR);
   const ms=canMS?4:0;for(const r of[composer.renderTarget1,composer.renderTarget2])if(r.samples!==ms){r.samples=ms;r.dispose();}
   if(typeof S!=='undefined'&&S&&S.L){const ss=GFX.ultra?4096:2048,sh=S.L.sun.shadow;if(sh.mapSize.x!==ss){sh.mapSize.set(ss,ss);if(sh.map){sh.map.dispose();sh.map=null;}}}
-  finalPass.uniforms.sharp.value=GFX.ultra?0.22:0.14;if(!GFX.ultra)raysPass.enabled=false;if(typeof mode!=='undefined'&&mode!=='menu')fitStage();
+  finalPass.uniforms.sharp.value=GFX.ultra?0.22:0.14;if(!GFX.ultra)raysPass.enabled=false;if(saoPass)saoPass.enabled=false;if(dofPass&&!GFX.ultra)dofPass.enabled=false;if(typeof mode!=='undefined'&&mode!=='menu')fitStage();
   const b=$('gfxBtn');b.textContent='Graphics: '+(GFX.ultra?'ULTRA':'HIGH');b.classList.toggle('ultra',GFX.ultra);}
 let viewW=2,viewH=2;
 function setView(w,h){viewW=w;viewH=h;renderer.setSize(w,h,false);composer.setSize(w,h);finalPass.uniforms.px.value.set(1/(w*DPR),1/(h*DPR));camera.aspect=w/h;camera.updateProjectionMatrix();
@@ -3927,6 +3938,11 @@ function playTease(){clearTimeout(CR_AUTO);CR_NEXT=null;$('credits').hidden=true
     roll.style.animation='none';roll.style.top='0';ov.hidden=false;$('crNext').hidden=false;$('crNext').textContent='Chapter 54 ▸';CR_NEXT=()=>startChapter(54);$('crNext').focus();});}
 
 /* ---- Chapter 54: Lily's First Day ---- */
+const KID_LOOKS=[{b:'mia',pants:0xff8ab8,glassC:0xffd23a,h:1.26,hd:1.12,w:1.0},{b:'xbot',top:0x3a9aff,pants:0xf4f4f4,back:'backpack',acc:0x3a9aff,h:1.32,hd:1.12,w:1.02},{b:'dad',top:0x5ad86a,pants:0x27324d,shoes:0x2a2a32,hair:0x3a2414,h:1.3,w:0.96},{b:'max',top:0xffd23a,visor:0x8fd8ff,acc:0xffd23a,h:1.3,w:1.0},{b:'mia',pants:0x8ad8ff,hat:'cap',acc:0x5ad86a,glassC:0x7dff6b,h:1.22,hd:1.14,w:0.98}];
+const TEACHER_LOOK={b:'mia',pants:0x5a3a8a,glassC:0xffe066,h:1.74,w:1.0};
+function realPerson(look,fallback){if(useRealHero()&&RH.has[look.b==='lily'?'mia':look.b]){try{const r=realAvatar(look,null);r.g.traverse(o=>{if(o.isMesh)o.castShadow=true;});return {g:r.g,r,real:true,step(t,mv){animRig(r,t,mv);rhPost(r);}};}catch(e){console.warn('realPerson',e);}}return fallback();}
+function schoolKid(i,fb){return realPerson(KID_LOOKS[i%KID_LOOKS.length],()=>miniKid(fb));}
+function schoolTeacher(fb){return realPerson(TEACHER_LOOK,()=>miniKid(fb));}
 function miniKid(o){const g=new THREE.Group(),skin=M({color:o.skin||0xf0c09a,roughness:.6}),cl=fab(o.col,.7),pn=fab(o.pants!=null?o.pants:0x27324d,.8),hr=fab(o.hair!=null?o.hair:0x3a2414,1);
   const lg=cg('kidLeg',()=>new THREE.CapsuleGeometry(0.09,0.3,3,8)),bd=cg('kidBody',()=>new THREE.CapsuleGeometry(0.2,0.3,3,10)),ar=cg('kidArm',()=>new THREE.CapsuleGeometry(0.06,0.28,3,8));
   const legs=[-1,1].map(x=>{const l=new THREE.Group();l.position.set(x*0.12,0.5,0);g.add(l);add(l,lg,pn,0,-0.2,0);return l;});add(g,bd,cl,0,0.82,0);const head=add(g,sphere(0.22,14,10),skin,0,1.24,0);add(head,sphere(0.23,14,10),hr,0,0.06,-0.03,1,0.8,1);
@@ -3955,8 +3971,8 @@ function buildFirstDay(S){
   const bk=REALGFX?pbrMat('brick',{size:1024,p:{color:0xe8c0a8,roughness:1},ns:1.2}):M({map:brickTex(),roughness:.85}),W=30,D=14,H=7.6,cz=-22;const bgeo=new THREE.BoxGeometry(W,H,D);faceUV(bgeo,3);const bld=add(L.scene,bgeo,bk,0,H/2,cz);bld.castShadow=true;bld.receiveShadow=true;L.blockers.push(bld);L.colliders.push({x0:-W/2,x1:W/2,z0:cz-D/2,z1:cz+D/2,top:H});
   if(REALGFX){for(const[x,c] of[[-19,0x8a1a1a],[-14.5,0xd8d8d4],[-10,0x1a3a6a]]){const car=realCar(c);car.position.set(x,0,17.2);car.rotation.y=Math.PI/2;L.scene.add(car);L.colliders.push({x0:x-1.1,x1:x+1.1,z0:15.2,z1:19.2,top:1.6});}}
   add(L.scene,box(W+0.8,0.5,D+0.8),M({color:0x4a5060,roughness:.7}),0,H+0.25,cz);add(L.scene,box(W+0.2,0.3,D+0.2),M({color:0xf2f0ea,roughness:.6}),0,3.85,cz);
-  const win=new THREE.MeshBasicMaterial({color:new THREE.Color(0xc4e4ff).multiplyScalar(1.1)}),frm=M({color:0xf6f4ee,roughness:.5});
-  for(const y of[2.0,5.7])for(let x=-12.5;x<=12.6;x+=3.6){if(y<3&&Math.abs(x)<2.2)continue;add(L.scene,box(2,1.5,0.1),frm,x,y,cz+D/2+0.05);add(L.scene,new THREE.PlaneGeometry(1.8,1.3),win,x,y,cz+D/2+0.12);}
+  const win=REALGFX?PM({color:0x8fb4d8,metalness:0.7,roughness:0.06,envMapIntensity:1.6,clearcoat:1,clearcoatRoughness:0.05}):new THREE.MeshBasicMaterial({color:new THREE.Color(0xc4e4ff).multiplyScalar(1.1)}),frm=M({color:0xf6f4ee,roughness:.5}),mul=M({color:0xe8e4dc,roughness:.5});
+  for(const y of[2.0,5.7])for(let x=-12.5;x<=12.6;x+=3.6){if(y<3&&Math.abs(x)<2.2)continue;add(L.scene,box(2,1.5,0.1),frm,x,y,cz+D/2+0.05);add(L.scene,new THREE.PlaneGeometry(1.8,1.3),win,x,y,cz+D/2+0.12);add(L.scene,box(0.05,1.3,0.04),mul,x,y,cz+D/2+0.14);add(L.scene,box(1.8,0.05,0.04),mul,x,y,cz+D/2+0.14);add(L.scene,box(2.2,0.1,0.3),frm,x,y-0.8,cz+D/2+0.15);}
   const fz=cz+D/2;add(L.scene,box(3.2,3.1,0.3),M({color:0x2a4a8a,roughness:.5}),0,1.55,fz+0.12);add(L.scene,box(0.08,2.8,0.1),frm,0,1.4,fz+0.3);for(const s of[-1,1]){add(L.scene,new THREE.PlaneGeometry(0.9,0.9),win,s*0.75,2.1,fz+0.3);add(L.scene,sphere(0.07,10,8),metalM(0xd8c070,.3),s*0.45,1.3,fz+0.3);}
   add(L.scene,box(5.6,0.5,2.4),M({color:0x2a4a8a,roughness:.6}),0,3.45,fz+1.1);for(const s of[-1,1])add(L.scene,cyl(0.1,0.1,3.2,10),frm,s*2.5,1.6,fz+2.1);L.colliders.push({x0:-3,x1:3,z0:fz,z1:fz+2.4,top:3.7});
   const st=signTex('MAPLE STAR SCHOOL','#1d3f8a','#ffe066');add(L.scene,box(9,1.3,0.2),M({map:st,emissive:0xffffff,emissiveMap:st,emissiveIntensity:0.5}),0,4.75,fz+0.25);
@@ -3990,8 +4006,8 @@ function buildFirstDay(S){
 function updFirstDay(dt){const P=S.P,L=S.L;S.stT=(S.stT||0)+dt;
   if(!S.init){S.init=1;S.stage=0;startCp();lilyJoin(V3(1.4,0,1.6));S.cr=[];
     L.crayons.forEach(([q,c],i)=>{const it=addItem('star',q.clone().setY(1.1));L.scene.remove(it.mesh);it.mesh=crayonMesh(c);it.mesh.position.copy(q);L.scene.add(it.mesh);S.cr.push(it);});
-    L.kids=[[0xff4f6a,0x3a2414,0xf0c09a,-4,-10.5],[0x3a9aff,0xf2c230,0xffd9b3,-2.2,-9.6],[0x5ad86a,0x1a1a22,0x8a5a3a,3,-10.2],[0xffd23a,0xd8782a,0xf0c09a,5,-9.4],[0xb06aff,0x3a2414,0xc08060,-6.5,-9]].map(([c,h,sk,x,z],i)=>{const r=miniKid({col:c,hair:h,skin:sk,s:0.95,hat:i===2?0xffffff:0});r.g.position.set(x,0,z);r.g.rotation.y=Math.PI+rnd(-0.4,0.4);L.scene.add(r.g);return {r,pos:V3(x,0,z),ph:rnd(0,6),tgt:null};});
-    const t=miniKid({col:0xe8e4ec,pants:0x5a3a8a,hair:0x8a4a2a,skin:0xf0c09a,s:1.35,bun:1});t.g.position.set(1.8,0,-11.6);t.g.rotation.y=Math.PI;L.scene.add(t.g);L.teach={r:t,pos:V3(1.8,0,-11.6)};lbl(L,'MS. PEPPER','#ffe066',0.6,1.8,2.8,-11.6);
+    L.kids=[[0xff4f6a,0x3a2414,0xf0c09a,-4,-10.5],[0x3a9aff,0xf2c230,0xffd9b3,-2.2,-9.6],[0x5ad86a,0x1a1a22,0x8a5a3a,3,-10.2],[0xffd23a,0xd8782a,0xf0c09a,5,-9.4],[0xb06aff,0x3a2414,0xc08060,-6.5,-9]].map(([c,h,sk,x,z],i)=>{const r=schoolKid(i,{col:c,hair:h,skin:sk,s:0.95,hat:i===2?0xffffff:0});r.g.position.set(x,0,z);r.g.rotation.y=Math.PI+rnd(-0.4,0.4);L.scene.add(r.g);return {r,pos:V3(x,0,z),ph:rnd(0,6),tgt:null};});
+    const t=schoolTeacher({col:0xe8e4ec,pants:0x5a3a8a,hair:0x8a4a2a,skin:0xf0c09a,s:1.35,bun:1});t.g.position.set(1.8,0,-11.6);t.g.rotation.y=Math.PI;L.scene.add(t.g);L.teach={r:t,pos:V3(1.8,0,-11.6)};lbl(L,'MS. PEPPER','#ffe066',0.6,1.8,2.8,-11.6);
     toast("LILY'S FIRST DAY OF SCHOOL",2600);
     talk([['LILY','My tummy feels funny. Is that normal on the first day?'],['{N}','Totally normal! You are going to LOVE it. I will show you around.'],['LILY','Oh no… my backpack was open. My CRAYONS fell out!'],['{N}','No problem. Let\'s pick them up on the way to the door!']]);}
   if(S.stage<=1)lilyFollow(dt);
@@ -4104,8 +4120,8 @@ function buildDoomArrive(S){const L=buildFirstDay(S);if(L.sky){const su=L.sky.ma
   L.crayons=[];L.spawn=V3(0,0,12);L.camYaw=0;L.camPitch=0.3;L.tip='SOMETHING IS FALLING FROM THE SKY!';L.showcase={pos:V3(18,10,30),look:V3(0,3,-5)};L.doomPt=V3(0,0,2);return L;}
 function updDoomArrive(dt){const P=S.P,L=S.L;S.stT=(S.stT||0)+dt;
   if(!S.init){S.init=1;S.stage=0;S.stT=0;startCp();S.waves=[];S.wn=0;
-    L.kids=[[0xff4f6a,0x3a2414,0xf0c09a,-4,-11.5],[0x3a9aff,0xf2c230,0xffd9b3,-2.2,-11],[0x5ad86a,0x1a1a22,0x8a5a3a,3,-11.3],[0xffd23a,0xd8782a,0xf0c09a,5,-11],[0xb06aff,0x3a2414,0xc08060,-6.5,-11]].map(([c,h,sk,x,z],i)=>{const r=miniKid({col:c,hair:h,skin:sk,s:0.95,hat:i===2?0xffffff:0});r.g.position.set(x,0,z);r.g.rotation.y=0;L.scene.add(r.g);return {r,ph:rnd(0,6)};});
-    const t=miniKid({col:0xe8e4ec,pants:0x5a3a8a,hair:0x8a4a2a,skin:0xf0c09a,s:1.35,bun:1});t.g.position.set(1.2,0,-12);L.scene.add(t.g);L.teach=t;lbl(L,'MS. PEPPER','#ffe066',0.6,1.2,2.8,-12);
+    L.kids=[[0xff4f6a,0x3a2414,0xf0c09a,-4,-11.5],[0x3a9aff,0xf2c230,0xffd9b3,-2.2,-11],[0x5ad86a,0x1a1a22,0x8a5a3a,3,-11.3],[0xffd23a,0xd8782a,0xf0c09a,5,-11],[0xb06aff,0x3a2414,0xc08060,-6.5,-11]].map(([c,h,sk,x,z],i)=>{const r=schoolKid(i,{col:c,hair:h,skin:sk,s:0.95,hat:i===2?0xffffff:0});r.g.position.set(x,0,z);r.g.rotation.y=0;L.scene.add(r.g);return {r,ph:rnd(0,6)};});
+    const t=schoolTeacher({col:0xe8e4ec,pants:0x5a3a8a,hair:0x8a4a2a,skin:0xf0c09a,s:1.35,bun:1});t.g.position.set(1.2,0,-12);L.scene.add(t.g);L.teach=t;lbl(L,'MS. PEPPER','#ffe066',0.6,1.2,2.8,-12);
     L.alarm.forEach(a=>{a.lm.emissiveIntensity=0;a.lt.intensity=0;});
     toast('THE SKY IS STILL DARK',2400);
     talk([['{N}','Lily… the ship is gone. But the sky is still dark.'],['MS. PEPPER','Everybody back inside! {N}, come away from the yard!'],['{N}','Wait. Look up. Something is FALLING!']]);}
@@ -5248,9 +5264,9 @@ function diveFrame0(dt,t){const d=S.dive;d.t+=dt;const TA=1.5,TB=6.2;const rig=S
     const cv=new THREE.CatmullRomCurve3(pts);V.teth.geometry.dispose();V.teth.geometry=new THREE.TubeGeometry(cv,40,0.026,6);V.clip.position.copy(hip);V.clip.lookAt(pts[2]);
     const end=pts[16],tg=cv.getTangent(1);V.fray.position.copy(end);V.fray.lookAt(end.clone().add(tg));V.fray.children.forEach((w,i)=>{const o=w.children[0].userData.o;w.rotation.set(o[0]+Math.sin(t*3+i)*0.1,o[1],0);});
     S.white=d.t-TA<0.5?0.95*(1-(d.t-TA)/0.5):Math.max(0,(u-0.86)/0.14);updRays(null,0);updParticles(0);}
-  finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=S.white;finalPass.uniforms.time.value=t;composer.render(dt);
+  dofSet(false);finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=S.white;finalPass.uniforms.time.value=t;composer.render(dt);
   if(d.t>TA+TB+0.05){const V=d.V;S.dive=null;if(V){V.hold.remove(rig.g);V.q.material.dispose();V.q.geometry.dispose();V.teth.geometry.dispose();if(rig.act)rig.act.idle.setEffectiveTimeScale(1);}enterTesseract();}}
-function applyGrade(L){raysPass.uniforms.flare.value=REALGFX?0.8:0;if(typeof finalPass!=='undefined')finalPass.uniforms.mblur.value=0;const rk=REALGFX?0.4:1;finalPass.uniforms.sat.value=1+(L.sat-1)*rk;finalPass.uniforms.real.value=REALGFX?1:0;finalPass.uniforms.ca.value=REALGFX?0.0008:0.0022;bloom.strength=REALGFX?(['home','fakemom','school','party','revenge','dinner','mall'].includes(S&&S.world)?0.38:0.62):0.8;finalPass.uniforms.gain.value.set(L.gain[0],L.gain[1],L.gain[2]);if(REALGFX&&L.bloomK!=null)bloom.strength=L.bloomK;if(REALGFX&&L.flareK!=null)raysPass.uniforms.flare.value=L.flareK;}
+function applyGrade(L){raysPass.uniforms.flare.value=REALGFX?0.8:0;if(saoPass)saoPass.enabled=false;if(typeof finalPass!=='undefined')finalPass.uniforms.mblur.value=0;const rk=REALGFX?0.4:1;finalPass.uniforms.sat.value=1+(L.sat-1)*rk;finalPass.uniforms.real.value=REALGFX?1:0;finalPass.uniforms.ca.value=REALGFX?0.0008:0.0022;bloom.strength=REALGFX?(['home','fakemom','school','party','revenge','dinner','mall'].includes(S&&S.world)?0.38:0.62):0.8;finalPass.uniforms.gain.value.set(L.gain[0],L.gain[1],L.gain[2]);if(REALGFX&&L.bloomK!=null)bloom.strength=L.bloomK;if(REALGFX&&L.flareK!=null)raysPass.uniforms.flare.value=L.flareK;}
 
 /* ================= SLEEP + WAKE CINEMATICS ================= */
 function woodTex(){return ctex('wood',512,512,(g,w,h)=>{for(let i=0;i<8;i++){const c=['#8a5a32','#7a4c28','#93633a','#6e4422'][i%4];g.fillStyle=c;g.fillRect(0,i*64,w,64);
@@ -5373,7 +5389,7 @@ function beginChapter(n){
 }
 function go(){$('intro').hidden=true;running=true;if(isTouch&&!isFS())try{setFS(true);}catch(e){}if(!S.L.fly)setTimeout(()=>lookHint(6000),600);beep(300,0.4,'sine',900);if(S.world==='hole')S.autoDive=1.4;if(S.L.tip){if(S.L.fly)toast(S.L.tip+' · E/Q THROTTLE · P AUTOPILOT · G GEAR · C CAMERA',6000);else floatText(S.L.tip,S.P.pos.clone().setY(3.8),'#ffe08a',0.75);}}
 $('goBtn').onclick=go;
-function toMenu(){running=false;mode='menu';try{mpClearRigs();}catch(e){}$('credits').hidden=true;$('talk').hidden=true;if(document.pointerLockElement)document.exitPointerLock();$('bossbar').hidden=true;if(S&&S.L&&S.L.eng&&ac)S.L.eng.g.gain.value=0;if(C){disposeLevel(C.B);C=null;}stage.classList.remove('cine');setLids(0);lidTarget=0;$('cap').textContent='';$('skip').hidden=true;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});try{fakeFS(false);}catch(e){}$('game').hidden=true;$('menu').hidden=false;$('intro').hidden=true;$('result').hidden=true;renderChapters();renderCards();setPick();}
+function toMenu(){running=false;mode='menu';try{mpClearRigs();dofSet(false);}catch(e){}$('credits').hidden=true;$('talk').hidden=true;if(document.pointerLockElement)document.exitPointerLock();$('bossbar').hidden=true;if(S&&S.L&&S.L.eng&&ac)S.L.eng.g.gain.value=0;if(C){disposeLevel(C.B);C=null;}stage.classList.remove('cine');setLids(0);lidTarget=0;$('cap').textContent='';$('skip').hidden=true;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});try{fakeFS(false);}catch(e){}$('game').hidden=true;$('menu').hidden=false;$('intro').hidden=true;$('result').hidden=true;renderChapters();renderCards();setPick();}
 $('quitBtn').onclick=toMenu;$('mapBtn').onclick=toMenu;
 $('retryBtn').onclick=()=>startChapter(S.n);
 $('nextBtn').onclick=()=>{const nx=CH.find(c=>c.n>S.n&&!c.bonus);if(S.ended==='win'&&nx&&!S.ch.bonus)startChapter(nx.n);else if(S.ended==='win')toMenu();else startChapter(S.n);};
@@ -5896,7 +5912,7 @@ function frameInner(now){
   if(lidV!==lidTarget&&mode!=='cine'){setLids(lidV<lidTarget?Math.min(lidTarget,lidV+lidSpeed*dt):Math.max(lidTarget,lidV-lidSpeed*dt));finalPass.uniforms.vig.value=0.45+lidV*0.4;}
   MUS.world=mode==='menu'?'menu':mode==='cine'?'cine':(S?S.world:'menu');
   if(mode==='menu')drawHero(dt,t);
-  if(mode==='cine'&&C){C.t+=dt;updCine(dt,t);if(C)updRays(V3(3,1.7,-0.3),C.kind==='wake'?1.4:0.7,C.kind==='wake'?[1,0.9,0.7]:[0.7,0.8,1]);finalPass.uniforms.time.value=t;composer.render(dt);requestAnimationFrame(frame);return;}
+  if(mode==='cine'&&C){C.t+=dt;updCine(dt,t);dofSet(true,C.kind==='tease'?2.6:2.2);if(C)updRays(V3(3,1.7,-0.3),C.kind==='wake'?1.4:0.7,C.kind==='wake'?[1,0.9,0.7]:[0.7,0.8,1]);finalPass.uniforms.time.value=t;composer.render(dt);requestAnimationFrame(frame);return;}
   if(mode==='play'&&S){
     if(running)update(dt);
     if(S.dive){diveFrame(dt,t);requestAnimationFrame(frame);return;}
@@ -5910,7 +5926,7 @@ function frameInner(now){
     updParticles(running?dt*(S.freeze>0?0.04:1):0);placeCamera(dt,false);
     if(L.bg){const u=L.bg.material.uniforms;camera.updateMatrixWorld();u.camPos.value.copy(camera.position);u.camWorld.value.copy(camera.matrixWorld);u.invProj.value.copy(camera.projectionMatrixInverse);u.time.value=t;}
     {const rp=L.raysPos||(L.raysDir?_rd.copy(L.raysDir).multiplyScalar(2000).add(camera.position).clone():null);updRays(rp,L.raysK,L.raysTint);}
-    finalPass.uniforms.time.value=t;finalPass.uniforms.ca.value=(REALGFX?0.0008:0.0022)+(S.roll||0)/Math.PI*0.009;finalPass.uniforms.sat.value=(1+(S.L.sat-1)*(REALGFX?0.4:1)+(S.roll||0)/Math.PI*0.35)*(S.freeze>0?0.08:1);if(S.freeze>0)finalPass.uniforms.gain.value.set(0.92,1,1.18);else finalPass.uniforms.gain.value.set(S.L.gain[0],S.L.gain[1],S.L.gain[2]);if(S.white>0){S.white=Math.max(0,S.white-dt*0.7);finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=S.white;}else{finalPass.uniforms.flashCol.value.set(1,0.3,0.5);finalPass.uniforms.flash.value=S.flash*0.6;}
+    dofSet(!!S.cam,S.cam?camera.position.distanceTo(S.cam.look):5);finalPass.uniforms.time.value=t;finalPass.uniforms.ca.value=(REALGFX?0.0008:0.0022)+(S.roll||0)/Math.PI*0.009;finalPass.uniforms.sat.value=(1+(S.L.sat-1)*(REALGFX?0.4:1)+(S.roll||0)/Math.PI*0.35)*(S.freeze>0?0.08:1);if(S.freeze>0)finalPass.uniforms.gain.value.set(0.92,1,1.18);else finalPass.uniforms.gain.value.set(S.L.gain[0],S.L.gain[1],S.L.gain[2]);if(S.white>0){S.white=Math.max(0,S.white-dt*0.7);finalPass.uniforms.flashCol.value.set(1,1,1);finalPass.uniforms.flash.value=S.white;}else{finalPass.uniforms.flashCol.value.set(1,0.3,0.5);finalPass.uniforms.flash.value=S.flash*0.6;}
     composer.render(dt);drawOverlays();
   }
   requestAnimationFrame(frame);
