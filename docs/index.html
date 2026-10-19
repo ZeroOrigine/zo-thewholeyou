@@ -4244,7 +4244,7 @@ function updOtherverseCine(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine,Z=L.z
   if(T>28&&!S.fin){S.fin=1;S.cam=null;running=false;finish(true);}}
 
 /* ================= PLAY TOGETHER: see your friends in the same dream ================= */
-const MP={ws:null,room:null,id:Math.random().toString(36).slice(2,10),peers:{},rigs:{},lastSend:0,ref:1,hb:null,status:'off',tries:0,key:(typeof window!=='undefined'&&window.__TWY_KEY)||'',url:(typeof window!=='undefined'&&window.__TWY_RT)||''};
+const MP={ws:null,room:null,id:Math.random().toString(36).slice(2,10),peers:{},rigs:{},lastSend:0,ref:1,hb:null,status:'off',tries:0,key:(typeof window!=='undefined'&&window.__TWY_KEY)||'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9wZ2l0Y3Vxd2ljdWlwbGFwdGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NzYwNjEsImV4cCI6MjA4OTU1MjA2MX0.jOZbexswKI3w4wMI2WWvRuVKnPUMFtBeZUdG0LerL14',url:(typeof window!=='undefined'&&window.__TWY_RT)||'wss://opgitcuqwicuiplaptkm.supabase.co'};
 function mpAvailable(){return !!(MP.key&&MP.url&&'WebSocket' in window);}
 function mpCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ',D='23456789';let c='';for(let i=0;i<4;i++)c+=A[(Math.random()*A.length)|0];c+='-';for(let i=0;i<3;i++)c+=D[(Math.random()*D.length)|0];return c;}
 function mpSetStatus(t){MP.status=t;const el=$('mpStatus');if(el)el.textContent=t;const r=$('mpRoom');if(r)r.textContent=MP.room?(MP.room==='PUBLIC'?'PUBLIC ROOM ·':'PRIVATE SERVER '+MP.room+' ·'):'';const lv=$('mpLeave');if(lv)lv.hidden=!MP.room;}
@@ -4259,7 +4259,7 @@ function mpOpen(){if(!MP.room)return;mpSetStatus('Connecting…');let ws;try{ws=
     if(m.event==='phx_reply'&&m.payload&&m.payload.status==='error'){mpSetStatus('Room refused: '+JSON.stringify(m.payload.response||'').slice(0,60));}
     if(m.event==='broadcast'&&m.payload&&m.payload.event==='p'){const p=m.payload.payload;if(!p||p.id===MP.id)return;const old=MP.peers[p.id]||{};p.seen=performance.now();p.px=old.px===undefined?p.x:old.px;p.py=old.py===undefined?p.y:old.py;p.pz=old.pz===undefined?p.z:old.pz;MP.peers[p.id]=p;}
     if(m.event==='broadcast'&&m.payload&&m.payload.event==='bye'){const p=m.payload.payload;if(p&&p.id)mpDropPeer(p.id);}};
-  ws.onclose=()=>{clearInterval(MP.hb);if(MP.room&&MP.ws===ws){MP.tries++;mpSetStatus(MP.tries<6?'Reconnecting…':'Disconnected');if(MP.tries<6)setTimeout(()=>{if(MP.ws===ws)mpOpen();},1500*MP.tries);}};
+  ws.onclose=()=>{clearInterval(MP.hb);if(MP.room&&MP.ws===ws){MP.tries++;mpSetStatus(MP.tries<6?'Reconnecting…':'Could not connect from here. Open thewholeyou.zeroorigine.com in a browser to play together.');if(MP.tries<6)setTimeout(()=>{if(MP.ws===ws)mpOpen();},1500*MP.tries);}};
   ws.onerror=()=>{};}
 function mpLeave(silent){if(MP.ws){try{mpSend({topic:'realtime:twy-'+(MP.room||''),event:'broadcast',payload:{type:'broadcast',event:'bye',payload:{id:MP.id}},ref:String(MP.ref++)});}catch(e){}const w=MP.ws;MP.ws=null;try{w.close();}catch(e){}}
   clearInterval(MP.hb);for(const id in MP.peers)mpDropPeer(id);MP.peers={};if(!silent){MP.room=null;try{localStorage.removeItem('twy-room');}catch(e){}mpSetStatus('Off');}}
@@ -4287,7 +4287,7 @@ function mpInitUI(){const box=$('mpBox');if(!box)return;
   $('mpJoinBtn').onclick=()=>{audio();const v=$('mpCodeIn').value.trim().toUpperCase().replace(/[^A-Z0-9-]/g,'');if(v.length>=4)mpJoin(v);};
   $('mpCodeIn').onkeydown=e=>{if(e.key==='Enter')$('mpJoinBtn').click();e.stopPropagation();};$('mpCodeIn').onkeyup=e=>e.stopPropagation();
   $('mpLeave').onclick=()=>{audio();mpLeave(false);mpPeersUI();};
-  if(!mpAvailable()){mpSetStatus('Play Together works on thewholeyou.zeroorigine.com');$('mpPublic').disabled=$('mpCreate').disabled=$('mpJoinBtn').disabled=true;}
+  if(!mpAvailable()){mpSetStatus('Play Together needs a browser that allows live connections. Open thewholeyou.zeroorigine.com.');$('mpPublic').disabled=$('mpCreate').disabled=$('mpJoinBtn').disabled=true;}
   else{let last=null;try{last=localStorage.getItem('twy-room');}catch(e){}if(last){$('mpCodeIn').value=last;mpJoin(last);}else mpSetStatus('Off');}
   setInterval(()=>{try{mpPing();}catch(e){}},1000);setInterval(()=>{if(MP.room)mpPeersUI();},2000);}
 
