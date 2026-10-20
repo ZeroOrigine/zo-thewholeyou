@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-20  v44: chapter 58 The Bait, colourful avatar portraits (Cowork session)
+
+- Chapter 58 "The Bait" (world `bait`, reuses the other-universe arena): Doom says Zero still has the Time Stone and they need a plan; the dreamer proposes Lily as bait. Player collects 4 golden cage pillars from the rock islands, plants them on 4 glowing corners around the altar, hides behind a big rock. Cutscene (35 s): Lily calls Zero, he appears in sparkles, Lily steps out, Doom shouts NOW, a cage of golden light snaps shut, Zero says "Cute." and shatters it, purple mist thins the air, everyone faints, fade to black, wake up in Zero's prison cell. Ends TO BE CONTINUED. Visual adds: violet 3D grass, moon with god rays, floating spores, lightning flash.
+- Prison cell sits at z=220 in the same scene; the arena bounds (44) are widened to 400 when the player is moved there, or the clamp would snap them back.
+- Chapter 57 result now points to Chapter 58. Saves that already beat 57 are unlocked to 58.
+- Dreamer portraits in CINEMA used one dark grey studio backdrop for everyone; founder asked for colour. Now 16 colour pairs x 3 lighting styles (bokeh, light streaks, halo rings) = 48 distinct backdrops, one per dreamer (studioColTex(i)).
+- Tested headless: full chapter 58 walkthrough, every stage, result screen, 0 page errors; all 48 portraits rendered.
+
 ## 2026-10-19  v43: CINEMA look (Cowork session)
 
 - CINEMA = Graphics ULTRA + Style REALISTIC (desktop). Daytime chapters get a physics atmosphere sky (three.js Sky, skyGain 0.13, rayleigh 2.2) with a drifting cloud layer; the painted gradient sky stays for night chapters, Dream City (own day/night cycle) and storm scenes. Film colour grade (contrast S-curve, teal shadows, warm highlights, slight desaturation) via finalPass `cine`. Depth of field in cutscenes. Dreamer cards are studio portraits (dark radial backdrop).
