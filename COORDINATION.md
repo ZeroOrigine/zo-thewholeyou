@@ -2,6 +2,16 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-20  v45: chapter 58 polish (Cowork session)
+
+- Intro no longer spoils the ending: short/story/goals now promise the trap works ("Catch Zero in the cage!"). Founder asked for this.
+- Cage pillars sit ON four rock islands (6, 3, 1, 4) with a staircase of round stone columns, 0.45 m per step, walkable with W alone (step-up is 0.55 m). The visible rock tops sit about 0.6 m above the island colliders, so a raised collider is added on those 4 rocks. Verified: a test held W only, climbed all 4, got 4 of 4, stage advanced. Founder said the high rocks were too hard.
+- Cutscene camera: peek over the hide rock raised so the altar is not hidden; Zero's entrance is a closer shot.
+- Prison: lighter stone walls, moonlit barred window with a light beam and spotlight, warm fill light. Hero, Lily (kneeling) and Doom moved to the front of the cell. First shot pushes in through the bars, then a side shot as the hero slowly sits up. Name tags hidden during the cutscene. Gold pillars no longer render red.
+- Portraits: softer centre glow; Glitch (hologram) and Boo (ghost) get dark backdrops (STUDIO_DARK) because their see-through white bodies vanished on pale ones.
+- Tried and removed: a point light inside Zero's cloak (made him a blue blob).
+- Test note: jumping the cutscene clock forward skips one-shot events (Zero's grow-in, dialog lines); judge those from the full walkthrough, not from jump tests.
+
 ## 2026-10-20  v44: chapter 58 The Bait, colourful avatar portraits (Cowork session)
 
 - Chapter 58 "The Bait" (world `bait`, reuses the other-universe arena): Doom says Zero still has the Time Stone and they need a plan; the dreamer proposes Lily as bait. Player collects 4 golden cage pillars from the rock islands, plants them on 4 glowing corners around the altar, hides behind a big rock. Cutscene (35 s): Lily calls Zero, he appears in sparkles, Lily steps out, Doom shouts NOW, a cage of golden light snaps shut, Zero says "Cute." and shatters it, purple mist thins the air, everyone faints, fade to black, wake up in Zero's prison cell. Ends TO BE CONTINUED. Visual adds: violet 3D grass, moon with god rays, floating spores, lightning flash.
