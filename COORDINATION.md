@@ -2,6 +2,16 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-20  v46: chapter 59 Zero's Tower (Cowork session)
+
+- Story (founder's): other dreamers stuck in Zero's prison for months and years; Zero calls the dreamer up alone; glass lift ride with the founder's ChatGPT painting of the universe seen through the glass; top floor, Zero on a crowned throne offers freedom for destroying Doom; dreamer says no; a screen counts universes destroyed by "someone more powerful"; Zero needs all the stones to snap and become his assistant. TO BE CONTINUED. Intro text does not spoil the deal.
+- World `zerotower`. Prison yard (r=26) with 6 cells built into the stone wall, flickering torches, buttresses; tower 70 m with lit window slits; glass lift (founder's photo: black frame, cyan LED strips, blue tiled door) facing the throne; marble-gold platform at y=70 with glass railing; carpet lift to throne.
+- The founder's painting is embedded (1024 px JPEG, 234 KB) on a 380 m cylinder, 4 mirrored copies (about 1 image pixel per screen pixel), fog off; it also feeds the reflection map (dimmed to 46 %). 3D islands, waterfalls (scrolling texture), light beams and planets sit in front for parallax.
+- Lift glass: tint + additive mirror layer (envMapIntensity 0.07) + fingerprint/dust/scratch canvas + teal edges. Transmission was avoided because it hides additive objects (waterfalls, beams) behind the glass.
+- Throne: crown with twinkling gems, energy pouring from the crown down the steps, gold sparks, shockwave rings, violet sky beam; Zero breathes and raises his staff; snap = six stones flare + gold shockwave.
+- Platform floor: the top is added as a collider only when the lift arrives (colliders are full-height columns; a 20 x 20 floor at y=70 would wall off the yard). Horizontal clamp keeps the dreamer within 9.2 m on top and 24.6 m in the yard.
+- Bugs found in tests and fixed: prisoners were 1 m tall and the `sit` emote sinks a body 0.42 m into the floor, so they were near invisible in the cells (now 1.56 to 1.80 m, standing, added to the scene root, close-up camera offset between bars); a timed Doom line cut into Zero's speech (now waits for silence); white floor plus bright reflections washed out the top (dark obsidian floor, dimmer reflection map); ride camera faced the door; marble checker texture shimmered.
+
 ## 2026-10-20  v45: chapter 58 polish (Cowork session)
 
 - Intro no longer spoils the ending: short/story/goals now promise the trap works ("Catch Zero in the cage!"). Founder asked for this.
