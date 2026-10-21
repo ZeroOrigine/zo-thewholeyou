@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-21  v47: chapter 60 Meteor Night, chapter 59 prison and lift rework (Cowork session)
+
+- Chapter 59 prison: two floors of 14 cells (instanced meshes: walls, bars, arches; frustumCulled off because InstancedMesh culls on the base geometry), balcony walkway, 15 prisoners. You start locked in your own cage (cell 0, south) with Lily and Doom in the cages beside you. 30 s camera tour with prisoner lines, then Zero appears outside your bars and your bars rise. Prisoners speak as you pass. Upper-floor close-up was dropped from the tour (it rendered a large blob in tests; cause not found).
+- Lift: ride starts inside over your shoulder (doors close, floor display counts 01 to 70), then turns to the glass. Brushed-steel handrail, stone floor, ceiling panel, control panel, cables to a top pulley, counterweight passing at mid height, small jolts at start and stop. The lift moved to z=-4.9 and the tower became a straight 3.6 m column so the shaft no longer cuts the tower; the top floor is an extruded disc with a square opening for the lift.
+- Chapter 60 Meteor Night (world `meteor`, reuses buildZeroTower): night version (dark vista, moon, dim reflection map), Doom bends your bars, three lantern guards patrol with vision cones (seen = back to your cage, no life lost), steal keys from the stone table, free 4 prisoners (instanced bars raised with L.raiseBars), meteor shower with warning rings, run back to your cage, sleep, THE NEXT MORNING (bright vista and reflection map rebuilt via L.rebuildEnv), lift up, the screen glitches (shader: RGB split, tearing, noise blocks) and shows the player's own avatar rendered live into a WebGLRenderTarget, in shadow: "I am you. From the future." TO BE CONTINUED.
+- Shared code: ztInitPeople(L) and ztAmbient(dt) extracted from updZeroTower; prison walls added to L.blockers so the follow camera stays inside the yard.
+- Founder asked: more people in the prison, you in a cage, realistic lift; chapter 60 story is his (option 1 without the Lily-is-a-stone twist, meteors, morning, the screen reveal of idea 6).
+
 ## 2026-10-20  v46: chapter 59 Zero's Tower (Cowork session)
 
 - Story (founder's): other dreamers stuck in Zero's prison for months and years; Zero calls the dreamer up alone; glass lift ride with the founder's ChatGPT painting of the universe seen through the glass; top floor, Zero on a crowned throne offers freedom for destroying Doom; dreamer says no; a screen counts universes destroyed by "someone more powerful"; Zero needs all the stones to snap and become his assistant. TO BE CONTINUED. Intro text does not spoil the deal.
