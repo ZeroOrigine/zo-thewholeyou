@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-22  v50: chapter 62 All Times At Once; robed masked villain (Cowork session)
+
+- Villain (entityFigure) rebuilt on the founder's ask: "like how you made Zero but not exactly like Zero, make him good". Procedural robed figure (lathe robe plus open outer cloak with gold clock-gear filigree at the hem, shoulder mantle, deep hood with a front opening), a slowly turning gold Roman-numeral clock dial behind his head, an hourglass staff with sand that drains and refills, golden time energy in the left hand, time dust drifting off the hem. Mask: sculpted steel face (displaced sphere segment: brow, nose, cheekbones, lips, chin), polished silver so it reads against the hood, the upper-left quarter burned (charred metal, glowing ember cracks, smoke and sparks), dark eye slits, a thin gold clock engraving on the forehead. No horns, no red eyes, no robot body.
+- Declined twice to copy a Marvel character's look and mask from a reference picture; offered and built an original design instead.
+- Chapter 62 (world `portals`, reuses buildTimeBreak): on the plain with Lily, Doom, the King and the army of 1783; a hum, then 12 portals open in the sky and on the ground, each era with its own look (past: bronze and stone ring, amber swirl; future: neon hexagon ring, cyan and violet swirl; present: silver ring, white-blue swirl; swirl is a ShaderMaterial). THE PAST: knights and Vikings walk out (real rigs with helmets, swords, shields) and a T-rex (makeRex, restyled darker); THE FUTURE: robots (xbot rigs), drones and a hover car; THE PRESENT: people in today's clothes and two cars. Everyone wanders the plain together. Playable: find 3 time shards; they form a gold time compass whose beam points to the Time Station (a tall tower with turning gold rings on the horizon); the villain's voice: "Come and find me then… little one." TO BE CONTINUED. Founder's story; the shards and compass are Claude's addition to give the chapter play, told to the founder.
+- Army spawn extracted to tbSpawnArmy(L) (used by chapters 61 and 62); the army block and the King are colliders in chapter 62.
+- Fixed in tests: present-wave camera looked at the portal edge-on (white streak); compass bloom washed out the screen; beam too faint; future-wave camera pointed at the sky.
+- Tests: full chapter 62 run 0 errors; re-run of the fixed shots 0 errors; villain close-up rendered from the render target and checked.
+
 ## 2026-10-21  v49: all-chapter glitch sweep and fixes (Cowork session)
 
 - Founder asked: double check every chapter for glitches and fix all of them.
