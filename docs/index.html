@@ -2117,7 +2117,7 @@ function updRuins(dt){const P=S.P,L=S.L;
 
 /* ---- Chapter 15: crystal multiverse ---- */
 function buildCrystal(S){
-  const L=baseLevel({fog:[0x1a0a3a,0.006],sky:{top:0x02010a,mid:0x2a1a6a,bot:0x0a0620,sunDir:V3(-0.4,0.25,-0.8),sunCol:0x9af0ff,clouds:0.6,cloudCol:0x5a2a9a,stars:1,swirl:1},hemi:[0x9ab8ff,0x1a0a2a,0.45],sunCol:0xc0e0ff,sunInt:1.3,sunDir:V3(-0.4,0.8,-0.5),bounds:{type:'sq',size:60},gravity:18,gain:[0.86,0.88,0.98],sat:1.25,raysK:0.5});
+  const L=baseLevel({fog:[0x1a0a3a,0.006],sky:{top:0x02010a,mid:0x2a1a6a,bot:0x0a0620,sunDir:V3(-0.4,0.25,-0.8),sunCol:0x9af0ff,clouds:0.6,cloudCol:0x5a2a9a,stars:1,swirl:1},hemi:[0x9ab8ff,0x1a0a2a,0.45],sunCol:0xc0e0ff,sunInt:1.3,sunDir:V3(-0.4,0.8,-0.5),bounds:{type:'sq',size:60},gravity:18,gain:[0.86,0.88,0.98],sat:1.25,raysK:0.2});
   add(L.scene,new THREE.PlaneGeometry(500,500),M({map:basaltTex(),emissiveMap:crackEmi(),emissive:0x3ae8ff,emissiveIntensity:0.45,color:0x4a3e66,roughness:.7}),0,0,0,1,1,1,-Math.PI/2).receiveShadow=true;
   const CN=60,cr=new THREE.InstancedMesh(new THREE.OctahedronGeometry(1,0),PM({color:0xffffff,roughness:.05,clearcoat:1,emissive:0x6a3aff,emissiveIntensity:.35,transparent:true,opacity:.9}),CN);const dm=new THREE.Object3D(),col=new THREE.Color();
   for(let i=0;i<CN;i++){let x,z;do{x=rnd(-160,160);z=rnd(-160,160);}while(Math.max(Math.abs(x),Math.abs(z))<62&&i>12);if(i<=12){x=rnd(-55,55);z=rnd(-55,55);if(Math.hypot(x,z-40)<12)continue;}const s=i<=12?rnd(1.5,3):rnd(5,18);
@@ -2130,9 +2130,9 @@ function buildCrystal(S){
   L.tip='ANOTHER MULTIVERSE! LIGHT UP THE 5 DARK CRYSTAL TOWERS (F)';L.spawn=V3(0,0,40);L.showcase={pos:V3(-10,8,58),look:V3(60,80,-300)};return L;}
 /* ---- Chapter 16: neon speedway ---- */
 function buildSpeed(S){
-  const L=baseLevel({fog:[0x1a0420,0.008],sky:{top:0x05000f,mid:0x6a0a6a,bot:0xff6a3a,sunDir:V3(0,0.12,-1),sunCol:0xffb03a,clouds:0,stars:0.8},hemi:[0xff8ad8,0x1a0a2a,0.5],sunCol:0xffa0e0,sunInt:1.4,sunDir:V3(0.2,0.8,-0.6),bounds:{type:'sq',size:62},grip:16,gain:[1.05,0.95,1.08],sat:1.25,raysK:1});
+  const L=baseLevel({fog:[0x1a0420,0.008],sky:{top:0x05000f,mid:0x6a0a6a,bot:0xff6a3a,sunDir:V3(0,0.12,-1),sunCol:0xffb03a,clouds:0,stars:0.8},hemi:[0xff8ad8,0x1a0a2a,0.5],sunCol:0xffa0e0,sunInt:1.4,sunDir:V3(0.2,0.8,-0.6),bounds:{type:'sq',size:62},grip:16,gain:[1.05,0.95,1.08],sat:1.25,raysK:0.3});
   add(L.scene,new THREE.PlaneGeometry(500,500),M({color:0x05020e,emissive:0xffffff,emissiveMap:neonTex(),emissiveIntensity:1.6,roughness:.25,metalness:.6}),0,0,0,1,1,1,-Math.PI/2).receiveShadow=true;
-  const sun=glow(0xff7a3a,300,2.5);sun.position.set(0,60,-600);L.scene.add(sun);
+  const sun=glow(0xff7a3a,240,0.8);sun.position.set(0,60,-600);L.scene.add(sun);
   const pc=[0xff2ad8,0x3ae8ff,0xffd23a];for(let i=0;i<28;i++){const a=i/28*TAU,r=rnd(80,140);const h=rnd(10,50);const m=add(L.scene,box(3,h,3),M({color:0x0a0414,emissive:pc[i%3],emissiveIntensity:1.2}),Math.cos(a)*r,h/2,Math.sin(a)*r);m.castShadow=false;}
   for(let i=0;i<8;i++){const a=rnd(0,TAU),r=rnd(90,160);add(L.scene,cone(10,14,4),M({color:0x0a0414,emissive:0x3ae8ff,emissiveIntensity:0.5,wireframe:true}),Math.cos(a)*r,rnd(30,70),Math.sin(a)*r);}
   const lasers=[];for(const[x,z,len,sp] of[[-25,0,22,0.6],[25,0,22,-0.7],[0,-30,26,0.5],[0,28,20,-0.8]]){const g=new THREE.Group();g.position.set(x,0.9,z);L.scene.add(g);const b=new THREE.Mesh(box(len,0.25,0.25),new THREE.MeshBasicMaterial({color:new THREE.Color(0xff2a2a).multiplyScalar(4)}));g.add(b);add(g,cyl(0.5,0.6,1.8,16),metalM(0x3a3f48,.3),0,0,0);lasers.push({g,len,sp});}
@@ -2161,7 +2161,7 @@ function buildBoss(S){
   L.warn=()=>S.pull?'BLACK HOLE! RUN AWAY (DASH!)':'';L.fallText='YOU FELL INTO THE VOID! -1 LIFE';
   L.tip='FINAL BATTLE! DEFEAT ZORVAX WITH YOUR SUPERPOWERS';L.spawn=V3(0,0,26);L.showcase={pos:V3(0,10,48),look:V3(0,8,-20)};return L;}
 function updSpeedGates(dt){const L=S.L,P=S.P;if(S.portal)return;if(S.gi===undefined){S.gi=0;S.timer=ez(110,75);}S.timer-=dt;
-  const g=S.items.find(i=>i.k==='gate'&&i.idx===S.gi);S.items.filter(i=>i.k==='gate').forEach(i=>{const on=i.idx===S.gi,done=i.idx<S.gi;i.mesh.userData.r.material.color.setRGB(done?0.5:on?3:1.2,done?3:on?2.4:0.3,done?1:on?0.4:2.4);i.mesh.lookAt(P.pos.x,i.mesh.position.y,P.pos.z);});
+  const g=S.items.find(i=>i.k==='gate'&&i.idx===S.gi);S.items.filter(i=>i.k==='gate').forEach(i=>{const on=i.idx===S.gi,done=i.idx<S.gi;{const rm=i.mesh.userData.r,dc=camera.position.distanceTo(i.mesh.position.clone().setY(i.mesh.position.y+3.2));const k=Math.max(0.12,Math.min(1,(dc-3)/9));rm.material.transparent=true;rm.material.opacity=k;rm.material.depthWrite=false;rm.material.color.setRGB((done?0.3:on?1.0:0.7)*k,(done?1.0:on?0.8:0.2)*k,(done?0.45:on?0.15:1.0)*k);}i.mesh.lookAt(P.pos.x,i.mesh.position.y,P.pos.z);});
   if(g&&hdist(g.pos,P.pos)<3.2){S.gi++;S.got=S.gi;burst(g.pos.clone().setY(3),0x3ae8ff,70,14,0.5,1);beep(700+S.gi*80,0.15,'triangle');toast(S.gi>=8?'ALL GATES!':`GATE ${S.gi} / 8`,1000);if(S.gi>=8){toast('ALL GATES! THE PORTAL IS OPEN',2000);spawnPortal();}}
   if(S.timer<=0&&S.gi<8){toast('TOO SLOW! TRY AGAIN',2000);beep(150,0.6,'sawtooth',80);S.gi=0;S.got=0;S.timer=ez(110,75);}}
 function updMirror(dt){if(S.portal)return;S.cloneN=S.cloneN||0;const alive=S.en.filter(e=>e.type==='clone').length;if(S.kills>=10){toast('ALL SHADOW CLONES DEFEATED! THE PORTAL IS OPEN',2500);spawnPortal();return;}
@@ -2528,7 +2528,9 @@ function buildCat(){const g=new THREE.Group(),fur=M({color:0xffffff,roughness:1,
   g.add(blob(4.2));g.traverse(o=>{if(o.isMesh&&o.material&&!(o.material.emissiveIntensity>1.5))rimify(o.material);});return {g,body,head,legs,tail};}
 function obPlat(L,x,y,z,w,d,mat,h){const hh=h||0.7;const m=add(L.scene,box(w,hh,d),mat,x,y-hh/2,z);const c={x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2,top:y,m};L.colliders.push(c);return c;}
 function onPlat(P,c){return P.onGround&&P.pos.x>c.x0&&P.pos.x<c.x1&&P.pos.z>c.z0&&P.pos.z<c.z1&&Math.abs(P.pos.y-c.top)<0.08;}
-function lbl(L,t,col,h,x,y,z){const sp=textSprite(t,col,h);sp.position.set(x,y,z);L.scene.add(sp);return sp;}
+const LBLS=[];const _lw=new THREE.Vector3();
+function lbl(L,t,col,h,x,y,z){const sp=textSprite(t,col,h);sp.position.set(x,y,z);L.scene.add(sp);LBLS.push(sp);return sp;}
+function fadeLabels(){for(let i=LBLS.length-1;i>=0;i--){const sp=LBLS[i];if(!sp.parent){LBLS.splice(i,1);continue;}sp.getWorldPosition(_lw);const d=camera.position.distanceTo(_lw);sp.material.opacity=Math.max(0,Math.min(1,(d-6)/5));}}
 function addFlag(L,x,y,z){const m=makeItemMesh('flag',S);m.position.set(x,y,z);L.scene.add(m);S.cps.push({pos:V3(x,y,z),on:false,mesh:m});}
 /* ---- Chapter 23: the sky obby ---- */
 function buildObby(S){
@@ -3057,7 +3059,7 @@ function buildGuardian(S){
   add(L.scene,cyl(36,30,30,64),M({map:basaltTex(),color:0x3a2a5a}),0,-15.01,0);add(L.scene,torus(35,0.4,96),glowM(0x5ee7ff,2.5),0,0.2,0,1,1,1,Math.PI/2);
   add(L.scene,new THREE.PlaneGeometry(600,600),M({color:0x1a0a2a,emissive:0x2a0a4a,emissiveIntensity:.6}),0,-30,0,1,1,1,-Math.PI/2);
   const pm=M({color:0x8af0ff,emissive:0x2a8aff,emissiveIntensity:0.6,roughness:.15,metalness:.2});L.pillars=[];for(let k=0;k<6;k++){const a=k/6*TAU+0.3,x=Math.cos(a)*21,z=Math.sin(a)*21;const m=add(L.scene,cyl(2.2,2.6,11,6),pm,x,5.5,z);const c={x0:x-2.2,x1:x+2.2,z0:z-2.2,z1:z+2.2,top:11};L.colliders.push(c);L.pillars.push({x,z,m,c,hp:2});}
-  const gol=buildGolem();gol.g.position.set(0,0,-12);L.scene.add(gol.g);L.G={...gol,pos:V3(0,0,-12),yaw:0,hp:ez(18,30),max:ez(18,30),t:0,cd:3,act:null,stun:0,proj:[],spikes:[]};
+  const gol=buildGolem();gol.g.position.set(0,0,-12);L.scene.add(gol.g);{const pr=new THREE.Mesh(new THREE.BoxGeometry(6.6,8.4,4.6),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));pr.position.y=4.2;gol.g.add(pr);L.blockers=L.blockers||[];L.blockers.push(pr);}L.G={...gol,pos:V3(0,0,-12),yaw:0,hp:ez(18,30),max:ez(18,30),t:0,cd:3,act:null,stun:0,proj:[],spikes:[]};
   L.aim=()=>L.G.hp>0?[L.G.pos.clone().setY(4.4)]:[];
   L.spawn=V3(0,0,20);L.camYaw=0;L.camPitch=0.36;L.showcase={pos:V3(26,14,30),look:V3(0,4,-8)};L.tip='MAKE GRONK CRASH INTO A PILLAR!';return L;}
 function updGuardian(dt){const P=S.P,L=S.L,G=L.G;if(S.stage===undefined){S.stage=0;S.stT=0;}S.stT+=dt;G.t+=dt;
@@ -3715,7 +3717,7 @@ function updValley(dt){const P=S.P,L=S.L;S.stT+=dt;
 function mandalaTex(){return ctex('mandala',512,512,(g,w,h)=>{g.fillStyle='#16123a';g.fillRect(0,0,w,h);g.translate(256,256);const cs=['#ff8ad8','#5ee7ff','#ffd166','#7dff6b','#b48cff'];
   for(let ring=0;ring<6;ring++){const r=40+ring*36,n=8+ring*4;for(let i=0;i<n;i++){const a=i/n*TAU;g.save();g.rotate(a);g.fillStyle=cs[(ring+i)%5];g.globalAlpha=0.45;g.beginPath();g.ellipse(0,-r,10+ring*2,18,0,0,TAU);g.fill();g.restore();}g.globalAlpha=0.8;g.strokeStyle='#ffd166';g.lineWidth=2;g.beginPath();g.arc(0,0,r+18,0,TAU);g.stroke();}});}
 function buildGarden(S){
-  const L=baseLevel({fog:[0x2a1a4a,0.007],sky:{top:0x0a0828,mid:0x3a2a7a,bot:0xd88ab8,sunDir:V3(-0.3,0.15,-0.95),sunCol:0xffb0d0,clouds:0.7,cloudCol:0x8a6ab8,stars:1,swirl:1},hemi:[0xd8c8ff,0x2a1a3a,0.65],sunCol:0xffe8f8,sunInt:1.3,sunDir:V3(-0.3,0.8,0.4),bounds:{type:'circle',size:25},gain:[0.95,0.92,1.0],sat:1.2,raysK:0.4});
+  const L=baseLevel({fog:[0x2a1a4a,0.007],sky:{top:0x0a0828,mid:0x3a2a7a,bot:0xd88ab8,sunDir:V3(-0.3,0.15,-0.95),sunCol:0xffb0d0,clouds:0.7,cloudCol:0x8a6ab8,stars:1,swirl:1},hemi:[0xd8c8ff,0x2a1a3a,0.65],sunCol:0xffe8f8,sunInt:1.3,sunDir:V3(-0.3,0.8,0.4),bounds:{type:'circle',size:25},gain:[0.95,0.92,1.0],sat:1.2,raysK:0.2});
   add(L.scene,new THREE.CircleGeometry(30,72),M({map:mandalaTex(),emissive:0xffffff,emissiveMap:mandalaTex(),emissiveIntensity:0.35,roughness:.6}),0,0.02,0,1,1,1,-Math.PI/2).receiveShadow=true;
   add(L.scene,new THREE.PlaneGeometry(300,300),M({color:0x1a2a3a,roughness:1}),0,-0.02,0,1,1,1,-Math.PI/2);
   const hm=M({color:0x2a6a4a,roughness:.9,normalMap:WEAVE,normalScale:new THREE.Vector2(1.5,1.5)});L.hide=[];
@@ -6147,7 +6149,7 @@ function startChapter(n){audio();if(!save.owned.includes(avIdx))avIdx=0;
   if(n===1){running=false;if(S&&S.L){disposeLevel(S.L);S=null;}playCine('sleep',()=>{beginChapter(1);setLids(1);lidsTo(0,1.3);});return;}
   if(n===45){running=false;if(S&&S.L){disposeLevel(S.L);S=null;}playCine('sleep',()=>{beginChapter(45);setLids(1);lidsTo(0,1.3);},true);return;}
   beginChapter(n);}
-function beginChapter(n){
+function beginChapter(n){LBLS.length=0;
   $('credits').hidden=true;try{mpClearRigs();}catch(e){}
   if(C){disposeLevel(C.B);C=null;}stage.classList.remove('cine');$('skip').hidden=true;$('cap').textContent='';finalPass.uniforms.vig.value=0.45;if(lidV>0&&lidTarget===0){}else setLids(0);
   if(S&&S.L)disposeLevel(S.L);
@@ -6696,9 +6698,9 @@ function frameInner(now){
   if(lidV!==lidTarget&&mode!=='cine'){setLids(lidV<lidTarget?Math.min(lidTarget,lidV+lidSpeed*dt):Math.max(lidTarget,lidV-lidSpeed*dt));finalPass.uniforms.vig.value=0.45+lidV*0.4;}
   MUS.world=mode==='menu'?'menu':mode==='cine'?'cine':(S?S.world:'menu');
   if(mode==='menu')drawHero(dt,t);
-  if(mode==='cine'&&C){C.t+=dt;updCine(dt,t);dofSet(true,C.kind==='tease'?2.6:2.2);if(C)updRays(V3(3,1.7,-0.3),C.kind==='wake'?1.4:0.7,C.kind==='wake'?[1,0.9,0.7]:[0.7,0.8,1]);finalPass.uniforms.time.value=t;composer.render(dt);requestAnimationFrame(frame);return;}
+  if(mode==='cine'&&C){C.t+=dt;updCine(dt,t);if(!C||mode!=='cine'){requestAnimationFrame(frame);return;}dofSet(true,C.kind==='tease'?2.6:2.2);if(C)updRays(V3(3,1.7,-0.3),C.kind==='wake'?1.4:0.7,C.kind==='wake'?[1,0.9,0.7]:[0.7,0.8,1]);finalPass.uniforms.time.value=t;composer.render(dt);requestAnimationFrame(frame);return;}
   if(mode==='play'&&S){
-    if(running)update(dt);
+    if(running)update(dt);try{fadeLabels();}catch(e){}
     if(S.dive){diveFrame(dt,t);requestAnimationFrame(frame);return;}
     if(S.exitA){const x=S.exitA;x.t+=dt;const k=Math.min(1,x.t/1.5),e=k*k*(3-2*k),rg=S.P.rig.g,a=x.t*9;rg.position.lerpVectors(x.from,x.to,e);rg.position.x+=Math.cos(a)*(1-e)*1.2;rg.position.z+=Math.sin(a)*(1-e)*1.2;
       rg.rotation.y+=dt*(4+18*e);rg.scale.setScalar(Math.max(0.02,1-e*0.98));if(S.portal){const pm=S.portal.mesh;pm.userData.pm.uniforms.time.value=t*2;pm.scale.setScalar(1+Math.sin(x.t*12)*0.05+e*0.3);}

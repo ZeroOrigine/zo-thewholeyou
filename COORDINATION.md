@@ -2,6 +2,19 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-21  v49: all-chapter glitch sweep and fixes (Cowork session)
+
+- Founder asked: double check every chapter for glitches and fix all of them.
+- Sweep: every chapter 1 to 61 started headless (SwiftShader), 3 s idle, 3 s walking forward, two screenshots each, page and console errors captured (/tmp test t170). Result: no page errors in 2 to 61. Chapters 1 and 45 open with the sleep cutscene; the test now waits for play mode and clicks Skip.
+- Bugs found and fixed:
+  - frameInner crashed for one frame when a cutscene ended (C became null inside updCine, then C.kind was read). Hit at the end of the sleep cutscene in chapters 1 and 45. Now returns early when the cutscene closed.
+  - Chapter 16: the synthwave sun (glow size 300, intensity 2.5) plus god rays at 1.0 and HDR gate rings bloomed into a white disc that covered the screen. Sun 240/0.8, rays 0.3, gate rings capped at 1.0 and faded by camera distance.
+  - Chapter 15: god rays 0.5 to 0.2 (white glare at the top). Chapter 49: rays 0.4 to 0.2.
+  - Chapter 32: the follow camera went inside Gronk (screen went black). An invisible 6.6 x 8.4 x 4.6 box on the golem is now a camera blocker.
+  - Chapters 56 to 58: name tags (lbl) filled the screen when the character was near the camera. All name tags now fade out within 6 m of the camera (fadeLabels, registry cleared per chapter).
+- Not bugs (checked): Dream time showing hours or years (WORLD.mult dilation by design); chapter 2 pauses play for the black hole fall; chapter 5 walking off a sky island; eyelids opening slowly in tests (frame time in SwiftShader).
+- Verified after the fixes: chapters 1, 16, 32, 49, 56, 57, 61 re-run, 0 errors, screenshots checked.
+
 ## 2026-10-21  v48: chapter 61 The Time Break, masked villain (Cowork session)
 
 - Chapter 61 (world `timebreak`, reuses buildZeroTower): top of the tower, the masked villain on the screen; Doom flies up from his cell and smashes the screen (glass shards); Doom: "Remember? We were FRIENDS." Zero: "Too sad… Our relationship is OVER." and vanishes; six dark ships circle the tower and fire beams with red warning rings (hits cost a life in the playable parts); run to the glass lift, fast ride down 70 to 01 with shaking; Lily waits at the bottom; escape through a hole Doom broke in the east wall (new wall geometry with a gap, east buttress and torch hidden, custom clamp for yard, gap and plain); outside: a grass plain with an army from 1783 (8 rigged redcoats with tricorn hats, 60 instanced soldiers, banners, cannons) and a King (crown, sceptre, red velvet cape with ermine trim); Doom: "Who are you?"; King (British accent): "from the year 1783"; the villain appears as a giant hologram in the sky: he broke into the Time Station and set time free; floating clocks in the sky; Doom explains past, present and future are mixed; Lily: we have to reach the Time Stations; dreamer: "But… how do we even get there?" TO BE CONTINUED.
