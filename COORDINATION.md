@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-22  v51: villain mask in grey forged steel (Cowork session)
+
+- Founder asked: make the mask metal and grey with good design and texture. Mask colour map is now gunmetal grey with brushed grain, hammer marks and darker worn edges; engraved grooves (centre seam, brow scrolls, cheek lines, chin lines, forehead lines) drawn into both the colour map and a new bump map; gold clock engraving kept; burned quarter kept (also pitted in the bump map). Metalness 0.6, roughness 0.42, envMapIntensity 0.35 so the purple sky does not tint it.
+- Villain screen lighting made neutral (the red point light and pink rim light had turned the steel red). Render target raised from 640x360 to 1024x576 so the engraving reads.
+- No rivets or mouth grille (keeps the design original).
+- Test: villain close-up from the render target checked; chapters 60 and 61 screens and the sky hologram ran with 0 errors.
+
 ## 2026-10-22  v50: chapter 62 All Times At Once; robed masked villain (Cowork session)
 
 - Villain (entityFigure) rebuilt on the founder's ask: "like how you made Zero but not exactly like Zero, make him good". Procedural robed figure (lathe robe plus open outer cloak with gold clock-gear filigree at the hem, shoulder mantle, deep hood with a front opening), a slowly turning gold Roman-numeral clock dial behind his head, an hourglass staff with sand that drains and refills, golden time energy in the left hand, time dust drifting off the hem. Mask: sculpted steel face (displaced sphere segment: brow, nose, cheekbones, lips, chin), polished silver so it reads against the hood, the upper-left quarter burned (charred metal, glowing ember cracks, smoke and sparks), dark eye slits, a thin gold clock engraving on the forehead. No horns, no red eyes, no robot body.
