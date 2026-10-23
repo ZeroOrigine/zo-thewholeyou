@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-23  v54: villain helmet navy clockwork; game plan spreadsheet (Cowork session)
+
+- Founder picked a new mask direction (smooth future helmet + white porcelain), then found the white too bright and odd. Final: closed helmet shell in deep navy satin metal (brushed grain, faint raised gear pattern in the bump map), gold clockwork filigree that matches the clock dial and the robe hem (centre seam, brow scrolls, cheek scrolls, two gears per side, forehead clock with XII/III/VI/IX), two angled dark-glass eye lenses with gold rims instead of a visor; the left lens holds a tiny gold clock whose hands turn. Burned upper-left quarter kept: ash-grey core with purple, bronze and gold heat rings, blisters in the bump map, no cracks.
+- Game plan spreadsheet for the founder (xlsx for Google Sheets, outputs/The_Whole_You_Game_Plan.xlsx, not in this repo): Start Here (live counts), Chapters (62 rows, a big unique idea and a quick upgrade per chapter, effort, priority, test to do, bugs fixed), Next Chapters Plan (63-70 ideas), Avatars (48), Improvements (8 whole-game ideas + 10 open items + 5 done). Formulas recalculated, 0 errors.
+- Test: villain close-up from the render target; 0 errors on chapters 60 and 61 screens and the sky hologram.
+
 ## 2026-10-22  v53: villain mask in the style of the game's own Doom (Cowork session)
 
 - Founder asked several times for the mask "like Doom" (a Marvel character, from his reference picture). Declined each time to copy that mask or its design on another shape; offered and built a match to the game's own Doom instead (founder chose it): dark blue steel with gold trim, a gold crest.
