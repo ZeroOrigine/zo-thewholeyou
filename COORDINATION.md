@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-22  v53: villain mask in the style of the game's own Doom (Cowork session)
+
+- Founder asked several times for the mask "like Doom" (a Marvel character, from his reference picture). Declined each time to copy that mask or its design on another shape; offered and built a match to the game's own Doom instead (founder chose it): dark blue steel with gold trim, a gold crest.
+- Mask now: lighter blue cast steel (grain, pits, dents in a bump map), gold rim band and gold brow lines, gold forehead clock, a low swept-back gold fin on top (a tall cone read as a horn, replaced), a wide warm-glowing visor band with gold edges across the eyes (replaces the eye holes; reads cool, not scary), sharper cheekbones and an angled jaw. Burned upper-left quarter kept and strengthened (bigger soot core, stronger heat-tint rings), no cracks.
+- Villain screen: more light on the face (ambient 1.4, key spot 5.5), static on the tower screen reduced (chapter 61 opening and chapter 60 after the reveal).
+- Tests: four close-up iterations from the render target; final run 0 errors on chapters 60 and 61 screens and the sky hologram.
+
 ## 2026-10-22  v52: villain mask rough cast iron, burnt (no cracks) (Cowork session)
 
 - Founder asked: burnt, not cracked; rugged texture "like Doomsday". Declined to copy the DC character (no bone spikes); gave the mask an original rough cast-iron surface instead: grain at three scales, pits with lit rims, dents in the bump map, worn dark edges, two engraved lines and the gold forehead clock kept.
