@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-22  v52: villain mask rough cast iron, burnt (no cracks) (Cowork session)
+
+- Founder asked: burnt, not cracked; rugged texture "like Doomsday". Declined to copy the DC character (no bone spikes); gave the mask an original rough cast-iron surface instead: grain at three scales, pits with lit rims, dents in the bump map, worn dark edges, two engraved lines and the gold forehead clock kept.
+- Burn (upper-left quarter): black soot core, heat-tint rings (blue, purple, brown, straw gold) as on overheated steel, soot smears, blisters and melt runs in the bump map, a few smouldering ember specks (emissive, gentle flicker). Glowing cracks removed.
+- Material: metalness 0.45, roughness 0.68, bumpScale 0.006, envMapIntensity 0.3.
+- Test: villain close-up checked from the render target; 0 errors on chapters 60 and 61 screens and the sky hologram.
+
 ## 2026-10-22  v51: villain mask in grey forged steel (Cowork session)
 
 - Founder asked: make the mask metal and grey with good design and texture. Mask colour map is now gunmetal grey with brushed grain, hammer marks and darker worn edges; engraved grooves (centre seam, brow scrolls, cheek lines, chin lines, forehead lines) drawn into both the colour map and a new bump map; gold clock engraving kept; burned quarter kept (also pitted in the bump map). Metalness 0.6, roughness 0.42, envMapIntensity 0.35 so the purple sky does not tint it.
