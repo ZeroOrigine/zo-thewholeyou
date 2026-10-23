@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-23  v55: chapter 63 The Train Through Time (Cowork session)
+
+- Founder's story: a real 3D train; you are inside, in your seat, watching from the window; it goes through a portal into space with no tracks and no road; you see timelines; you go to ask the driver and nobody is there; you are trapped. Founder added: you still hold the compass from chapter 62, and the train comes out of a FUTURE portal (the neon hexagon kind).
+- World `train` (buildTrain, updTrain): passenger car built as a full interior (navy and gold striped upholstery, patterned red carpet, wood panels, cream ceiling with lamps, brass luggage racks, facing seat bays with tables and table lamps, glass windows), a sliding door to the driver's cab (dashboard, three levers that move by themselves, a TIME gauge, a NEXT STOP: ??? screen, an empty driver seat, front window), a single-sided exterior shell (navy, gold stripe, curved roof, nose, wheels) so you can see out from inside.
+- Opening: on the plain with Lily and Doom, compass in hand pointing at a future portal; the train bursts out of it and stops; board; the world scrolls past (meadow, sleepers, poles, trees, hills); a second future portal; flash; space (stars, nebulae, speed streaks) with six timelines (tube ribbons) carrying era dioramas past the windows: 65 MILLION BC (T-rex), 1200 (castle), 1783 (redcoats), 1986 (arcade), 2049 (towers), TODAY (car). Playable: walk the aisle to the front (passengers from other times speak as you pass: a snoring knight, a robot reading DAILY NEWS 2049, a girl from 1986). Cab: nobody driving; doors locked; announcer: "This train… does not stop." TO BE CONTINUED.
+- Bugs fixed in tests: camera blocked by Doom and a pole, compass hidden inside the hero, portal timing (portal now starts at z -545 so the train meets it on the flash), day trees floating in space (moved into the day group), roof built upside down, player name tag huge inside the car (hidden in this chapter), missing L.showcase broke the chapter-select art (makeMenuArt).
+- Tests: full run twice, final run 0 errors.
+
 ## 2026-10-23  v54: villain helmet navy clockwork; game plan spreadsheet (Cowork session)
 
 - Founder picked a new mask direction (smooth future helmet + white porcelain), then found the white too bright and odd. Final: closed helmet shell in deep navy satin metal (brushed grain, faint raised gear pattern in the bump map), gold clockwork filigree that matches the clock dial and the robe hem (centre seam, brow scrolls, cheek scrolls, two gears per side, forehead clock with XII/III/VI/IX), two angled dark-glass eye lenses with gold rims instead of a visor; the left lens holds a tiny gold clock whose hands turn. Burned upper-left quarter kept: ash-grey core with purple, bronze and gold heat rings, blisters in the bump map, no cracks.
