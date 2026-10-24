@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-23  v56: chapter 63 train made futuristic, with lounge, AI chairs and suites (Cowork session)
+
+- Founder asked for the train to look like his reference image (silver-white, glass roof) and to be futuristic and realistic inside and out, then for suites, sofas and AI chairs inside.
+- Outside: pearl-white body, dark glass band, cyan light lines, sloped nose with a glass cockpit, glass roof with ribs, hover pads on a concrete guideway (no wheels).
+- Inside, back to front: LOUNGE (two long sofas with LED underglow, side tables with holo lamps); AI CHAIRS in bays 1 to 4 (glowing ring on each seat back, floating AI orb, holo screen); six private SUITES 1A to 3B (frosted glass walls, doorway, recliner, day-bed sofa, AI wall screen, name sign).
+- Glare fix: whites toned to soft grey, cabin lights 0.85 to 0.32, ambient 0.36 to 0.1; doorway light posts thinned and dimmed.
+- Tests: t173 full chapter run 0 errors; t174 and t175 interior shots (lounge, AI chairs, suites, corridor) 0 errors.
+
 ## 2026-10-23  v55: chapter 63 The Train Through Time (Cowork session)
 
 - Founder's story: a real 3D train; you are inside, in your seat, watching from the window; it goes through a portal into space with no tracks and no road; you see timelines; you go to ask the driver and nobody is there; you are trapped. Founder added: you still hold the compass from chapter 62, and the train comes out of a FUTURE portal (the neon hexagon kind).
