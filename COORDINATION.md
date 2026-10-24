@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-24  v57: chapter 64 The AI Chairs Wake Up (Cowork session)
+
+- Founder's pick: idea 5 (the AI chairs wake up), then "you are really in the past and in the train you see young zero… continued".
+- World `aichairs` (buildAIChairs reuses buildTrain; updAIChairs). Opening: a hologram of the masked one in the aisle ("I took the BRAIN of this train"), every AI ring and orb turns red; an AI chair whispers the plan.
+- Puzzle: six AI chairs carry year signs in mixed-up seats; sit in them oldest to newest (65 MILLION BC, 1200, 1783, 1986, TODAY, 2049) by stepping next to a chair. A wrong chair resets the count, the masked voice laughs, and the next correct chair glows as a hint.
+- Win: rings go blue, the train AI is free, flash into THE PAST: the train stands at PAST STATION (old platform, canopy, clock, lamps, houses, warm old colour grade). Young Zero (zeroFigure at 0.66, hood down so his face shows, toy tower) walks in: "I am Zero. I am nine…". Doom: "…Zero?". End: "maybe we can change his future." TO BE CONTINUED.
+- Also: chapter 63 result button now says Chapter 64; TR_HOLO colour reset on every train build so red never leaks.
+- Tests: t176 and t177 full chapter runs (intro, one wrong chair, all six right, ending) 0 errors; t178 to t180 camera fixes 0 errors.
+
 ## 2026-10-23  v56: chapter 63 train made futuristic, with lounge, AI chairs and suites (Cowork session)
 
 - Founder asked for the train to look like his reference image (silver-white, glass roof) and to be futuristic and realistic inside and out, then for suites, sofas and AI chairs inside.
