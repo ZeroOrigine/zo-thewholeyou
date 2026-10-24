@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-24  v59: chapter 66 The Glitch World, Time Keeper guards and the Judge, cute realistic Lily (Cowork session)
+
+- Founder's story for ch66: through the portal into a glitch world; old Zero has become the masked one's assistant; the way back closes; defeated (written for kids as "too weak to stand"); Lily knocked out; the Time Keepers come out of a bright portal and take them; they face a Judge. Continued.
+- World `glitch` (buildGlitch, updGlitch): neon path through floating broken pieces of every era with glitch ghosts; six sliding glitch walls; dais with the masked one (entityFigure, new helmet) and old Zero (red glow); the entry portal shrinks shut; survive Zero for 25 s (red shockwave rings, red target circles; dream light bounces off); everyone lies down; Time Keeper guards (MAX rig in silver and gold, clock shields, glowing gold laser swords) jump down from a light portal; Hall of Time: marble, gold-banded pillars, red carpet, giant clock and cosmic sky behind the throne; playable walk to the Judge with glowing footstep rings, pillars lighting up, guards saluting with gold shockwaves, aisle lights, rising gold sand, faster sky rings.
+- The Judge (gwJudge) rebuilt bigger: midnight-blue robe with gold pattern, silver inner robe, layered shoulder plates, a sunburst collar of gold clock hands, hourglass head with twelve orbiting Roman numerals, a glowing time-sun with rays in the chest, scales of justice, pendulum staff, circling gear rings. A reference image the founder sent was a trading-card artwork, so the design is original, not a copy.
+- Lily (story and hero 27) now matches her cartoon look in 3D: auburn hair buns, fair skin (founder asked), pink top and pants, a pink sparkle skirt measured to her waist, star wand, star hair clips (miaMat skin/top/hair recolor, cuteExtras).
+- Tests: t190 full ch66 run 0 errors; t191/t192 guards, hall walk, Judge, Lily views 0 errors. The last skirt lowering (5 cm) was not re-checked on screen.
+
 ## 2026-10-24  v58: chapter 65 Zero's Village, every person hero walks upright, new villain helmet (Cowork session)
 
 - Founder's story for ch65: "if we kill Zero now the future won't change" (written for a kids' game as "We can't hurt him. He is just a kid."), Doom: look around his village for evidence; young Doom ("Oh, hi Doom!"); Zero's real family; search the house; a screen glitches in the past; a mech jumps out; everyone except Zero is teleported; beat the mech; a strange sound lurks.
