@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-24  v58: chapter 65 Zero's Village, every person hero walks upright, new villain helmet (Cowork session)
+
+- Founder's story for ch65: "if we kill Zero now the future won't change" (written for a kids' game as "We can't hurt him. He is just a kid."), Doom: look around his village for evidence; young Doom ("Oh, hi Doom!"); Zero's real family; search the house; a screen glitches in the past; a mech jumps out; everyone except Zero is teleported; beat the mech; a strange sound lurks.
+- World `village` (buildVillage, updVillage): station, road, 7 cottages, well, fences, lamps, trees kept off the road and houses, playground with a ball; Zero's house you can walk into (room camera inside), parents (zeroFigure, hoods down), 4 clues (family photo, MY TOWER drawing, Zero and Doom toys, a glowing chip); screen with live static; glitch arena (neon grid, pillars, floating cubes); GLITCH MECH boss (stomp shockwave, cannon orbs, red target circles), Doom joins in at half health; death sends you back to the arena start, never fails.
+- Walking fix for every person hero (Dad, Mia, MAX and ninja bodies): run clip no longer mixed in for people (it caused the hunched, deep-knee walk); standTall() measures the spine-to-neck line each frame and turns it back to that body's own standing direction; armsSwing() hangs the arms by the sides and swings them opposite the legs; leg-length looks now scale evenly (one-axis scale sheared the knee).
+- Villain helmet repainted (emPaint): stylized, ten pattern zones (chevrons, clock, Greek key, brows with spirals, honeycomb with glowing seams, circuit lines, centre diamonds, ribbed jaw with sun, hatching and waves, rivets), flame-shaped burnt quarter with glowing ember edge.
+- Tests: ch65 full run t183 0 errors (fixes after it: house camera, tree placement, kids' tag positions, parents' hoods, beam fade); walk sweep t187/t188 on Kage, Astro Ava, Chompy, Captain Whiskers, Sir Clank, Finn, Lily, Merlo, King Aurum: all upright, 0 errors; helmet render checked.
+
 ## 2026-10-24  v57: chapter 64 The AI Chairs Wake Up (Cowork session)
 
 - Founder's pick: idea 5 (the AI chairs wake up), then "you are really in the past and in the train you see young zero… continued".
