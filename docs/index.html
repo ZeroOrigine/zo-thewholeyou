@@ -4219,10 +4219,121 @@ function updDoomArrive(dt){const P=S.P,L=S.L;S.stT=(S.stT||0)+dt;
       const tg=V3(-10.5,0,15);const to=tg.clone().sub(D.g.position);to.y=0;const dd=to.length();if(dd>0.4){to.normalize();D.g.position.addScaledVector(to,Math.min(dd,dt*3));D.g.rotation.y=Math.atan2(to.x,to.z);D.step(S.t,0.8);}else{D.g.rotation.y=Math.atan2(P.pos.x-D.g.position.x,P.pos.z-D.g.position.z);}L.doomLbl.position.set(D.g.position.x,4.4,D.g.position.z);
       if(k>=1&&hdist(P.pos,V3(-14,0,16))<4.5&&!S.fin){S.fin=1;burst(P.pos.clone().setY(1),0xffd166,40,6);beep(784,0.3,'triangle');setTimeout(()=>beep(1046,0.4,'triangle'),180);running=false;finish(true);}}}}
 /* ---- Chapter 56: stuck in the wormhole ---- */
+/* ---- Chapter 56 v60: realistic warp tunnel (swirl walls, speed streaks, red core, plasma wisps, sparkles) ---- */
+const WH_NOISE=`
+vec3 m289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}vec4 m289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 perm(vec4 x){return m289(((x*34.0)+1.0)*x);}vec4 tis(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
+vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=m289(i);
+vec4 p=perm(perm(perm(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 norm=tis(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
+return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
+float fbm3(vec3 p){return 0.5*snoise(p)+0.25*snoise(p*2.03+7.1)+0.125*snoise(p*4.01+3.7);}
+`;
+const WH_AX=6,WH_FAR=-330,WH_NEAR=270,WH_R=58;
+function whTunnel(L){
+  const g=new THREE.CylinderGeometry(WH_R*0.74,WH_R,WH_NEAR-WH_FAR,160,40,true);g.rotateX(-Math.PI/2);g.translate(0,WH_AX,(WH_NEAR+WH_FAR)/2);
+  const m=new THREE.ShaderMaterial({uniforms:{uT:{value:0},uOff:{value:0},uSpd:{value:0}},side:THREE.BackSide,depthWrite:false,fog:false,
+    vertexShader:`varying vec3 vW;void main(){vec4 w=modelMatrix*vec4(position,1.0);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    fragmentShader:WH_NOISE+`uniform float uT,uOff,uSpd;varying vec3 vW;
+    void main(){float a=atan(vW.y-${WH_AX}.0,vW.x);float d=vW.z;float far=clamp((40.0-d)/360.0,0.0,1.0);
+      float sw=a+d*0.011+uT*0.22;vec2 cs=vec2(cos(sw),sin(sw));float z=(d-uOff)*0.016;
+      float n=fbm3(vec3(cs*1.9,z))*0.5+0.5;
+      float n2=fbm3(vec3(cs*3.4+5.0,z*1.7+2.0))*0.5+0.5;
+      float sw2=a+d*0.004+uT*0.05;vec2 c2=vec2(cos(sw2),sin(sw2));
+      float st=snoise(vec3(c2*11.0,(d-uOff*1.3)*0.0028));st=pow(max(st,0.0),2.5);
+      float st2=snoise(vec3(c2*26.0+3.0,(d-uOff*1.6)*0.0045));st2=pow(max(st2,0.0),4.0);
+      vec3 navy=vec3(0.004,0.018,0.075),blue=vec3(0.015,0.12,0.42),cyan=vec3(0.12,0.62,1.1),white=vec3(0.85,0.95,1.2);
+      vec3 col=mix(navy,blue,smoothstep(0.25,0.6,n));col=mix(col,cyan,smoothstep(0.55,0.85,n)*(0.35+0.65*far));
+      col+=white*smoothstep(0.66,0.92,n2)*(0.25+0.9*far);
+      col+=mix(cyan,white,0.4)*st*(0.9+1.6*far)+white*st2*1.4;
+      float left=smoothstep(0.25,0.95,-cos(a-0.35));col+=vec3(0.9,0.12,0.55)*left*(smoothstep(0.5,0.8,n)*0.9+st*1.4)*(0.5+far);
+      col*=0.55+0.9*far*far+uSpd*0.004;col+=vec3(0.35,0.7,1.2)*pow(far,6.0)*1.6;
+      col*=smoothstep(${WH_NEAR}.0,${WH_NEAR-120}.0,d);
+      gl_FragColor=vec4(pow(max(col,0.0),vec3(2.2)),1.0);}`});
+  const t=add(L.scene,g,m,0,0,0);t.renderOrder=-5;t.frustumCulled=false;return m;}
+function whCap(L){const m=new THREE.ShaderMaterial({uniforms:{uT:{value:0}},depthWrite:false,fog:false,
+    vertexShader:`varying vec2 vU;void main(){vU=uv*2.0-1.0;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:WH_NOISE+`uniform float uT;varying vec2 vU;void main(){float r=length(vU);float a=atan(vU.y,vU.x);
+      float n=snoise(vec3(cos(a+r*4.0-uT*0.4)*2.0,sin(a+r*4.0-uT*0.4)*2.0,r*3.0-uT*0.3))*0.5+0.5;
+      vec3 c=mix(vec3(0.03,0.12,0.42),vec3(0.55,0.85,1.35),smoothstep(0.35,1.0,r))*(0.8+0.4*n);gl_FragColor=vec4(pow(c,vec3(2.2)),1.0);}`});
+  const p=add(L.scene,new THREE.CircleGeometry(WH_R*0.78,64),m,0,WH_AX,WH_FAR+2);p.renderOrder=-4;return m;}
+function whCore(L){
+  const m=new THREE.ShaderMaterial({uniforms:{uT:{value:0},uSpd:{value:0}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,
+    vertexShader:`varying vec2 vU;void main(){vU=uv*2.0-1.0;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:WH_NOISE+`uniform float uT,uSpd;varying vec2 vU;
+    void main(){float r=length(vU);float a=atan(vU.y,vU.x);vec2 cs=vec2(cos(a),sin(a));
+      float fl=0.75+0.5*(snoise(vec3(cs*2.5,uT*0.9))*0.5+0.5);float fl2=snoise(vec3(cs*6.0,uT*1.6))*0.5+0.5;
+      float R=0.36+0.012*snoise(vec3(cs*3.0,uT*0.7));
+      float ring=exp(-pow((r-R)/0.06,2.0))*fl;float hot=exp(-pow((r-R+0.03)/0.014,2.0))*(0.6+0.8*fl2);
+      float outer=exp(-pow((r-R-0.03)/0.09,2.0))*0.5;
+      float cy=exp(-pow((r-0.21)/0.016,2.0))*(0.8+0.4*fl2);float cyg=exp(-pow((r-0.21)/0.06,2.0))*0.35;
+      float ctr=exp(-r*r/0.012)*0.9+exp(-r*r/0.05)*0.25;float halo=exp(-r*2.6)*0.55;
+      vec3 c=vec3(1.3,0.3,0.02)*ring*1.6+vec3(1.3,0.62,0.1)*hot*1.3+vec3(0.9,0.1,0.04)*outer
+        +vec3(0.2,0.9,1.25)*(cy*1.6+cyg)+vec3(0.4,0.7,1.2)*ctr*0.8+vec3(0.15,0.35,0.9)*halo*0.5;
+      c*=1.0+uSpd*0.012;c*=1.0-smoothstep(0.75,1.0,r);gl_FragColor=vec4(pow(max(c,0.0),vec3(2.2)),1.0);}`});
+  const p=add(L.scene,new THREE.PlaneGeometry(130,130),m,0,WH_AX,-300);p.renderOrder=-3;return{m,p};}
+function whWisps(L){
+  const ws=[];const mk=(z,s,seed,int,rot)=>{
+    const m=new THREE.ShaderMaterial({uniforms:{uT:{value:0},uSeed:{value:seed},uI:{value:int}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,side:THREE.DoubleSide,
+      vertexShader:`varying vec2 vU;void main(){vU=uv*2.0-1.0;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+      fragmentShader:WH_NOISE+`uniform float uT,uSeed,uI;varying vec2 vU;
+      void main(){float r=length(vU);float a=atan(vU.y,vU.x)+r*3.2-uT*0.35;vec2 cs=vec2(cos(a),sin(a));
+        float n=fbm3(vec3(cs*1.6+uSeed,r*3.0-uT*0.4))*0.5+0.5;float arm=smoothstep(0.55,0.86,n);
+        float band=smoothstep(0.12,0.32,r)*(1.0-smoothstep(0.62,0.98,r));
+        vec3 c=mix(vec3(0.5,0.75,1.2),vec3(1.1,1.1,1.2),arm)*arm*band*uI;gl_FragColor=vec4(pow(max(c,0.0),vec3(2.2)),1.0);}`});
+    const p=add(L.scene,new THREE.PlaneGeometry(s,s),m,0,WH_AX,z);p.renderOrder=-2;p.rotation.z=rot;ws.push({m,p,sp:0.06+seed*0.01});};
+  mk(-285,150,1.3,0.55,0);mk(-240,170,4.7,0.35,1.2);mk(-180,190,8.1,0.22,2.5);mk(-110,200,2.2,0.12,4.0);return ws;}
+function whStreaks(L,N,span){
+  const base=new THREE.PlaneGeometry(1,1);const g=new THREE.InstancedBufferGeometry();g.index=base.index;g.attributes.position=base.attributes.position;g.attributes.uv=base.attributes.uv;
+  const P=new Float32Array(N*3),C=new Float32Array(N*3),W=new Float32Array(N*2);
+  for(let i=0;i<N;i++){const r=Math.random()<0.25?rnd(9,22):rnd(22,WH_R-3);P[i*3]=rnd(0,TAU);P[i*3+1]=r;P[i*3+2]=rnd(0,span);
+    const k=Math.random();const c=k<0.62?[0.55,0.85,1.3]:k<0.86?[1.2,1.2,1.3]:k<0.95?[1.2,0.35,0.85]:[1.3,0.55,0.25];C.set(c,i*3);W[i*2]=rnd(0.06,0.22);W[i*2+1]=rnd(4,16);}
+  g.setAttribute('aP',new THREE.InstancedBufferAttribute(P,3));g.setAttribute('aC',new THREE.InstancedBufferAttribute(C,3));g.setAttribute('aW',new THREE.InstancedBufferAttribute(W,2));g.instanceCount=N;
+  const m=new THREE.ShaderMaterial({uniforms:{uOff:{value:0},uStr:{value:1},uSpan:{value:span},uI:{value:1}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,side:THREE.DoubleSide,
+    vertexShader:`attribute vec3 aP,aC;attribute vec2 aW;uniform float uOff,uStr,uSpan;varying vec2 vU;varying vec3 vC;varying float vF;
+    void main(){float z=mod(aP.z+uOff,uSpan)-uSpan+${WH_NEAR-150}.0;float len=aW.y*uStr;
+      vec3 rad=vec3(cos(aP.x),sin(aP.x),0.0);vec3 tg=vec3(-sin(aP.x),cos(aP.x),0.0);float rr=aP.y*(1.0-0.18*clamp((-z)/330.0,0.0,1.0));
+      vec3 p=rad*rr+vec3(0.0,${WH_AX}.0,0.0)+tg*position.x*aW.x*(1.0+uStr*0.15)+vec3(0.0,0.0,z+position.y*len);
+      vU=uv;vC=aC;vF=smoothstep(${WH_FAR}.0,${WH_FAR+90}.0,z)*smoothstep(${WH_NEAR-150}.0,${WH_NEAR-230}.0,z);
+      gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
+    fragmentShader:`uniform float uI;varying vec2 vU;varying vec3 vC;varying float vF;
+    void main(){float along=pow(vU.y,1.6)*(1.0-smoothstep(0.85,1.0,vU.y));float across=1.0-abs(vU.x*2.0-1.0);across*=across;
+      gl_FragColor=vec4(pow(vC*along*across*vF*uI*1.6,vec3(2.2)),1.0);}`});
+  const s=new THREE.Mesh(g,m);s.frustumCulled=false;s.renderOrder=-1;L.scene.add(s);return m;}
+function whSparks(L,N,span){
+  const g=new THREE.BufferGeometry();const P=new Float32Array(N*3),C=new Float32Array(N*3),Z=new Float32Array(N);
+  for(let i=0;i<N;i++){const a=rnd(0,TAU),r=Math.sqrt(Math.random())*(WH_R-4)+2;P[i*3]=Math.cos(a)*r;P[i*3+1]=WH_AX+Math.sin(a)*r;P[i*3+2]=0;Z[i]=rnd(0,span);
+    const k=Math.random();C.set(k<0.7?[0.8,0.95,1.3]:k<0.9?[0.4,0.8,1.3]:[1.2,0.5,1.0],i*3);}
+  g.setAttribute('position',new THREE.BufferAttribute(P,3));g.setAttribute('aC',new THREE.BufferAttribute(C,3));g.setAttribute('aZ',new THREE.BufferAttribute(Z,1));
+  const m=new THREE.ShaderMaterial({uniforms:{uOff:{value:0},uSpan:{value:span},uT:{value:0}},transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,
+    vertexShader:`attribute vec3 aC;attribute float aZ;uniform float uOff,uSpan,uT;varying vec3 vC;
+    void main(){vec3 p=position;p.z=mod(aZ+uOff,uSpan)-uSpan+${WH_NEAR-150}.0;vec4 mv=modelViewMatrix*vec4(p,1.0);
+      float tw=0.6+0.4*sin(uT*6.0+aZ*3.1);vC=aC*tw*smoothstep(${WH_FAR}.0,${WH_FAR+60}.0,p.z);
+      gl_PointSize=clamp(2600.0/-mv.z,1.5,9.0)*(0.7+0.6*fract(aZ*7.31));gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying vec3 vC;void main(){vec2 q=gl_PointCoord*2.0-1.0;float d=dot(q,q);float k=exp(-d*5.0)+0.6*exp(-d*28.0);
+      float x=exp(-abs(q.x)*14.0)*exp(-abs(q.y)*2.5)+exp(-abs(q.y)*14.0)*exp(-abs(q.x)*2.5);gl_FragColor=vec4(pow(vC*(k+x*0.5),vec3(2.2)),1.0);}`});
+  const p=new THREE.Points(g,m);p.frustumCulled=false;p.renderOrder=-1;L.scene.add(p);return m;}
+function whBuild(L){const W={};W.tun=whTunnel(L);W.cap=whCap(L);W.core=whCore(L);W.wisps=whWisps(L);W.str=whStreaks(L,1600,480);W.spk=whSparks(L,2400,480);W.off=0;
+  W.coreLight=new THREE.PointLight(0x6ab8ff,1.4,140,1.2);W.coreLight.position.set(0,WH_AX+4,-40);L.scene.add(W.coreLight);
+  W.rim=new THREE.DirectionalLight(0xff7a4a,0.35);W.rim.position.set(-20,10,-80);L.scene.add(W.rim);L.wh=W;return W;}
+function whUpd(L,dt,spd){const W=L.wh;if(!W)return;const flow=16+spd*2.2;W.off+=dt*flow;const t=S.t;
+  W.tun.uniforms.uT.value=t;W.cap.uniforms.uT.value=t;W.tun.uniforms.uOff.value=W.off;W.tun.uniforms.uSpd.value=spd;
+  W.core.m.uniforms.uT.value=t;W.core.m.uniforms.uSpd.value=spd;W.core.p.rotation.z=t*0.08;
+  W.wisps.forEach((w,i)=>{w.m.uniforms.uT.value=t*(1+spd*0.02);w.p.rotation.z+=dt*(w.sp+spd*0.004)*(i%2?-1:1);});
+  W.str.uniforms.uOff.value=W.off;W.str.uniforms.uStr.value=1+flow/30;W.str.uniforms.uI.value=0.85+Math.min(1.2,spd/60);
+  W.spk.uniforms.uOff.value=W.off*0.9;W.spk.uniforms.uT.value=t;W.coreLight.intensity=1.4+spd*0.03+Math.sin(t*3)*0.15;}
+
 function buildWormhole(S){
-  const L=baseLevel({fog:[0x1a0c3a,0.008],sky:{top:0x05020f,mid:0x1a0c3a,bot:0x2a1050,sunDir:V3(0,1,0),sunCol:0xb08aff,clouds:0,cloudCol:0x000000,stars:1},hemi:[0x8a6aff,0x1a0a2a,0.7],sunCol:0xd8c0ff,sunInt:1.3,sunDir:V3(0.3,0.8,0.4),bounds:{type:'sq',size:70},gain:[0.95,0.9,1.1],sat:1.2,raysK:0.2,ground:()=>-Infinity});
-  L.fallText='LOST IN THE WORMHOLE! -1 LIFE';
-  L.rings=[];for(let i=0;i<30;i++){const z=-96+i*7;const col=new THREE.Color().setHSL(((i/30)*0.5+0.55)%1,0.9,0.6);const m=new THREE.MeshBasicMaterial({color:col.multiplyScalar(1.5),transparent:true,opacity:0.6,fog:false});const r=add(L.scene,new THREE.TorusGeometry(46,0.4,8,72),m,0,6,z);r.rotation.z=i*0.35;L.rings.push(r);}
+  const L=baseLevel({fog:[0x071a3e,0.006],sky:{top:0x020814,mid:0x06183a,bot:0x0a2050,sunDir:V3(0,1,0),sunCol:0x8ac8ff,clouds:0,cloudCol:0x000000,stars:1},hemi:[0x8ac4ff,0x2a3a6a,1.15],sunCol:0xd8ecff,sunInt:1.6,sunDir:V3(0.3,0.8,0.4),bounds:{type:'sq',size:70},gain:[0.95,0.98,1.06],sat:1.15,raysK:0.2,ground:()=>-Infinity});
+  L.fallText='LOST IN THE WORMHOLE! -1 LIFE';L.raysK=0;
+  L.rings=[];whBuild(L);if(L.sky)L.sky.visible=false;if(L.atmo)L.atmo.visible=false;if(L.cloudLayer)L.cloudLayer.visible=false;L.bloomK=0.85;
   const hull=M({map:panelTex(),color:0x9aa0b8,roughness:.45,metalness:.7}),gold=metalM(0xffc94a,.25),rock=REALGFX?pbrMat('rock',{p:{color:0x9a86c0,roughness:1},ns:1.4}):M({color:0x4a3a6a,roughness:.95});
   obPlat(L,0,0,0,8,30,hull,1.2);const deck=add(L.scene,new THREE.PlaneGeometry(8,30),M({map:panelTex(),color:0xc0c6d8,roughness:.35,metalness:.75}),0,0.01,0,1,1,1,-Math.PI/2);deck.receiveShadow=true;add(L.scene,box(8.4,0.12,30.4),gold,0,-0.04,0);
   for(let z=-13;z<=13;z+=2){add(L.scene,sphere(0.16,10,8),glowM(0x5ee7ff,2.5),-3.8,0.12,z);add(L.scene,sphere(0.16,10,8),glowM(0x5ee7ff,2.5),3.8,0.12,z);}
@@ -4242,7 +4353,7 @@ function updWormhole(dt){const P=S.P,L=S.L;S.stT=(S.stT||0)+dt;
     const d=doomFigure();d.g.position.set(2.5,0,-5);d.g.rotation.y=Math.PI;L.scene.add(d.g);L.doom=d;L.doomLbl=lbl(L,'DOOM','#ffd166',0.7,2.5,4.4,-5);
     toast('INSIDE THE WORMHOLE',2600);
     talk([['DOOM','My ship. Full speed through the wormhole, straight to Zero.'],['DOOM','…Wait. The speed is DROPPING. The wormhole is pulling us in!'],['{N}','We are STUCK?!'],['DOOM','The engine lost 5 parts. They are floating on those rocks. Go. Jump carefully. I will hold the ship steady.']]);}
-  L.rings.forEach((r,i)=>{r.position.z+=dt*L.ringSpd;r.rotation.z+=dt*(0.3+i*0.02);if(r.position.z>20)r.position.z-=210;r.material.opacity=0.35+Math.min(0.5,L.ringSpd/80);});
+  whUpd(L,dt,L.ringSpd);
   if(Math.random()<dt*20)emit({x:rnd(-40,40),y:rnd(-10,30),z:-90,vx:0,vy:0,vz:L.ringSpd*0.8+4,life:6,max:6,r:1.5,g:1.2,b:2.5,size:0.08,grav:0,drag:0});
   const D=L.doom;D.g.rotation.y=Math.atan2(P.pos.x-D.g.position.x,P.pos.z-D.g.position.z);D.step(S.t,0);
   for(const it of S.pt){if(!it.done&&!S.items.includes(it)){it.done=1;floatText(it.pk.toUpperCase()+'!',it.pos.clone().setY(it.pos.y+1.5),'#ffd166',0.9);burst(it.pos,0xffd166,30,6);const n=S.pt.filter(q=>q.done).length;L.sockets[n-1].material.emissive.setHex(0x7dff6b);

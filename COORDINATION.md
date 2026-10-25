@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-24  v60: chapter 56 Stuck in the Wormhole gets a realistic warp tunnel (Cowork session)
+
+- Founder sent an AI-made warp tunnel picture and asked for the wormhole to look like it, "super duper realistic".
+- Old look (30 flat coloured rings) replaced by a warp tunnel built in shaders (whBuild, whUpd): swirling blue and cyan tunnel walls with white smoke and pink streaks on the left; 1600 speed streaks rushing past; 2400 twinkling sparkles; a red-orange core ring with a cyan inner ring at the far end; plasma swirls around the core; a glowing far cap; blue core light and a warm rim light on the ship.
+- Speed is tied to the story: slow drift while you collect the 5 parts, then at FULL SPEED the streaks stretch into hyperspace lines and the tunnel races.
+- Fixes found while testing: shader colours converted to linear (the game applies gamma, so first try was washed out); the sky dome was drawing over the tunnel, now hidden for this chapter; god rays off here; deck lights brighter.
+- Gameplay unchanged (deck, rocks, parts, engine, Doom lines).
+- Tests: t193 to t196 full chapter runs (play view, tunnel view, all 5 parts, engine, full speed, chapter result) 0 errors.
+
 ## 2026-10-24  v59: chapter 66 The Glitch World, Time Keeper guards and the Judge, cute realistic Lily (Cowork session)
 
 - Founder's story for ch66: through the portal into a glitch world; old Zero has become the masked one's assistant; the way back closes; defeated (written for kids as "too weak to stand"); Lily knocked out; the Time Keepers come out of a bright portal and take them; they face a Judge. Continued.
