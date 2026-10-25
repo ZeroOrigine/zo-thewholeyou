@@ -2,6 +2,17 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-25  v61: chapter 67 Trial of Memories (Cowork session)
+
+- Founder picked idea 2: the Judge looks into your memories on giant clock screens; you walk into each one to prove you are good; one memory changes while you watch, because the masked one has been editing your past.
+- World `trial` (buildTrial reuses the Hall of Time from buildGlitch; updTrial). Intro: the Judge opens the trial, three gold-framed memory screens rise out of the floor with painted pictures (THE LOST STAR, ZERO'S TOWER, THE GREAT CLOCK). Walk onto a glowing pad and the camera dives into the picture.
+- Memory 1, The Lost Star: sunset garden, cottage, fence, stream, butterflies, flowers. Little Lily lost her star wand; find it behind the bushes and bring it back. The Judge: "Kindness."
+- Memory 2, Zero's Tower: playground (slide with steps, moving swings, bench, balloons, sandbox). Find 3 tower pieces (on the slide, on a swing, under the bench) and young Zero's tower rebuilds in the sandbox. "Will you be my friend?" "Always." The Judge: "Friendship."
+- Memory 3, The Great Clock (opens after the first two): town square with a clock tower. A gold ghost of you fixes the clock, then the memory glitches red, rewinds, and shows you breaking it. "GUILTY!" Erase 6 red EDIT marks (they run away; touch them or use dream light) and the colours come back. The masked one appears with a TIME PEN, then vanishes; the real memory returns.
+- Ending: the Judge declares NOT GUILTY, guards salute with gold shockwaves and fireworks, and a golden door opens to go after the Time Pen. TO BE CONTINUED. Ch66 result button now says Chapter 67.
+- Fix found in testing: the screen dive first used S.dive, which the game already uses for its sleep dive and sent you to chapter 2; renamed to S.tmDive. Camera now snaps after each memory (was dark for a moment).
+- Tests: t197 to t199 full chapter runs (intro, all three memories, final) 0 errors.
+
 ## 2026-10-24  v60: chapter 56 Stuck in the Wormhole gets a realistic warp tunnel (Cowork session)
 
 - Founder sent an AI-made warp tunnel picture and asked for the wormhole to look like it, "super duper realistic".
