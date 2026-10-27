@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-26  v63: chapter 68 easier and clearer, slower cutscenes in 67 and 68 (Cowork session)
+
+- Founder: "make some time to read the lines and don't make it too confusing for the obstacles" (he could not tell how to reach the desk).
+- Cutscenes in ch67 and ch68 now run at 70 to 72% speed, so every line stays on screen longer.
+- Ch68 path: a glowing ring with a bouncing arrow sits on the next spot to go; the map arrow points there too; one clear tip per part (books, stairs, bridge); bigger books (3.4 x 3.0) with ~1 m gaps that start sinking after 1.6 s and sink slower; bigger book stairs with no gaps; wider bridge (3.4) that touches the desk platform; wind about half as strong; ink meter about 50% slower; a tip after the first fall into the ink.
+- Published before the key-press playthrough test finished, at the founder's request for speed; test result to follow.
+
 ## 2026-10-26  v62: chapter 68 The Last Page (Cowork session)
 
 - Founder's story: idea 1 (the pen writes you) plus: the page is on a desk; Doom uses his power (animated, a lot cool) and the page does not even flinch; when you try to destroy it, it disappears and the whole library is destroyed; the masked villain, flying: "Good try"; everyone falls into the void; a portal opens while falling and brings them back to the Judge; the Judge saw everything and is scared: two more Time Stations exist, if he breaks both the whole universe falls; so far time is only worse in this galaxy, but we are in big trouble and he looks so powerful, so what should we do... Continued.

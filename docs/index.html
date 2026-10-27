@@ -6408,7 +6408,7 @@ function tmHallAnim(dt){const L=S.L;for(const r of L.rings)r.rotation.z+=dt*(S.f
   const J=L.judge.userData;J.sTop.scale.y=0.6+0.4*Math.abs(Math.sin(S.t*0.2));if(J.orb)J.orb.rotation.z-=dt*0.25;if(J.rays){J.rays.rotation.z+=dt*0.3;J.rays.children.forEach((r,i)=>r.scale.y=0.8+0.3*Math.sin(S.t*3+i));}if(J.gears)J.gears.forEach((g2,i)=>g2.rotation.y+=dt*(i%2?-0.2:0.15));if(J.pend)J.pend.rotation.z=Math.sin(S.t*1.6)*0.5;if(J.scales)J.scales.rotation.z=Math.sin(S.t*0.8)*0.12;if(L.sky2)L.sky2.rotation.z+=dt*0.02;
   for(const sh of L.shafts)sh.material.opacity=0.08+0.06*Math.sin(S.t*2+sh.position.z);
   for(const s of L.scr){s.shine.map.offset.x=(S.t*0.25+s.k*0.3)%1;s.crest.rotation.z=Math.sin(S.t*0.6+s.k)*0.05;const on=s.open&&!s.done;s.pad.opacity=on?0.6+0.35*Math.sin(S.t*4):0.35;s.beam.material.opacity=on?0.16+0.08*Math.sin(S.t*3):0.0;if(on&&Math.random()<dt*10)emit({x:s.padW.x+rnd(-0.9,0.9),y:0.1,z:s.padW.z+rnd(-0.9,0.9),vx:0,vy:rnd(1,2.4),vz:0,life:1.6,max:1.6,r:2.2,g:1.7,b:0.7,size:0.07,grav:0,drag:0.3});}}
-function tmIntro(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;P.pos.copy(L.spawn);P.yaw=Math.PI;tmTrio();
+function tmIntro(dt){const P=S.P,L=S.L;S.cine+=dt*0.72;const T=S.cine;P.pos.copy(L.spawn);P.yaw=Math.PI;tmTrio();
   gwSay('t0',T,[[0.6,'THE JUDGE','The trial of {N} begins NOW.'],[4.0,'THE JUDGE','Words can lie. Memories cannot. This court will look into your PAST.'],[9.0,'LILY','Whoa… those are YOUR memories, {N}!'],[12.6,'THE JUDGE','Walk into a memory. Show me who you really are.'],[16.4,'DOOM','Go on. We will be right here.'],[19.6,'THE JUDGE','Two memories first. The third… will decide everything.']]);
   if(T>8&&T<11){const u=sm((T-8)/2.6);L.scr.forEach((s,i)=>{const v=sm(Math.min(1,Math.max(0,(T-8-i*0.25)/2.4)));s.lift.position.y=-14*(1-v);});if(!S.tmRise){S.tmRise=1;boomSnd();S.shake=0.5;for(const s of L.scr)burst(V3(s.g.position.x,0.4,s.g.position.z),0xffd890,60,7,0.3,1.2,-2,2);beep(392,0.8,'sine');setTimeout(()=>beep(523,0.8,'sine'),250);setTimeout(()=>beep(784,1.0,'sine'),500);}if(u>=0.99)for(const s of L.scr)s.lift.position.y=0;}
   else if(T>=11)for(const s of L.scr)s.lift.position.y=0;
@@ -6449,14 +6449,14 @@ function tmMemAnim(dt){const P=S.P,L=S.L;if(Math.random()<dt*16)emit({x:P.pos.x+
     for(const m of L.tmMarks){if(!m.g.visible)continue;m.r1.rotation.z+=dt*2.4;m.r2.rotation.y+=dt*3.2;m.g.position.y=1.3+Math.sin(S.t*2+m.ph)*0.25;m.g.children[0].rotation.y+=dt*2;}}}
 function tmCamBehind(c,off,look){return [c.clone().add(off),c.clone().add(look)];}
 function tmM1(dt){const P=S.P,L=S.L,c=TM_C[0];
-  if(S.mph===0){S.cine+=dt;const T=S.cine;tmLockP();
+  if(S.mph===0){S.cine+=dt*0.72;const T=S.cine;tmLockP();
     if(T<0.05){toast('MEMORY 1: THE LOST STAR',2800);}
     gwSay('m1a',T,[[0.6,'LITTLE LILY','(crying) My star wand… I lost my star wand!'],[4.0,'{N}','I remember this day. Don\'t cry, Lily. I will find it!']]);
     let pos,look;if(T<4){pos=c.clone().add(V3(3.0,1.0,-6.2));look=c.clone().add(V3(1.6,0.7,-9.4));}else{pos=c.clone().add(V3(0.9,1.9,-1.2));look=c.clone().add(V3(1.2,0.9,-9.4));}vlCam(pos,look,T<4);
     if(T>7.4){S.mph=1;S.cam=null;placeCamera(1,true);S.lockMove=false;dofSet(false,5);toast('FIND LITTLE LILY\'S STAR WAND',2600);}}
   else if(S.mph===1){const sp=L.tmStar.getWorldPosition(new THREE.Vector3());if(hdist(P.pos,sp)<1.5&&Math.abs(P.pos.y-sp.y)<2){S.tmGot=1;S.mph=2;floatText('STAR WAND!',sp.clone().setY(2),'#ffe07a',0.9);burst(sp.clone().setY(0.8),0xffe07a,50,6,0.3,0.8);beep(880,0.2,'sine');setTimeout(()=>beep(1320,0.3,'sine'),120);toast('BRING IT BACK TO LITTLE LILY',2400);}}
   else if(S.mph===2){const st=L.tmStar;st.position.set(P.pos.x,P.pos.y+2.3+Math.sin(S.t*4)*0.08,P.pos.z);st.rotation.set(0,S.t*2,0);if(hdist(P.pos,L.tmLily.g.position)<2.4){S.mph=3;S.cine=0;S.lockMove=true;}}
-  else if(S.mph===3){S.cine+=dt;const T=S.cine;const ly=L.tmLily,st=L.tmStar;
+  else if(S.mph===3){S.cine+=dt*0.72;const T=S.cine;const ly=L.tmLily,st=L.tmStar;
     if(T<0.05){S.st0=st.position.clone();const to=P.pos.clone().sub(ly.g.position);ly.g.rotation.y=Math.atan2(to.x,to.z);P.yaw=Math.atan2(-to.x,-to.z);}
     const hp=ly.g.position.clone().add(V3(0.25,0.75,0.25));if(T<1)st.position.lerpVectors(S.st0,hp,sm(T));else st.position.copy(hp);
     if(T>1.1&&T<3.4){ly.g.position.y=Math.abs(Math.sin((T-1.1)*7))*0.35;}else ly.g.position.y=0;
@@ -6465,14 +6465,14 @@ function tmM1(dt){const P=S.P,L=S.L,c=TM_C[0];
     vlCam(c.clone().add(V3(3.6,1.4,-5.4)),ly.g.position.clone().add(V3(0,0.75,0)),true);
     if(T>8.4){tmExit(0);}}}
 function tmM2(dt){const P=S.P,L=S.L,c=TM_C[1],Z=L.tmZero;
-  if(S.mph===0){S.cine+=dt;const T=S.cine;tmLockP();if(T<0.05)toast('MEMORY 2: ZERO\'S TOWER',2800);
+  if(S.mph===0){S.cine+=dt*0.72;const T=S.cine;tmLockP();if(T<0.05)toast('MEMORY 2: ZERO\'S TOWER',2800);
     gwSay('m2a',T,[[0.6,'YOUNG ZERO','The wind knocked my tower down! The pieces flew everywhere…'],[4.2,'{N}','Hey, I will help you. We can build it again!']]);
     let pos,look;if(T<4.2){pos=c.clone().add(V3(4.8,1.2,-3.6));look=Z.position.clone().add(V3(0,0.8,0));}else{pos=c.clone().add(V3(0.8,1.9,4.8));look=c.clone().add(V3(0.6,0.9,-6));}vlCam(pos,look,T<4.2);
     if(T>7.6){S.mph=1;S.cam=null;placeCamera(1,true);S.lockMove=false;dofSet(false,5);S.tmN=0;toast('FIND THE 3 PIECES OF ZERO\'S TOWER',2600);}}
   else if(S.mph===1){for(const p of L.tmPieces){if(p.got)continue;const wp=p.m.getWorldPosition(new THREE.Vector3());if(hdist(P.pos,wp)<1.5&&Math.abs(P.pos.y-wp.y)<2.2){p.got=1;S.tmN++;p.m.visible=false;floatText(p.n+'!',wp.clone().setY(wp.y+1),'#ffe07a',0.8);burst(wp,0xffe07a,40,6,0.3,0.8);beep(700+S.tmN*150,0.25,'sine');
       if(S.tmN===3){toast('BRING THEM TO YOUNG ZERO',2400);talk([['YOUNG ZERO','You found them ALL?! Bring them here!']]);}}}
     if(S.tmN===3&&hdist(P.pos,Z.position)<2.6){S.mph=2;S.cine=0;S.lockMove=true;}}
-  else if(S.mph===2){S.cine+=dt;const T=S.cine;const spot=c.clone().add(V3(0,0.18,-6));
+  else if(S.mph===2){S.cine+=dt*0.72;const T=S.cine;const spot=c.clone().add(V3(0,0.18,-6));
     if(T<0.05){L.tmPieces.forEach((p,i)=>{if(p.m.parent!==L.mem[1])L.mem[1].attach(p.m);p.m.visible=true;p.m.scale.setScalar(1);p.m.rotation.set(0,0,0);p.from=P.pos.clone().setY(1.6+i*0.3);p.m.position.copy(p.from);});const to=P.pos.clone().sub(Z.position);Z.rotation.y=Math.atan2(to.x,to.z);}
     L.tmPieces.forEach((p,i)=>{const t0=0.4+i*0.8,u=sm(Math.min(1,Math.max(0,(T-t0)/0.7)));const tgt=spot.clone().setY(spot.y+p.stackY);const mid=p.from.clone().lerp(tgt,u);mid.y+=Math.sin(u*Math.PI)*1.2;p.m.position.copy(mid);if(u>=1&&!p.placed){p.placed=1;burst(tgt,0xffe07a,40,5,0.3,0.8);beep(523+i*196,0.35,'sine');S.shake=0.12;}});
     if(T>2.9&&!S.twBeam){S.twBeam=1;L.twB=tmBeam(L.mem[1],spot.x,spot.z,0xffe0a0,14);const gl=glow(0xffe0a0,2.2,0.7);gl.position.copy(spot).setY(1.6);L.mem[1].add(gl);burst(spot.clone().setY(1.5),0xffe07a,120,9,0.35,1.4,-1,3);boomSnd();}
@@ -6483,7 +6483,7 @@ function tmM2(dt){const P=S.P,L=S.L,c=TM_C[1],Z=L.tmZero;
     if(T>12.6)tmExit(1);}}
 function tmLockP(){const P=S.P;if(P.rig){P.rig.g.position.copy(P.pos);P.rig.g.rotation.set(0,P.yaw,0);}}
 function tmM3(dt){const P=S.P,L=S.L,c=TM_C[2],C=L.tmClock,G=L.tmGhost;
-  if(S.mph===0){S.cine+=dt;const T=S.cine;tmLockP();if(T<0.05){toast('MEMORY 3: THE GREAT CLOCK',2800);S.clockSpin=0;}
+  if(S.mph===0){S.cine+=dt*0.72;const T=S.cine;tmLockP();if(T<0.05){toast('MEMORY 3: THE GREAT CLOCK',2800);S.clockSpin=0;}
     // the ghost of you walks to the clock and puts the gear back
     if(T>2&&T<6.6){G.mv=vlWalkTo(G.g,c.clone().add(V3(0,0,-8.0)),1.9,dt);}else if(T>=6.6&&T<9){G.mv=0;G.g.rotation.y=Math.PI;}
     if(T>6.8&&!L.tmGear){const gr=new THREE.Group();for(let i=0;i<8;i++){const a=i/8*TAU;add(gr,box(0.14,0.14,0.08),M({color:0xffd23a,metalness:.8,roughness:.2,emissive:0xffa020,emissiveIntensity:1.4}),Math.cos(a)*0.32,Math.sin(a)*0.32,0,1,1,1,0,0,a);}add(gr,torus(0.26,0.07,8,24),M({color:0xffd23a,metalness:.8,roughness:.2,emissive:0xffa020,emissiveIntensity:1.4}),0,0,0);L.mem[2].add(gr);L.tmGear=gr;}
@@ -6506,7 +6506,7 @@ function tmM3(dt){const P=S.P,L=S.L,c=TM_C[2],C=L.tmClock,G=L.tmGhost;
         if(S.tmE===3)talk([['{N}','It is working! The colours are coming back!']]);}}
     S.red+=((1-S.tmE/6)*0.85+0.15*(S.tmE<6?1:0)-S.red)*Math.min(1,dt*2);
     if(S.tmE>=6){S.mph=2;S.cine=0;S.lockMove=true;}}
-  else if(S.mph===2){S.cine+=dt;const T=S.cine;tmLockP();
+  else if(S.mph===2){S.cine+=dt*0.72;const T=S.cine;tmLockP();
     if(T<0.05){P.pos.copy(c).add(V3(0,0,4));P.yaw=Math.PI;if(!L.ent3){const e=entityFigure();e.g.position.copy(c).add(V3(0,3.6,-7.0));e.g.visible=false;L.mem[2].add(e.g);L.ent3=e;
       const pen=new THREE.Group();add(pen,cyl(0.05,0.06,0.9,10),M({color:0x14101a,metalness:.7,roughness:.3}),0,0,0);add(pen,cone(0.06,0.22,10),M({color:0x3a0008,emissive:0xff1a3a,emissiveIntensity:3}),0,-0.55,0,1,1,1,Math.PI,0,0);const pg=glow(0xff2a4a,1.2,1.4);pg.position.y=-0.66;pen.add(pg);pen.position.set(0.9,1.5,0.6);pen.rotation.z=0.6;e.g.add(pen);L.pen=pen;L.penTip=pg;}}
     if(T>0.4&&!S.m3e){S.m3e=1;L.ent3.g.visible=true;finalPass.uniforms.flashCol.value.set(0.4,0,0.1);finalPass.uniforms.flash.value=0.8;thunderSnd();S.shake=0.8;burst(L.ent3.g.position.clone().add(V3(0,1.2,0)),0x6a0a2a,120,9,0.4,1.2,0,2);S.red=0.6;}
@@ -6519,7 +6519,7 @@ function tmM3(dt){const P=S.P,L=S.L,c=TM_C[2],C=L.tmClock,G=L.tmGhost;
     let pos,look;if(T<12){pos=c.clone().add(V3(0.4,2.0,0.6));look=L.ent3.g.position.clone().add(V3(0,1.6,0));}else if(T<17.6){pos=c.clone().add(V3(4.2,3.4,-1.4));look=c.clone().add(V3(0,7.4,-9.4));}else{pos=c.clone().add(V3(1.6,1.8,7.4));look=c.clone().add(V3(0,3.5,-8));}
     vlCam(pos,look,T<12);
     if(T>20.4){finalPass.uniforms.ca.value=REALGFX?0.0008:0.0022;tmExit(2);}}}
-function tmFinal(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;
+function tmFinal(dt){const P=S.P,L=S.L;S.cine+=dt*0.72;const T=S.cine;
   if(T<0.05){P.pos.set(GW_CX,0,-9.6);P.yaw=Math.PI;L.lily.g.position.set(GW_CX-1.6,0,-8.8);L.doomF.g.position.set(GW_CX+1.8,0,-8.3);L.lily.g.rotation.set(0,Math.PI,0);L.doomF.g.rotation.set(0,Math.PI,0);}
   tmLockP();
   if(T>15.6&&T<19&&Math.floor(T*8)!==S.drm){S.drm=Math.floor(T*8);beep(140,0.06,'square',120);}
@@ -6575,12 +6575,12 @@ function buildLibrary(S0){const L=buildGlitch(S0);L.gw.visible=false;L.hall.visi
   // the path
   const plat=(x,y,z,w,d,h,mat)=>{const m=add(G,box(w,h||0.8,d),mat||wood,x,y-(h||0.8)/2,z);m.receiveShadow=true;const c={x0:x-w/2,x1:x+w/2,z0:z-d/2,z1:z+d/2,top:y};L.colliders.push(c);keep(m,Math.abs(z)/60);return c;};
   plat(0,0,-4,7,20);{const rug=add(G,new THREE.PlaneGeometry(3,18),M({color:0x6a1a2a,roughness:.9}),0,0.01,-4,1,1,1,-Math.PI/2);rug.receiveShadow=true;keep(rug,0.1);}
-  L.books=[];const zs=[-17.5,-21.5,-25.5,-29.5,-33.5,-37.5,-41.5],xs=[1.4,-1.2,1.0,-1.4,1.2,-1.0,0.6],cols=[0x7a1e22,0x1e3a6a,0x2a5a32,0x6a4a1a,0x4a1e5a,0x1a4a4a,0x8a2a1a];
-  zs.forEach((z,i)=>{const g=lbBook(G,xs[i],0,z,2.8,2.6,cols[i],true);const c={x0:xs[i]-1.3,x1:xs[i]+1.3,z0:z-1.3,z1:z+1.3,top:0};L.colliders.push(c);L.books.push({g,c,t:0,y:0});keep(g,0.3+i*0.05);});
-  plat(0,0,-47,6,5);
-  L.stairs=[];[[-51.8,0.8],[-54.6,1.6],[-57.4,2.4],[-60.2,3.2]].forEach(([z,top],i)=>{const g=new THREE.Group();G.add(g);for(let k=0;k<Math.round(top/0.4)+2;k++){const b=add(g,box(2.3-rnd(0,0.3),0.4,2.3-rnd(0,0.3)),M({color:cols[(i+k)%cols.length],roughness:.6}),rnd(-0.08,0.08),top-0.2-k*0.4,z);b.rotation.y=rnd(-0.15,0.15);}L.colliders.push({x0:-1.1,x1:1.1,z0:z-1.1,z1:z+1.1,top});keep(g,0.8+i*0.05);});
-  plat(0,4,-65,4.4,4.4,0.6,wood);plat(0,4,-75,2.4,16,0.5,M({map:vlWoodTex(),color:0x7a5030,roughness:.75}));
-  for(const sx of[-1,1])for(let z=-67;z>=-83;z-=2){keep(add(G,cyl(0.05,0.05,0.9,6),gold,sx*1.15,4.45,z),1.2);}
+  L.books=[];const zs=[-16.6,-20.4,-24.2,-28,-31.8,-35.6,-39.4,-43.2],xs=[0.5,-0.5,0.5,-0.5,0.5,-0.5,0.5,0],cols=[0x7a1e22,0x1e3a6a,0x2a5a32,0x6a4a1a,0x4a1e5a,0x1a4a4a,0x8a2a1a,0x6a2a5a];
+  zs.forEach((z,i)=>{const g=lbBook(G,xs[i],0,z,3.4,3.0,cols[i],true);const c={x0:xs[i]-1.7,x1:xs[i]+1.7,z0:z-1.5,z1:z+1.5,top:0};L.colliders.push(c);L.books.push({g,c,t:0,y:0});keep(g,0.3+i*0.05);});
+  plat(0,0,-47.5,6,5);
+  L.stairs=[];[[-51.4,0.8],[-54.2,1.6],[-57.0,2.4],[-59.8,3.2]].forEach(([z,top],i)=>{const g=new THREE.Group();G.add(g);for(let k=0;k<Math.round(top/0.4)+2;k++){const b=add(g,box(2.9-rnd(0,0.2),0.4,2.9-rnd(0,0.2)),M({color:cols[(i+k)%cols.length],roughness:.6}),rnd(-0.08,0.08),top-0.2-k*0.4,z);b.rotation.y=rnd(-0.15,0.15);}L.colliders.push({x0:-1.4,x1:1.4,z0:z-1.4,z1:z+1.4,top});keep(g,0.8+i*0.05);});
+  plat(0,4,-63.4,4.4,4.0,0.6,wood);plat(0,4,-75.1,3.4,20.6,0.5,M({map:vlWoodTex(),color:0x7a5030,roughness:.75}));
+  for(const sx of[-1,1])for(let z=-66;z>=-84;z-=2){keep(add(G,cyl(0.05,0.05,0.9,6),gold,sx*1.65,4.45,z),1.2);}
   {const m=add(G,cyl(7,6.4,0.8,48),wood,0,3.6,-91);m.receiveShadow=true;keep(m,7.9);L.colliders.push({x0:-6.2,x1:6.2,z0:-97.2,z1:-84.8,top:4});const rim=add(G,torus(7,0.12,10,64),gold,0,4.02,-91,1,1,1,Math.PI/2,0,0);keep(rim,7.9);}
   // the desk, the page, the inkwell and a candle
   {const D=L.desk=new THREE.Group();D.position.set(0,4,-93);G.add(D);const dw=M({map:vlWoodTex(),color:0x5a3018,roughness:.55});add(D,box(4.2,0.18,2.2),dw,0,1.1,0);for(const sx of[-1,1])for(const sz of[-1,1])add(D,box(0.2,1.0,0.2),dw,sx*1.9,0.5,sz*0.95);add(D,box(4.0,0.6,0.1),dw,0,0.75,-1.0);add(D,box(4.4,0.08,2.4),gold,0,1.2,0);
@@ -6609,9 +6609,9 @@ function buildLibrary(S0){const L=buildGlitch(S0);L.gw.visible=false;L.hall.visi
   // the page tornado around the bridge
   L.swirl=[];for(let i=0;i<40;i++){const p=add(G,new THREE.PlaneGeometry(0.34,0.46),M({color:0xf4ead0,roughness:.9,side:THREE.DoubleSide,emissive:0x2a2010,emissiveIntensity:0.3}),0,0,0);p.castShadow=false;p.userData={a:rnd(0,TAU),r:rnd(2,4.5),z:rnd(-83,-67),y:rnd(3.4,7.8),sp:rnd(1.5,3)};L.swirl.push(p);}
   // golden quills: each one pushes the ink back
-  L.quills=[[0,1.2,-10],[-1.4,1.0,-29.5],[0,3.4,-57.4],[0,5.1,-76]].map(([x,y,z])=>{const q=new THREE.Group();q.position.set(x,y,z);G.add(q);add(q,cyl(0.02,0.03,0.9,6),gold,0,0,0);add(q,sphere(0.2,12,8),M({color:0xffe08a,emissive:0xffb030,emissiveIntensity:1.3,roughness:.4}),0,0.3,0,0.35,1.7,0.12);const gl=glow(0xffe07a,1.2,1);q.add(gl);return {q,got:0};});
+  L.quills=[[0,1.2,-10],[0.5,1.0,-24.2],[0,3.4,-57.0],[0,5.1,-76]].map(([x,y,z])=>{const q=new THREE.Group();q.position.set(x,y,z);G.add(q);add(q,cyl(0.02,0.03,0.9,6),gold,0,0,0);add(q,sphere(0.2,12,8),M({color:0xffe08a,emissive:0xffb030,emissiveIntensity:1.3,roughness:.4}),0,0.3,0,0.35,1.7,0.12);const gl=glow(0xffe07a,1.2,1);q.add(gl);return {q,got:0};});
   L.door=ptPortal('past',2.4);L.door.position.set(0,2.6,5.4);L.door.lookAt(0,2.6,-10);L.door.visible=true;L.door.scale.setScalar(1);if(L.door.userData.mat)L.door.userData.mat.uniforms.op.value=1;G.add(L.door);
-  L.force=(P,out)=>{out.set(0,0,0);if(S.stage===1&&P.pos.z<-66.6&&P.pos.z>-83.4&&P.pos.y>3){out.x=Math.sin(S.t*1.25)*ez(5.5,8);}};
+  L.force=(P,out)=>{out.set(0,0,0);if(S.stage===1&&P.pos.z<-66.6&&P.pos.z>-83.4&&P.pos.y>3){out.x=Math.sin(S.t*1.0)*ez(2.6,4.5);}};
   L.spawn=V3(0,0,2);L.camYaw=0;L.showcase={pos:V3(6,6,8),look:V3(0,2,-30)};return L;}
 /* Doom's power: aura, orbiting orbs, lightning, rune circle and a huge beam */
 function lbPower(L,D){const W=new THREE.Group();L.scene.add(W);const P={W,t:0};
@@ -6668,7 +6668,7 @@ function lbLibAnim(dt){const L=S.L;
 function lbInkFx(dt){const P=S.P,L=S.L;const cin=S.stage===0&&S.cine>8.6&&S.cine<17.6;const on=(S.stage===1||S.stage===2||S.stage===3||cin);const n=on?Math.round(Math.min(1,Math.max(S.ink,cin?0.5:0.12))*L.inkL.length):0;
   L.inkL.forEach((l,i)=>{l.sp.visible=i<n&&!!P.rig;if(!l.sp.visible)return;l.a+=dt*l.sp2;const rp=P.rig.g.position;l.sp.position.set(rp.x+Math.cos(l.a)*l.r,rp.y+l.y+Math.sin(S.t*2+i)*0.12,rp.z+Math.sin(l.a)*l.r);});
   if(on&&S.ink>0.25&&P.rig&&Math.random()<dt*20*S.ink){const rp=P.rig.g.position;emit({x:rp.x+rnd(-0.3,0.3),y:rp.y+rnd(0.4,1.6),z:rp.z+rnd(-0.3,0.3),vx:0,vy:-1,vz:0,life:0.7,max:0.7,r:0.15,g:0.18,b:0.6,size:0.07,grav:-4,drag:0});}}
-function lbIntro(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;P.pos.copy(L.spawn);P.yaw=Math.PI;if(P.rig){P.rig.g.position.copy(P.pos);P.rig.g.rotation.set(0,Math.PI,0);}
+function lbIntro(dt){const P=S.P,L=S.L;S.cine+=dt*0.7;const T=S.cine;P.pos.copy(L.spawn);P.yaw=Math.PI;if(P.rig){P.rig.g.position.copy(P.pos);P.rig.g.rotation.set(0,Math.PI,0);}
   animRig(L.lily,S.t,0);if(L.lily.real)rhPost(L.lily);L.doomF.step(S.t,0);
   if(T>9&&T<13)S.ink=Math.min(0.2,(T-9)*0.06);
   if(T>17.8&&L.door.visible){const k=Math.max(0,1-(T-17.8)/2.4);L.door.scale.setScalar(Math.max(0.001,k));if(k<=0){L.door.visible=false;burst(V3(0,2.6,5.4),0xffd070,50,6,0.3,0.8);}}
@@ -6677,20 +6677,23 @@ function lbIntro(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;P.pos.copy(L.sp
   vlCam(pos,look,(T>=8.6&&T<12.4)||T>=17.6);
   if(T>21){S.stage=1;S.cam=null;camYaw=0;L.door.visible=false;placeCamera(1,true);S.lockMove=false;dofSet(false,5);toast('REACH THE DESK BEFORE THE INK DRIES!',3200);S.keepBar=1;const bb=$('bossbar');bb.hidden=false;const bt=bb.querySelector('b');if(!bt.dataset.t0)bt.dataset.t0=bt.textContent;S.bbTxt=bt.dataset.t0;bt.textContent='INK';}}
 function lbPlay(dt){const P=S.P,L=S.L;lbFollow(dt);
-  S.ink+=dt/ez(150,110);$('bossFill').style.width=Math.min(100,S.ink*100)+'%';
+  S.ink+=dt/ez(230,170);$('bossFill').style.width=Math.min(100,S.ink*100)+'%';
   if(S.ink>0.7&&!S.inkW){S.inkW=1;talk([['LILY','{N}, hurry! You are almost all letters!']]);}
   if(S.ink>=1){S.ink=0.55;S.inkW=0;finalPass.uniforms.flashCol.value.set(0.1,0.1,0.4);finalPass.uniforms.flash.value=0.9;P.pos.copy(S.cp.pos);P.vel.set(0,0,0);floatText('THE INK ALMOST GOT YOU!',P.pos.clone().setY(P.pos.y+3),'#a8b8ff',0.7);beep(110,0.4,'sawtooth',55);}
   // the sinking books
-  for(const b of L.books){const on=P.onGround&&P.pos.x>b.c.x0&&P.pos.x<b.c.x1&&P.pos.z>b.c.z0&&P.pos.z<b.c.z1;if(on){b.t+=dt;if(b.t>0.8)b.y=Math.max(-1.7,b.y-dt*0.9);}else{b.t=0;b.y=Math.min(0,b.y+dt*1.2);}b.c.top=b.y;b.g.position.y=b.y+Math.sin(S.t*1.5+b.c.z)*0.05;b.g.rotation.z=Math.sin(S.t*1.1+b.c.z)*0.03;
-    if(on&&b.t>0.8&&Math.random()<dt*12)emit({x:P.pos.x+rnd(-1,1),y:b.y+0.05,z:P.pos.z+rnd(-1,1),vx:rnd(-0.5,0.5),vy:rnd(0.5,1.5),vz:rnd(-0.5,0.5),life:0.6,max:0.6,r:0.2,g:0.15,b:0.6,size:0.08,grav:-5,drag:0});}
-  if(P.pos.y<-1.4){fellOff();}
+  for(const b of L.books){const on=P.onGround&&P.pos.x>b.c.x0&&P.pos.x<b.c.x1&&P.pos.z>b.c.z0&&P.pos.z<b.c.z1;if(on){b.t+=dt;if(b.t>1.6)b.y=Math.max(-1.7,b.y-dt*0.55);}else{b.t=0;b.y=Math.min(0,b.y+dt*1.2);}b.c.top=b.y;b.g.position.y=b.y+Math.sin(S.t*1.5+b.c.z)*0.05;b.g.rotation.z=Math.sin(S.t*1.1+b.c.z)*0.03;
+    if(on&&b.t>1.6&&Math.random()<dt*12)emit({x:P.pos.x+rnd(-1,1),y:b.y+0.05,z:P.pos.z+rnd(-1,1),vx:rnd(-0.5,0.5),vy:rnd(0.5,1.5),vz:rnd(-0.5,0.5),life:0.6,max:0.6,r:0.2,g:0.15,b:0.6,size:0.08,grav:-5,drag:0});}
+  if(P.pos.y<-1.4){fellOff();if(!S.inkTip){S.inkTip=1;setTimeout(()=>{if(S.world==='library')toast('KEEP MOVING! JUMP BEFORE THE BOOK SINKS',3200);},600);}}
   // checkpoints and quills
-  if(P.pos.z<-44.6&&P.pos.y>-0.2&&S.cpN!==1&&P.pos.z>-50){S.cpN=1;S.cp.pos.set(0,0,-47);floatText('CHECKPOINT',V3(0,2.4,-47),'#ffe07a',0.7);beep(880,0.2,'sine');}
-  if(P.pos.z<-63&&P.pos.y>3.6&&S.cpN!==2&&S.cpN<2){S.cpN=2;S.cp.pos.set(0,4,-65);floatText('CHECKPOINT',V3(0,6.4,-65),'#ffe07a',0.7);beep(880,0.2,'sine');}
+  if(P.pos.z<-45.2&&P.pos.y>-0.2&&!S.cpN&&P.pos.z>-50){S.cpN=1;S.cp.pos.set(0,0,-47.5);floatText('CHECKPOINT',V3(0,2.4,-47.5),'#ffe07a',0.7);beep(880,0.2,'sine');}
+  if(P.pos.z<-61.6&&P.pos.y>3.6&&(S.cpN||0)<2){S.cpN=2;S.cp.pos.set(0,4,-63.4);floatText('CHECKPOINT',V3(0,6.4,-63.4),'#ffe07a',0.7);beep(880,0.2,'sine');}
   for(const q of L.quills){if(q.got)continue;const qp=q.q.position;if(hdist(P.pos,qp)<1.3&&Math.abs(P.pos.y+0.9-qp.y)<1.8){q.got=1;q.q.visible=false;S.ink=Math.max(0,S.ink-0.3);floatText('GOLDEN QUILL! INK -30%',qp.clone().setY(qp.y+1.2),'#ffe07a',0.7);burst(qp.clone(),0xffe07a,40,6,0.3,0.8);beep(990,0.2,'sine');setTimeout(()=>beep(1320,0.25,'sine'),110);}}
-  if(P.pos.z<-71&&!S.windSaid){S.windSaid=1;talk([['DOOM','The pages are pushing you! Lean against the wind!']]);}
+  lbGuide(dt);
+  const hint=(k,z,txt)=>{if(P.pos.z<z&&!(S.hints&&S.hints[k])){(S.hints=S.hints||{})[k]=1;toast(txt,3600);}};
+  hint(1,-13,'JUMP (SPACE) FROM BOOK TO BOOK. THEY SINK IF YOU STAND STILL!');hint(2,-49,'JUMP UP THE BOOK STAIRS');hint(3,-66,'CROSS THE BRIDGE. THE FLYING PAGES PUSH YOU, SO STEER BACK!');
+  if(P.pos.z<-71&&!S.windSaid){S.windSaid=1;talk([['DOOM','The pages are pushing you! Steer the other way!']]);}
   if(P.pos.z<-86&&P.pos.y>3.5){S.stage=2;S.cine=0;S.lockMove=true;S.keepBar=0;$('bossbar').hidden=true;if(S.bbTxt)$('bossbar').querySelector('b').textContent=S.bbTxt;}}
-function lbDoom(dt){const P=S.P,L=S.L,D=L.doomF;S.cine+=dt;const T=S.cine;const pc=L.page.position;
+function lbDoom(dt){const P=S.P,L=S.L,D=L.doomF;S.cine+=dt*0.7;const T=S.cine;const pc=L.page.position;
   if(T<0.05){P.pos.set(0,4,-86.2);P.yaw=Math.PI;L.lily.g.position.set(-1.7,4,-85.4);L.lily.g.rotation.set(0,Math.PI,0);D.g.position.set(1.9,4,-85);D.g.rotation.set(0,Math.PI,0);L.pw=lbPower(L,D);L.loose=[];for(let i=0;i<14;i++){const a=rnd(0,TAU),r=rnd(2.2,5.5);const b=lbBook(L.lib,Math.cos(a)*r,4.2,-91+Math.sin(a)*r,0.6,0.8,[0x7a1e22,0x1e3a6a,0x2a5a32,0x6a4a1a][i%4],false);b.rotation.y=rnd(0,TAU);L.loose.push({g:b,v:null});}}
   if(P.rig){P.rig.g.position.copy(P.pos);P.rig.g.rotation.set(0,P.yaw,0);}animRig(L.lily,S.t,0);if(L.lily.real)rhPost(L.lily);
   // Doom steps forward, rises and charges
@@ -6719,12 +6722,12 @@ function lbDoom(dt){const P=S.P,L=S.L,D=L.doomF;S.cine+=dt;const T=S.cine;const 
   else if(T<20.8){pos=V3(0.7,6.3,-90.6);look=pc.clone();}
   else{pos=V3(-0.8,5.6,-88);look=L.lily.g.position.clone().add(V3(0,1.1,0));}
   vlCam(pos,look,T<3.8||(T>=16&&T<20.8));
-  if(T>23.8){S.stage=3;S.cine=0;S.cam=null;camYaw=0;placeCamera(1,true);S.lockMove=false;dofSet(false,5);toast('DESTROY THE PAGE! TOUCH IT OR USE DREAM LIGHT (F)',3200);for(const b of L.loose)L.lib.remove(b.g);L.pw.W.visible=false;L.pw.rune.visible=false;}}
+  if(L.guide)L.guide.g.visible=false;if(T>23.8){S.stage=3;S.cine=0;S.cam=null;camYaw=0;placeCamera(1,true);S.lockMove=false;dofSet(false,5);toast('DESTROY THE PAGE! TOUCH IT OR USE DREAM LIGHT (F)',3200);for(const b of L.loose)L.lib.remove(b.g);L.pw.W.visible=false;L.pw.rune.visible=false;}}
 function lbTry(dt){const P=S.P,L=S.L;const pc=L.page.position;S.ink=Math.min(0.95,S.ink+dt*0.02);
   animRig(L.lily,S.t,0);if(L.lily.real)rhPost(L.lily);L.doomF.step(S.t,0);
   let hitP=hdist(P.pos,pc)<1.9&&P.pos.y>3.5;for(const b of S.bolts){if(b.life>0&&b.pos.distanceTo(pc)<1.4){b.life=0;hitP=true;}}
   if(hitP){S.stage=4;S.cine=0;S.lockMove=true;}}
-function lbFall(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;const pc=L.page.position;
+function lbFall(dt){const P=S.P,L=S.L;S.cine+=dt*0.7;const T=S.cine;const pc=L.page.position;
   if(T<0.05){S.ink=0;P.pos.set(0,4,-86.4);P.yaw=Math.PI;S.fallBase=[P.pos.clone(),L.lily.g.position.clone().set(-1.6,4,-85.6),L.doomF.g.position.clone().set(1.8,4,-85.2)];L.lily.g.position.copy(S.fallBase[1]);L.doomF.g.position.copy(S.fallBase[2]);L.lily.g.rotation.set(0,Math.PI,0);L.doomF.g.rotation.set(0,Math.PI,0);
     finalPass.uniforms.flashCol.value.set(1,0.95,0.8);finalPass.uniforms.flash.value=0.7;beep(1200,0.5,'sine',200);}
   // the page folds away into letters and is gone
@@ -6757,7 +6760,7 @@ function lbFall(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;const pc=L.page.
   else{pos=ctr.clone().add(V3(0.6,6,2.4));look=ctr.clone().add(V3(0,-12,-0.6));}
   vlCam(pos,look,false);
   if(T>16.3){finalPass.uniforms.flashCol.value.set(1,0.95,0.8);finalPass.uniforms.flash.value=1.3;S.stage=5;S.cine=0;}}
-function lbJudge(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;
+function lbJudge(dt){const P=S.P,L=S.L;S.cine+=dt*0.7;const T=S.cine;
   if(T<0.05){L.lib.visible=false;if(L.fport)L.fport.visible=false;L.hall.visible=true;L.scene.fog=new THREE.FogExp2(0x120e1e,0.01);L.scene.background=new THREE.Color(0x0a0714);L.sun.intensity=0.7;L.sun.color.set(0xffe8c8);L.hemi.intensity=0.4;L.hemi.color.set(0xfff0d8);L.hemi.groundColor.set(0x1a0a2a);L.gain=[1,1,1];L.sat=1.12;
     for(let i=0;i<6;i++){const k=gwGuard();const sx=i%2?1:-1;k.g.position.set(GW_CX+sx*9.8,0,[16,6,-11][(i/2)|0]);k.g.rotation.set(0,sx>0?-Math.PI/2:Math.PI/2,0);L.hall.add(k.g);L.keepers.push(k);}
     P.pos.set(GW_CX,0,-9.6);P.yaw=Math.PI;L.lily.g.position.set(GW_CX-1.6,0,-8.8);L.doomF.g.position.set(GW_CX+1.8,0,-8.3);L.lily.g.rotation.set(0,Math.PI,0);L.doomF.g.rotation.set(0,Math.PI,0);
@@ -6781,8 +6784,14 @@ function lbJudge(dt){const P=S.P,L=S.L;S.cine+=dt;const T=S.cine;
   else{pos=V3(GW_CX,3,0).lerp(V3(GW_CX,3.6,4),sm((T-28.4)/3));look=V3(GW_CX,7,-22);}
   vlCam(pos,look,T>=22.4&&T<28.4);
   if(T>31.4&&!S.fin){S.fin=1;S.cam=null;if(P.tag)P.tag.visible=true;running=false;finish(true);}}
+const LB_ROUTE=[[0,0,-12,0],[0.5,0,-16.6,1],[-0.5,0,-20.4,1],[0.5,0,-24.2,1],[-0.5,0,-28,1],[0.5,0,-31.8,1],[-0.5,0,-35.6,1],[0.5,0,-39.4,1],[0,0,-43.2,1],[0,0,-47.5,1],[0,0.8,-51.4,1],[0,1.6,-54.2,1],[0,2.4,-57.0,1],[0,3.2,-59.8,1],[0,4,-63.4,1],[0,4,-74,0],[0,4,-83,0],[0,4,-87.6,0]];
+function lbNext(){const P=S.P;for(let i=0;i<LB_ROUTE.length;i++){const r=LB_ROUTE[i];if(r[2]<P.pos.z-0.9)return r;}return LB_ROUTE[LB_ROUTE.length-1];}
+function lbGuide(dt){const L=S.L;if(!L.guide){const g=new THREE.Group();const rm=new THREE.MeshBasicMaterial({color:new THREE.Color(0xffe07a).multiplyScalar(1.8),transparent:true,opacity:0.9,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});
+    const ring=add(g,new THREE.RingGeometry(0.75,0.95,40),rm,0,0.06,0,1,1,1,-Math.PI/2);ring.castShadow=false;const ar=add(g,cone(0.32,0.6,4),new THREE.MeshBasicMaterial({color:new THREE.Color(0xffe07a).multiplyScalar(1.6),toneMapped:false}),0,1.6,0,1,1,1,Math.PI,0,0);ar.castShadow=false;const gl=glow(0xffe07a,1.6,0.8);gl.position.y=0.3;g.add(gl);
+    L.scene.add(g);L.guide={g,ring,ar};}
+  const r=lbNext(),G=L.guide;const top=r[3]?(L.books.find(b=>Math.abs(b.c.z0+1.5-r[2])<0.1)||{y:r[1]}).y:r[1];G.g.position.set(r[0],(r[1]===0&&r[3]&&r[2]>-45)?top:r[1],r[2]);G.ar.position.y=1.5+Math.abs(Math.sin(S.t*4))*0.4;G.ar.rotation.y+=dt*3;G.ring.scale.setScalar(1+0.15*Math.sin(S.t*6));G.g.visible=S.stage===1;}
 function lbObj(){if(S.stage===1)return 'Reach the desk before the ink dries!';if(S.stage===3)return 'Destroy the page! Touch it or use dream light (F)';return '';}
-function lbTargets(){const L=S.L;if(!L.desk)return [];if(S.stage===1){const q=L.quills.filter(q=>!q.got&&q.q.position.z<S.P.pos.z+2&&q.q.position.z>S.P.pos.z-14).map(q=>q.q.position);return q.length?q:[V3(0,4,-91)];}if(S.stage===3)return [L.page.position];return [];}
+function lbTargets(){const L=S.L;if(!L.desk)return [];if(S.stage===1){const r=lbNext();return [V3(r[0],r[1],r[2])];}if(S.stage===3)return [L.page.position];return [];}
 
 /* ---- wind-swaying 3D grass ---- */
 function grassGeo(){return cg('grassClump',()=>{const pos=[],nor=[],idx=[];let base=0;for(let b=0;b<4;b++){const a=b/4*TAU+Math.random()*0.8,ox=Math.cos(a)*0.09,oz=Math.sin(a)*0.09,h=0.42+Math.random()*0.4,w=0.045,lean=(Math.random()-0.5)*0.35,px=Math.cos(a+1.57),pz=Math.sin(a+1.57);
