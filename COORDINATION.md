@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-31  v66: chapter 72 The Pumpkin Beast, and a luxury hotel (Cowork session)
+
+- Founder story: while you escape the hotel after freeing Doom, a raging pumpkin beast comes smashing through, one door at a time (two reference images, AI-made for him; we took the glowing drips, arm spikes and vines, not the hat or block look). Also: make the hotel realistic and luxurious, with designs and textures.
+- Luxury kit (lx*), used by ch71 and ch72: procedural textures with normal maps (veined marble with black and gold inlays, a star medallion, art-deco and damask wallpaper, raised wood panels, panelled doors, ornate runner and rug, coffered ceiling, fluted columns, herringbone parquet); trims on every wall (wainscot, gold chair rail, baseboard, crown); doors with architrave, brass lever and gold-on-black number plaques; shaded sconces; crystal chandeliers (instanced crystals); velvet sofas, consoles with lamps, plants, gold-framed paintings, a luggage cart; the facade gets gold fins, a deco crown, a revolving door, a canopy with bulbs, a red carpet, lamp posts.
+- World `pumpkin` (buildPumpkin): intro in Room 789 (rumble, Zero: "His guard. The Pumpkin Beast"), the elevator doors blast off and the beast's burning face fills the doorway, then it drops away; floor 1, a 150 m corridor where every door is built from breakable pieces; 9 planned smashes: the door rattles, orange light leaks, that half of the floor glows red; the wall, frame, door and a dresser fly; stay on the other side; then the beast breaks into the corridor and chases you (camera faces you, lights pop as it passes); the lobby: it bursts out of the elevator, Doom's last blast drops the chandelier on it; outside the sky turns red and the masked one's mask appears ("Now… I take EVERYTHING."). TO BE CONTINUED.
+- The beast (pkBeast): carved pumpkin head with ribbed geometry and a recessed glowing face (eyes, jagged teeth, drips), inner light and embers; body of bark and stone with glowing cracks, thorns and vines; walk, punch, roar and kneel poses.
+- Fixes found by testing: corridor too low, camera above the ceiling (now 4.4 m); smashes fell behind fast runners (shorter cycle, hand-over, skip doors already reached, chase starts by position, stage end by position); `L.warn` is an engine overlay function (renamed); the engine already applies `L.force`, so ch71 floor 7's pull was doubled (manual copy removed); torus helper takes 3 args (rings were 6 or 8 sided); lobby too bright; the mask hid behind the hotel; the f1 start camera was outside the corridor.
+- Tests: t213/t214 key-press playthroughs of ch72 (intro, 9 smashes with dodges, chase, lobby, outside, result TO BE CONTINUED), 0 page errors on run 3 and the final run; ch71 lobby screenshots after the luxury pass.
+
 ## 2026-10-31  v65: chapter 71 The Black Hole Hotel (Cowork session)
 
 - Founder picked idea 11 (the Black Hole Hotel) and asked: make it the best; when you go to the elevator the lights flicker and the button lights go at random; make it cinematic; no Halloween.
