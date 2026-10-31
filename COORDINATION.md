@@ -2,6 +2,17 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-10-31  v65: chapter 71 The Black Hole Hotel (Cowork session)
+
+- Founder picked idea 11 (the Black Hole Hotel) and asked: make it the best; when you go to the elevator the lights flicker and the button lights go at random; make it cinematic; no Halloween.
+- World `hotel` (buildHotel, updHotel): the ship flies past the accretion disc and lands at a hotel on a rock island; the lobby is frozen in time (stopped clocks, a glass and its water mid-air, papers, a suitcase); a manager in a red bellhop hat gives the key to Room 789.
+- The elevator: wood and brass cab, flickering light, 8 buttons that light up at random (faster during rides), a swinging floor needle, a fuse screen, sliding doors; each ride shakes, creaks and drops, with an outside shot of the cab falling down a brick shaft with sparks and red alarm lights.
+- Floors are different years: floor 2 = 1925 (gramophone room, frozen music notes); floor 4 = 65 million years ago (a baby rex runs off with the fuse, catch it); floor 6 = year 3025 (4 sweeping lasers, the fuse powers them); floor 7 = Room 789 (small black holes in the walls pull you; a gold safe line down the middle).
+- Ending: the key turns, 160 tiny black holes swirl into the lock, Doom floats down ("I knew you would come"); the manager's hat falls: he is young Zero, locked in the hotel for 1000 years by the masked one, "and he is coming back. TONIGHT." TO BE CONTINUED.
+- Cinema: letterbox bars in every cutscene, title cards (chapter, each floor's year, TO BE CONTINUED), every shot is a slow moving camera; cutscenes at 70% speed.
+- Fixes found by testing: manager hidden behind the desk (now on a raised step), collar covered his face; floor 7 too hard (152 hits, never reached the door; pull and hit radius reduced, push back 5 m instead of restart, gold safe line); the camera saw the back of the cab on arrival (cab walls hide when the camera is behind them; the hero walks out as the doors open); title cards timed in game time; neon and void walls glowed flat white; Doom close-ups framed by his measured height; the engine has no L.force hook, so the pull is applied in updHotel.
+- Tests: t212 full key-press playthrough x3 (intro, 5 rides, fuses on floors 2/4/6, floor 7 in ~6 s after the fix, ending, result TO BE CONTINUED), 0 page errors.
+
 ## 2026-10-26  v64: chapter 69 Lost in Time and chapter 70 Time City Falls (Cowork session)
 
 - Ch69 founder story: time glitches Doom and half of him is gone; you look for a cure but as you walk he disappears; you find the villain's location (Time City); show the inside controls of the spaceship in 3D; a little long journey. Continued.
