@@ -2,6 +2,15 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-11-02  v67: Graphics 2.0, natural arms and hands (Cowork session)
+
+- Founder: make the game ultra realistic with a big visible graphics change; make the arm positions and hands right; no errors.
+- Arms: idle and walking arms of the Mia/Lily and Dad bodies stood out in an A shape (armsDown 0.62/0.7, armsSwing 0.34/0.42); now 0.44/0.34 idle and 0.34/0.27 walking, so arms hang by the sides and still clear Lily's flared skirt.
+- Hands: Mia/Lily and Dad had no finger animation (straight T-pose fingers). New rhFingers/rhHands: every finger joint curls toward the palm (axis from the hand's own knuckle plane, sign from the thumb), relaxed when standing, more when walking, a loose fist when running; added on top of clips that already move the fingers (Max at half strength).
+- Graphics 2.0 (ULTRA on desktop): soft contact shadow under every character's feet; a cinematic rim light on character materials (chained onBeforeCompile); ambient occlusion from the scene depth the game already draws (composer render targets now carry a depth texture; glows, glass and sprites do not write depth so they are ignored), with a speed guard that switches it off if fps stays under 28; contact-hardening soft sun shadows (PCSS-style patch of the shadow chunk: sharp at contact, softer with distance).
+- Tried and rejected: the built-in SAOPass (it re-renders the scene twice and treats glow sprites and transparent planes as solid: black squares and outlines).
+- Tests: t220/t221 baseline vs new (chapters 5, 20, 33, 58 and a line-up of six body types), t222/t223 AO on/off and hand close-ups, t224 soft shadows, t225 contact-shadow debug, t226 ten chapters (3, 10, 27, 41, 52, 63, 67, 69, 71, 72) 0 page errors.
+
 ## 2026-10-31  v66: chapter 72 The Pumpkin Beast, and a luxury hotel (Cowork session)
 
 - Founder story: while you escape the hotel after freeing Doom, a raging pumpkin beast comes smashing through, one door at a time (two reference images, AI-made for him; we took the glowing drips, arm spikes and vines, not the hat or block look). Also: make the hotel realistic and luxurious, with designs and textures.

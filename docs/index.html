@@ -290,7 +290,7 @@ try{if(THREE.SAOPass){saoPass=new THREE.SAOPass(renderPass.scene,camera,false,tr
 try{if(THREE.BokehPass){dofPass=new THREE.BokehPass(renderPass.scene,camera,{focus:5,aperture:0.00055,maxblur:0.009,width:1280,height:720});dofPass.enabled=false;composer.addPass(dofPass);}}catch(e){console.warn('dof',e);}
 const CINEMA=()=>!!(GFX.ultra&&REALGFX);
 let ssaoPass=null;try{if(THREE.SSAOPass){ssaoPass=new THREE.SSAOPass(renderPass.scene,camera,1280,720);ssaoPass.kernelRadius=6;ssaoPass.minDistance=0.0008;ssaoPass.maxDistance=0.03;ssaoPass.output=THREE.SSAOPass.OUTPUT.Default;ssaoPass.enabled=false;composer.addPass(ssaoPass);}}catch(e){console.warn('ssao',e);}
-function cinemaApply(){const on=CINEMA();if(ssaoPass)ssaoPass.enabled=false;finalPass.uniforms.cine.value=on?1:0;}
+function cinemaApply(){const on=CINEMA();if(ssaoPass)ssaoPass.enabled=false;finalPass.uniforms.cine.value=on?1:0;try{g2Apply();}catch(e){}}
 function dofSet(on,focus){if(!dofPass)return;dofPass.enabled=!!on&&GFX.ultra;if(dofPass.enabled&&focus!==undefined)dofPass.uniforms.focus.value=focus;}
 const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(256,256),0.8,0.55,0.92);composer.addPass(bloom);
 const finalPass=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},exposure:{value:1},vig:{value:0.45},flash:{value:0},flashCol:{value:new THREE.Vector3(1,0.3,0.5)},time:{value:0},sat:{value:1.15},gain:{value:new THREE.Vector3(1,1,1)},ca:{value:0.0022},sharp:{value:0},real:{value:0},cine:{value:0},mblur:{value:0},px:{value:new THREE.Vector2(0.001,0.001)}},
@@ -308,6 +308,10 @@ const finalPass=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},exposure:{
 composer.addPass(finalPass);
 /* ULTRA graphics: supersampling, 4x MSAA, 4096 shadows, ambient occlusion (SAO) */
 const GFX={ultra:!isTouch,locked:false};try{const g=localStorage.getItem('mdd-gfx');if(g){GFX.ultra=g==='ultra';GFX.locked=true;}}catch(e){}
+/* soft realistic shadows (ULTRA, desktop): sharp where things touch, softer the further the shadow falls */
+if(GFX.ultra&&!isTouch){try{const G2PCSS='\tfloat g2Rnd(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}\n\tfloat g2PCSS(sampler2D sm,vec4 sc){float zR=sc.z;float rot=g2Rnd(gl_FragCoord.xy)*6.2831853;float sr=0.5/84.0;float bs=0.0;float bn=0.0;\n\t\tfor(int i=0;i<12;i++){float fi=float(i);float a=rot+fi*2.39996;float r=sqrt((fi+0.5)/12.0);float d=unpackRGBAToDepth(texture2D(sm,sc.xy+vec2(cos(a),sin(a))*r*sr));if(d<zR){bs+=d;bn+=1.0;}}\n\t\tif(bn<0.5)return 1.0;float dist=max(zR-bs/bn,0.0)*499.0;float rad=clamp(0.015+0.045*dist,0.015,0.4)/84.0;float lit=0.0;\n\t\tfor(int i=0;i<16;i++){float fi=float(i);float a=rot+fi*2.39996+1.3;float r=sqrt((fi+0.5)/16.0);lit+=step(zR,unpackRGBAToDepth(texture2D(sm,sc.xy+vec2(cos(a),sin(a))*r*rad)));}\n\t\treturn lit/16.0;}\n';
+  let c=THREE.ShaderChunk.shadowmap_pars_fragment;const a='\tfloat getShadow( sampler2D shadowMap,',b='\t\tif ( frustumTest ) {\n\t\t#if defined( SHADOWMAP_TYPE_PCF )';
+  if(c.includes(a)&&c.includes(b)){THREE.ShaderChunk.shadowmap_pars_fragment=c.replace(a,G2PCSS+a).replace(b,'\t\tif ( frustumTest ) {\n\t\t\treturn g2PCSS( shadowMap, shadowCoord );\n\t\t#if defined( SHADOWMAP_TYPE_PCF )');}}catch(e){console.warn('pcss',e);}}
 /* God rays: light beams streaming from the sun / black hole / windows (screen-space light scattering) */
 const raysPass=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},lp:{value:new THREE.Vector2(0.5,0.5)},strength:{value:0},thresh:{value:0.5},tint:{value:new THREE.Vector3(1,0.9,0.75)},aspect:{value:1.7},rad:{value:0.3},flare:{value:0}},
   vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
@@ -331,7 +335,7 @@ function applyGfx(){
   renderer.setPixelRatio(DPR);composer.setPixelRatio(DPR);
   const ms=canMS?4:0;for(const r of[composer.renderTarget1,composer.renderTarget2])if(r.samples!==ms){r.samples=ms;r.dispose();}
   if(typeof S!=='undefined'&&S&&S.L){const ss=GFX.ultra?4096:2048,sh=S.L.sun.shadow;if(sh.mapSize.x!==ss){sh.mapSize.set(ss,ss);if(sh.map){sh.map.dispose();sh.map=null;}}}
-  finalPass.uniforms.sharp.value=GFX.ultra?0.22:0.14;if(!GFX.ultra)raysPass.enabled=false;if(saoPass)saoPass.enabled=false;if(dofPass&&!GFX.ultra)dofPass.enabled=false;cinemaApply();if(typeof mode!=='undefined'&&mode!=='menu')fitStage();
+  finalPass.uniforms.sharp.value=GFX.ultra?0.22:0.14;if(!GFX.ultra)raysPass.enabled=false;if(saoPass)saoPass.enabled=false;if(dofPass&&!GFX.ultra)dofPass.enabled=false;cinemaApply();try{g2Apply();}catch(e){}if(typeof mode!=='undefined'&&mode!=='menu')fitStage();
   const b=$('gfxBtn');b.textContent='Graphics: '+(GFX.ultra?'ULTRA':'HIGH');b.classList.toggle('ultra',GFX.ultra);}
 let viewW=2,viewH=2;
 function setView(w,h){viewW=w;viewH=h;renderer.setSize(w,h,false);composer.setSize(w,h);finalPass.uniforms.px.value.set(1/(w*DPR),1/(h*DPR));camera.aspect=w/h;camera.updateProjectionMatrix();
@@ -8304,6 +8308,58 @@ function rhExtraClips(k){const sA=RH.src.max.animations,f=n=>sA.find(a=>a.name==
   cl.idle.tracks=cl.idle.tracks.filter(t=>/(Shoulder|Arm|Hand|Neck|Head)/.test(t.name));
   const samba=RH.src.mia&&RH.src.mia.animations.find(a=>/samba/i.test(a.name));cl.dance=k==='mia'&&samba?rhClip(samba,'dance'):(RH.has.mia&&samba?rhRetarget('mia',k,samba):null)||cl.idle.clone();cl.dance.name='dance';RH.clipsK[k]=cl;}
 const _hv=new THREE.Vector3(),_hq=new THREE.Quaternion(),_ax=new THREE.Vector3();
+/* ---- natural hands: every finger joint curls toward the palm (relaxed when standing, more when walking, a loose fist when running) ---- */
+const FMUL={Thumb:0.55,Index:0.9,Middle:1.05,Ring:1.18,Pinky:1.3};
+const _fhq=new THREE.Quaternion();
+function rhFingers(r,C){const B={};r.model.traverse(o=>{if(o.isBone)B[o.name.replace(/^mixamorig:?/,'').replace(/_\d+$/,'')]=o;});
+  const tracked=new Set();for(const n in C)for(const t of C[n].tracks){const nm=t.name.split('.')[0];tracked.add(nm);}
+  r.model.updateMatrixWorld(true);const out=[];const wp=o=>o.getWorldPosition(new THREE.Vector3());
+  for(const side of['Left','Right']){const hand=B[side+'Hand'],i1=B[side+'HandIndex1'],p1=B[side+'HandPinky1']||B[side+'HandRing1'],t2=B[side+'HandThumb2'];if(!hand||!i1||!p1)continue;
+    const W=wp(hand),n=new THREE.Vector3().crossVectors(wp(i1).sub(W),wp(p1).sub(W)).normalize();if(t2&&wp(t2).sub(W).dot(n)<0)n.negate();
+    for(const f of['Thumb','Index','Middle','Ring','Pinky'])for(let j=1;j<=3;j++){const b=B[side+'Hand'+f+j],c=B[side+'Hand'+f+(j+1)];if(!b||!c)continue;
+      const v=wp(c).sub(wp(b)).normalize(),a=new THREE.Vector3().crossVectors(v,n);if(a.lengthSq()<1e-6)continue;a.normalize().applyQuaternion(b.getWorldQuaternion(new THREE.Quaternion()).invert());
+      out.push({b,ax:a,q0:b.quaternion.clone(),m:FMUL[f]*(j===1?1:j===2?1.15:0.8),tr:tracked.has(b.name)});}}
+  r.fing=out.length?out:null;r.fk=0.3;}
+function rhHands(r,k,dt){if(!r.fing)return;r.fk+=(k-r.fk)*Math.min(1,dt*6);const kk=r.fk*(r.base==='max'?0.5:1);
+  for(const F of r.fing){_fhq.setFromAxisAngle(F.ax,kk*F.m);if(F.tr)F.b.quaternion.multiply(_fhq);else F.b.quaternion.copy(F.q0).multiply(_fhq);}}
+
+/* ---- GRAPHICS 2.0: soft shadows in corners and creases (ambient occlusion from the depth the game already draws), contact shadows under every character, a cinematic rim light on characters ---- */
+const G2={rim:{value:0},rimCol:{value:new THREE.Color(0.75,0.85,1.0)},ao:true,aoPass:null,fpsT:0,fpsN:0,slow:0};
+let G2_BLOB=null;function g2Blob(){if(G2_BLOB)return G2_BLOB;const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');const gr=g.createRadialGradient(64,64,4,64,64,62);gr.addColorStop(0,'rgba(0,0,0,0.85)');gr.addColorStop(0.45,'rgba(0,0,0,0.45)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,128,128);
+  const t=new THREE.CanvasTexture(c);G2_BLOB=new THREE.MeshBasicMaterial({map:t,color:0x000000,transparent:true,opacity:0.72,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-4,toneMapped:false});return G2_BLOB;}
+const G2_BLOBGEO=new THREE.PlaneGeometry(1,1);G2_BLOBGEO.rotateX(-Math.PI/2);
+function g2Rim(m){if(!m||m.userData&&m.userData.g2rim||m.isMeshBasicMaterial||!(m.isMeshStandardMaterial||m.isMeshPhysicalMaterial))return;m.userData=m.userData||{};m.userData.g2rim=1;
+  const prev=m.onBeforeCompile,pk=m.customProgramCacheKey&&m.customProgramCacheKey!==THREE.Material.prototype.customProgramCacheKey?m.customProgramCacheKey.bind(m):null;
+  m.onBeforeCompile=(sh,rd)=>{if(prev)prev.call(m,sh,rd);sh.uniforms.g2Rim=G2.rim;sh.uniforms.g2RimCol=G2.rimCol;
+    if(sh.fragmentShader.indexOf('#include <output_fragment>')<0)return;
+    sh.fragmentShader='uniform float g2Rim;uniform vec3 g2RimCol;\n'+sh.fragmentShader.replace('#include <output_fragment>','{float g2f=1.0-clamp(dot(normalize(normal),normalize(vViewPosition)),0.0,1.0);outgoingLight+=g2RimCol*pow(g2f,3.0)*g2Rim;}\n#include <output_fragment>');};
+  m.customProgramCacheKey=()=>(pk?pk():'')+'|g2rim';m.needsUpdate=true;}
+function g2Rig(r){if(r.g2)return;r.g2=1;try{r.model.traverse(o=>{if(!o.isMesh)return;if(Array.isArray(o.material))o.material.forEach(g2Rim);else g2Rim(o.material);});}catch(e){console.warn('g2rim',e);}
+  const hs=r.hs||1;const s=new THREE.Mesh(G2_BLOBGEO,g2Blob());s.scale.set(1.15*hs,1,0.95*hs);s.position.y=0.08;s.castShadow=false;s.receiveShadow=false;s.renderOrder=2;r.g.add(s);r.g2s=s;}
+/* ambient occlusion pass: reads the scene depth (glows, glass and sprites do not write depth, so they are ignored) */
+function g2MakeAO(){if(G2.aoPass||!renderer.capabilities.isWebGL2||!THREE.Pass||!THREE.FullScreenQuad)return null;
+  for(const rt of[composer.renderTarget1,composer.renderTarget2]){const dt=new THREE.DepthTexture();dt.type=THREE.UnsignedIntType;rt.depthTexture=dt;rt.dispose();}
+  const mat=new THREE.ShaderMaterial({uniforms:{tDiffuse:{value:null},tDepth:{value:null},proj:{value:new THREE.Matrix4()},projInv:{value:new THREE.Matrix4()},str:{value:1.0},rad:{value:0.75}},
+    vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+    fragmentShader:`uniform sampler2D tDiffuse,tDepth;uniform mat4 proj,projInv;uniform float str,rad;varying vec2 vUv;
+    vec3 vpos(vec2 uv){float d=texture2D(tDepth,uv).x;vec4 v=projInv*vec4(uv*2.0-1.0,d*2.0-1.0,1.0);return v.xyz/v.w;}
+    float ign(vec2 p){return fract(52.9829189*fract(dot(p,vec2(0.06711056,0.00583715))));}
+    void main(){vec4 col=texture2D(tDiffuse,vUv);float d=texture2D(tDepth,vUv).x;if(d>=0.99999||str<=0.0){gl_FragColor=col;return;}
+      vec3 P=vpos(vUv);vec3 n=normalize(cross(dFdx(P),dFdy(P)));if(dot(n,P)>0.0)n=-n;
+      vec3 t=normalize(cross(n,abs(n.y)<0.99?vec3(0.0,1.0,0.0):vec3(1.0,0.0,0.0)));vec3 b=cross(n,t);
+      float a0=ign(gl_FragCoord.xy)*6.2831853;float occ=0.0;float rr=rad*clamp(-P.z/6.0,0.6,3.0);
+      for(int i=0;i<12;i++){float fi=float(i);float ph=a0+fi*2.39996;float ct=0.25+0.75*fract(fi*0.381966+0.13);float st=sqrt(1.0-ct*ct);float ln=rr*(0.2+0.8*fract(fi*0.618034+ign(gl_FragCoord.yx)));
+        vec3 S=P+(t*cos(ph)*st+b*sin(ph)*st+n*ct)*ln;vec4 c=proj*vec4(S,1.0);vec2 su=c.xy/c.w*0.5+0.5;if(su.x<0.0||su.y<0.0||su.x>1.0||su.y>1.0)continue;
+        float sz=vpos(su).z;float rng=smoothstep(0.0,1.0,rr/max(abs(P.z-sz),0.0001));occ+=step(S.z+0.03,sz)*rng;}
+      float ao=1.0-clamp(occ/12.0,0.0,1.0)*str;gl_FragColor=vec4(col.rgb*ao,col.a);}`});
+  class G2AO extends THREE.Pass{constructor(){super();this.needsSwap=true;this.fs=new THREE.FullScreenQuad(mat);this.mat=mat;}
+    render(rd,wb,rb){const u=this.mat.uniforms;u.tDiffuse.value=rb.texture;u.tDepth.value=rb.depthTexture;u.proj.value.copy(camera.projectionMatrix);u.projInv.value.copy(camera.projectionMatrixInverse);rd.setRenderTarget(this.renderToScreen?null:wb);this.fs.render(rd);}}
+  const p=new G2AO();composer.insertPass(p,1);G2.aoPass=p;return p;}
+function g2Frame(dt){const on=CINEMA();G2.rim.value=on?0.55:0;
+  // speed guard: if the shadows make the game slow, switch them off for this session
+  if(G2.aoPass&&G2.aoPass.enabled){G2.fpsT+=dt;G2.fpsN++;if(G2.fpsT>3){const fps=G2.fpsN/G2.fpsT;G2.fpsT=0;G2.fpsN=0;if(fps<28){G2.slow++;if(G2.slow>=2){G2.ao=false;G2.aoPass.enabled=false;}}else G2.slow=0;}}}
+function g2Apply(){if(saoPass)saoPass.enabled=false;const on=CINEMA()&&G2.ao&&!isTouch;try{if(on&&!G2.aoPass)g2MakeAO();}catch(e){console.warn('g2ao',e);G2.ao=false;}if(G2.aoPass)G2.aoPass.enabled=on;}
+
 function realRig(k,opt={}){const base=k==='lily'?'mia':k==='agent'?'dad':k;const kk=RH.has[base]?base:'max';const src=RH.src[kk];const m=THREE.SkeletonUtils.clone(src.scene);
   const hgt=opt.h||(k==='lily'?1.22:k==='agent'?1.85:HUM[kk].h);const sc=src.sc*hgt/HUM[kk].h;m.scale.setScalar(sc);m.position.y=-src.minY*sc;if(kk==='max')m.rotation.y=Math.PI;
   m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;}});
@@ -8315,6 +8371,7 @@ function realRig(k,opt={}){const base=k==='lily'?'mia':k==='agent'?'dad':k;const
   m.traverse(o=>{if(!o.isBone)return;const n=o.name.replace(/^mixamorig/,'').replace(/_\d+$/,'');for(const q in want)if(n===want[q]&&!bn[q])bn[q]=o;});r.bn=bn;if(opt.hd&&opt.hd!==1&&bn.head&&kk!=='bot')bn.head.scale.multiplyScalar(opt.hd);
   const C=RH.clipsK[kk];r.mixer=new THREE.AnimationMixer(m);r.act={};for(const n of Object.keys(C)){const a=r.mixer.clipAction(C[n]);a.play();a.setEffectiveWeight(r.w[n]||0);r.act[n]=a;}
   if(kk!=='bot'){m.traverse(o=>{if(!o.isBone)return;const n=o.name.replace(/^mixamorig/,'').replace(/_\d+$/,'');if(n==='Spine'&&!r.spB)r.spB=o;if(n==='Neck'&&!r.nkB)r.nkB=o;});if(r.spB&&r.nkB){g.updateMatrixWorld(true);const a=new THREE.Vector3(),c=new THREE.Vector3();r.spB.getWorldPosition(a);r.nkB.getWorldPosition(c);g.worldToLocal(a);g.worldToLocal(c);r.spUp=c.sub(a).normalize();}}
+  try{rhFingers(r,C);}catch(e){console.warn('fing',e);}
   r.act.walk.time=Math.random()*C.walk.duration;r.act.run.time=r.act.walk.time;r.act.idle.time=Math.random()*C.idle.duration;r.mixer.update(0.016);RH.live.add(r);return r;}
 /* ---- real 3D looks for every dreamer (outfit colours + 3D accessories) ---- */
 const RLOOK=[
@@ -8445,6 +8502,7 @@ function realAnim(r,t,move,air,keep){let dt=r.lt===null?0:t-r.lt;r.lt=t;if(dt<0|
   let ti=1-clamp(mv*4,0,1),tr=clamp((mv-0.55)/0.3,0,1)*(r.base==='bot'?1:0),tw=Math.max(0,1-ti-tr),td=0;if(r.emoNow){td=1;ti=tw=tr=0;}r.emoNow=false;
   const k=Math.min(1,dt*9),T={idle:ti,walk:tw,run:tr,dance:td};if(r.act.sit){const si=r.wantSit?1:0,wv=(!si&&r.wantWave)?1:0,f=1-Math.max(si,wv);for(const n in T)T[n]*=f;T.sit=si;T.wave=wv;}for(const n in T){r.w[n]+=(T[n]-r.w[n])*k;r.act[n].setEffectiveWeight(r.w[n]);}
   r.act.walk.setEffectiveTimeScale(0.7+mv*0.9);r.act.run.setEffectiveTimeScale(air>0.5?0.3:0.75+mv*0.35);r.mixer.update(dt);if(r.spB&&r.nkB&&!r.noStraight){const mvW=Math.min(1,(r.w.walk||0)+(r.w.run||0));if(mvW>0.01)standTall(r,mvW*0.9);}if(r.base!=='bot'&&!r.noArmFix){const mvW=Math.min(1,(r.w.walk||0)+(r.w.run||0)),idW=(r.base==='dad'||r.base==='mia')?(r.w.idle||0):0;if(mvW>0.05)armsSwing(r,mvW);else if(idW>0.05)armsDown(r,idW);}
+  if(r.fing)rhHands(r,0.34+0.22*(r.w.walk||0)+0.8*(r.w.run||0),dt);
   if(!keep){r.legL.rotation.set(0,0,0);r.legR.rotation.set(0,0,0);r.armR.rotation.set(0,0,0);r.armL.rotation.set(0,0,0);if(r.sitT!==RH.tick)r.b.position.y=0;}r.tick=RH.tick;}
 // stand tall while walking: turn the lower spine so the line from spine to neck points straight up (fixes forward or backward lean on any body)
 const _st1=new THREE.Vector3(),_st2=new THREE.Vector3(),_stq=new THREE.Quaternion(),_stw=new THREE.Quaternion(),_stp=new THREE.Quaternion(),_stI=new THREE.Quaternion(),_stU=new THREE.Vector3();
@@ -8454,17 +8512,17 @@ function standTall(r,w){const sp=r.spB,nk=r.nkB;if(!sp.parent)return;r.g.updateM
 const _sw1=new THREE.Vector3(),_sw2=new THREE.Vector3();
 function armsSwing(r,k){const bn=r.bn;if(!bn.armL||!bn.armR||!bn.farmL||!bn.farmR)return;r.g.updateMatrixWorld(true);const q=new THREE.Quaternion();r.g.getWorldQuaternion(q);const hs=r.hs||1;
   const fwd=(up,kn)=>{if(!up||!kn)return 0;up.getWorldPosition(_sw1);kn.getWorldPosition(_sw2);r.g.worldToLocal(_sw1);r.g.worldToLocal(_sw2);return clamp((_sw2.z-_sw1.z)/(0.5*hs),-1,1);};
-  const lL=fwd(bn.upL,bn.knL),lR=fwd(bn.upR,bn.knR);const dad=r.base==='dad',o=dad?0.42:0.34;
+  const lL=fwd(bn.upL,bn.knL),lR=fwd(bn.upR,bn.knR);const dad=r.base==='dad',o=dad?0.27:0.34;
   for(const s of[-1,1]){const up=s<0?bn.armL:bn.armR,fa=s<0?bn.farmL:bn.farmR,hd=s<0?bn.handL:bn.handR;const side=-s;const sw=-(s<0?lR:lL)*0.55*k;const zf=1;
     aimBone(up,fa,V3(side*o,-1,zf*sw).normalize().applyQuaternion(q),0.92*k);if(hd)aimBone(fa,hd,V3(side*o*0.5,-1,zf*(sw+0.32)).normalize().applyQuaternion(q),0.85*k);}}
 function armsDown(r,k){const bn=r.bn;if(!bn.armL||!bn.armR||!bn.farmL||!bn.farmR)return;r.g.updateMatrixWorld(true);const q=new THREE.Quaternion();r.g.getWorldQuaternion(q);
-  for(const s of[-1,1]){const up=s<0?bn.armL:bn.armR,fa=s<0?bn.farmL:bn.farmR,hd=s<0?bn.handL:bn.handR;const side=-s;const dad=r.base==='dad',o=dad?0.7:0.62;aimBone(up,fa,V3(side*o,-1,dad?0.16:0.04).applyQuaternion(q),0.95*k);if(hd)aimBone(fa,hd,V3(side*o*(dad?0.6:0.85),-1,dad?0.42:0.14).applyQuaternion(q),0.9*k);}}
+  for(const s of[-1,1]){const up=s<0?bn.armL:bn.armR,fa=s<0?bn.farmL:bn.farmR,hd=s<0?bn.handL:bn.handR;const side=-s;const dad=r.base==='dad',o=dad?0.34:0.44;aimBone(up,fa,V3(side*o,-1,dad?0.12:0.06).applyQuaternion(q),0.95*k);if(hd)aimBone(fa,hd,V3(side*o*(dad?0.45:0.6),-1,dad?0.36:0.22).applyQuaternion(q),0.9*k);}}
 function rhRot(bone,axis,ang){if(!bone)return;_ax.set(axis==='x'?1:0,axis==='y'?1:0,axis==='z'?1:0);_hq.setFromAxisAngle(_ax,ang);bone.quaternion.multiply(_hq);}
 const RHP={sitUp:['x',-1.45],sitKn:['x',1.5],waveArm:['z',-1.2],waveFa:['z',-0.9]};
 function updRealRigs(){if(!RH.live.size)return;RH.tick++;const top=S&&S.L&&S.L.scene;
   for(const r of RH.live){let o=r.g;while(o.parent)o=o.parent;if(o!==top){if(!r.g.parent&&r.tick<RH.tick-600)RH.live.delete(r);continue;}
     if(r.tick!==RH.tick-1&&r.tick!==RH.tick)realAnim(r,S.t,0,0,true);
-    rhPost(r);}}
+    rhPost(r);if(!r.g2&&CINEMA())g2Rig(r);if(r.g2s)r.g2s.visible=CINEMA();}}
 function rhPost(r){const sit=r.legL.rotation.x<-1.0||r.sitT===RH.tick-1;if(r.base==='bot'){r.wantSit=sit;r.wantWave=r.armR.rotation.x<-2.2;}else{if(sit){rhRot(r.bn.upL,RHP.sitUp[0],RHP.sitUp[1]);rhRot(r.bn.upR,RHP.sitUp[0],RHP.sitUp[1]);rhRot(r.bn.knL,RHP.sitKn[0],RHP.sitKn[1]);rhRot(r.bn.knR,RHP.sitKn[0],RHP.sitKn[1]);}
   if(r.armR.rotation.x<-2.2){const w=Math.sin((S?S.t:performance.now()/1000)*9)*0.35;rhRot(r.bn.armR,RHP.waveArm[0],RHP.waveArm[1]);rhRot(r.bn.farmR,RHP.waveFa[0],RHP.waveFa[1]+w);}}
   r.g.updateMatrixWorld(true);const hs=r.hs||1,hb=r.hb||HB.max;
@@ -8906,7 +8964,7 @@ function updCine(dt,t){const c=C,T=c.t,B=c.B;
 }
 
 /* ================= FLOW ================= */
-function startChapter(n){audio();{const hb=document.getElementById('htBars');if(hb){hb.classList.remove('on');const c=hb.querySelector('.htc');if(c)c.classList.remove('on');}}{const bb=document.querySelector('#bossbar b');if(bb&&bb.dataset.t0)bb.textContent=bb.dataset.t0;}if(!save.owned.includes(avIdx))avIdx=0;
+function startChapter(n){audio();try{g2Apply();}catch(e){}{const hb=document.getElementById('htBars');if(hb){hb.classList.remove('on');const c=hb.querySelector('.htc');if(c)c.classList.remove('on');}}{const bb=document.querySelector('#bossbar b');if(bb&&bb.dataset.t0)bb.textContent=bb.dataset.t0;}if(!save.owned.includes(avIdx))avIdx=0;
   if(n===1){running=false;if(S&&S.L){disposeLevel(S.L);S=null;}playCine('sleep',()=>{beginChapter(1);setLids(1);lidsTo(0,1.3);});return;}
   if(n===45){running=false;if(S&&S.L){disposeLevel(S.L);S=null;}playCine('sleep',()=>{beginChapter(45);setLids(1);lidsTo(0,1.3);},true);return;}
   beginChapter(n);}
@@ -9395,7 +9453,7 @@ function updateHud(force){if(!S)return;const h=`${S.obj}|${S.lives}|${Math.floor
   $('hObj').textContent=S.obj;$('hLives').textContent='♥'.repeat(Math.max(0,S.lives))+'♡'.repeat(Math.max(0,S.maxLives-S.lives));$('hCoins').textContent=`Coins this run: ${S.coins}`;$('hDream').textContent=`Dream time: ${fmt(S.dream)}`;}
 
 /* ================= CAMERA + HUD OVERLAYS ================= */
-function placeCamera(dt,snap){try{updRealRigs();}catch(e){console.warn(e);}if(S.L.fly&&S.V){placeFlyCam(dt,snap);return;}const P=S.P,L=S.L,cm=camMode;
+function placeCamera(dt,snap){try{updRealRigs();g2Frame(dt);}catch(e){console.warn(e);}if(S.L.fly&&S.V){placeFlyCam(dt,snap);return;}const P=S.P,L=S.L,cm=camMode;
   if(S.cam){camera.position.copy(S.cam.pos);camera.lookAt(S.cam.look);if(S.shake>0){camera.position.x+=rnd(-1,1)*S.shake*0.6;camera.position.y+=rnd(-1,1)*S.shake*0.6;}P.rig.g.visible=true;L.sun.position.copy(P.pos).addScaledVector(L.sunDir,150);L.sun.target.position.copy(P.pos);return;}let tgt=V3(P.pos.x,P.pos.y+1.6,P.pos.z),want,look;
   const fx=-Math.sin(camYaw),fz=-Math.cos(camYaw),rx=Math.cos(camYaw),rz=-Math.sin(camYaw);
   if(cm===2){const lp=(camPitch-0.32)*1.3;want=V3(P.pos.x+fx*0.25,P.pos.y+1.72,P.pos.z+fz*0.25);look=want.clone().add(V3(fx*Math.cos(lp),-Math.sin(lp),fz*Math.cos(lp)).multiplyScalar(10));}
