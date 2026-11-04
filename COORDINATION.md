@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed the product.
 
+## 2026-11-04  v68: every body upright, arms visible, bigger graphics (Cowork session)
+
+- Founder: no visible graphics difference; some avatars' legs and arms are in the wrong position; some look like they have no arms; make the change big and with no glitching.
+- Found in a 48-avatar line-up (t230): every Max-body avatar (Soldier.glb clips) stood in a combat crouch with bent knees; Mia-body avatars with dark tops held their arms tight to a dark body, so they read as armless; after the fix the knight's arms crossed in front of the belly (Max model is rotated pi inside the rig, so the side sign was wrong).
+- Fix: rhUprightClips retargets the Xbot idle/walk/run onto the max, mia and dad bodies (finger tracks dropped, hands.js keeps the fingers); armsDown now covers max too, per base offsets (dad 0.34, max 0.3, mia 0.52, slight forward bend); new rhSide reads the real side of each upper arm in rig space, used by armsDown and armsSwing.
+- Graphics: stronger cinematic grade (S-curve, warm highlights, cool shadows, more saturation); rim light 0.42 to 0.75; contact shadow opacity 0.8; AO rewritten: half-resolution, 4x4 interleaved pattern plus an edge-aware 4x4 blur (the old one left a diagonal grain), strength 1.35, radius 0.95; speed guard kept (off under 28 fps).
+- Tests: t230 before vs t231/t232 after: 48 avatars in 6 batches (idle, idle, walk) all upright with arms clear of the body, 0 page errors; ten chapters (3, 10, 27, 41, 52, 63, 67, 69, 71, 72) 0 page errors.
+
 ## 2026-11-02  v67: Graphics 2.0, natural arms and hands (Cowork session)
 
 - Founder: make the game ultra realistic with a big visible graphics change; make the arm positions and hands right; no errors.
